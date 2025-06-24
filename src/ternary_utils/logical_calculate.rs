@@ -2,14 +2,8 @@ pub mod logical_table;
 
 /// 半加器：返回 (sum, carry)
 pub fn ternary_half_adder(a: u8, b: u8) -> (u8, u8) {
-    let sum = logical_table::TSUM[a as usize][b as usize];// 和
-    let carry=logical_table::TCONS[a as usize][b as usize];// 进位;
-    (sum, carry)
-}
-/// 全加器：基于三维数组实现
-pub fn ternary_full_adder(a: u8, b: u8, c_in: u8) -> (u8, u8) {
-    let sum =logical_table::TFULLSUM[a as usize][b as usize][c_in as usize];// 和
-    let carry=logical_table::TFULLCONS[a as usize][b as usize][c_in as usize];// 进位
+    let sum = tsum_gate(a,b);// 和
+    let carry=tcons_gate(a, b);// 进位;
     (sum, carry)
 }
 /// 全加器2：基于半加器实现
@@ -17,9 +11,16 @@ pub fn ternary_full_adder2(a: u8, b: u8, c_in: u8) -> (u8, u8) {
     //2个平衡三进制半加器及1个平衡三进制调和门,组成一个平衡三进制全加器
     let (num,c1_in)=ternary_half_adder(a,b);
     let (sum,c2_in)=ternary_half_adder(num,c_in);
-    let carry=logical_table::TANY[c1_in as usize][c2_in as usize];//两个进位数合成一个进位数;
+    let carry=tany_gate(c1_in, c2_in);//两个进位数合成一个进位数;
     (sum, carry)
 }
+/// 全加器：基于三维数组实现
+pub fn ternary_full_adder(a: u8, b: u8, c_in: u8) -> (u8, u8) {
+    let sum =tfullsum_gate(a,b,c_in);// 和
+    let carry=tfullcons_gate(a, b, c_in);// 进位
+    (sum, carry)
+}
+
 
 ///多位三进制加法器基础,输入两个的三进制向量，返回加法结果向量和最终进位
 pub fn ternary_stackadder_base(mut stack1: Vec<u8>,mut stack2: Vec<u8>,carry_in: u8)-> (Vec<u8>, u8){
@@ -45,3 +46,22 @@ pub fn ternary_stack_adder(stack1: Vec<u8>,stack2: Vec<u8>) -> Vec<u8> {
     result.insert(0, carry);
     result
 }
+
+
+
+fn tsum_gate(a: u8, b: u8) -> u8{
+    logical_table::TSUM[a as usize][b as usize]
+}
+fn tcons_gate(a: u8, b: u8) -> u8{
+    logical_table::TCONS[a as usize][b as usize]
+}
+fn tany_gate(a: u8, b: u8) -> u8{
+    logical_table::TANY[a as usize][b as usize]
+}
+fn tfullsum_gate(a: u8, b: u8, c: u8) -> u8{
+    logical_table::TFULLSUM[a as usize][b as usize][c as usize]
+}
+fn tfullcons_gate(a: u8, b: u8, c: u8) -> u8{
+    logical_table::TFULLCONS[a as usize][b as usize][c as usize]
+}
+
