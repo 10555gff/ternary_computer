@@ -48,7 +48,28 @@ pub fn ternary_stack_adder(stack1: Vec<u8>,stack2: Vec<u8>) -> Vec<u8> {
 }
 
 
+fn tneg_gate(a: u8) -> u8{
+    logical_table::TNEG[a as usize]
+}
 
+fn tor_gate(a: u8, b: u8) -> u8{
+    logical_table::TOR[a as usize][b as usize]
+}
+fn tand_gate(a: u8, b: u8) -> u8{
+    logical_table::TAND[a as usize][b as usize]
+}
+fn tnor_gate(a: u8, b: u8) -> u8{
+    logical_table::TNOR[a as usize][b as usize]
+}
+fn tnand_gate(a: u8, b: u8) -> u8{
+    logical_table::TNAND[a as usize][b as usize]
+}
+fn txor(a: u8, b: u8) -> u8{
+    logical_table::TXOR[a as usize][b as usize]
+}
+fn txnor(a: u8, b: u8) -> u8{
+    logical_table::TXNOR[a as usize][b as usize]
+}
 fn tsum_gate(a: u8, b: u8) -> u8{
     logical_table::TSUM[a as usize][b as usize]
 }
@@ -58,6 +79,8 @@ fn tcons_gate(a: u8, b: u8) -> u8{
 fn tany_gate(a: u8, b: u8) -> u8{
     logical_table::TANY[a as usize][b as usize]
 }
+
+
 fn tfullsum_gate(a: u8, b: u8, c: u8) -> u8{
     logical_table::TFULLSUM[a as usize][b as usize][c as usize]
 }
