@@ -6,14 +6,6 @@ pub fn ternary_half_adder(a: u8, b: u8) -> (u8, u8) {
     let carry=tcons_gate(a, b);// 进位;
     (sum, carry)
 }
-/// 全加器2：基于半加器实现
-pub fn ternary_full_adder2(a: u8, b: u8, c_in: u8) -> (u8, u8) {
-    //2个平衡三进制半加器及1个平衡三进制调和门,组成一个平衡三进制全加器
-    let (num,c1_in)=ternary_half_adder(a,b);
-    let (sum,c2_in)=ternary_half_adder(num,c_in);
-    let carry=tany_gate(c1_in, c2_in);//两个进位数合成一个进位数;
-    (sum, carry)
-}
 /// 全加器：基于三维数组实现
 pub fn ternary_full_adder(a: u8, b: u8, c_in: u8) -> (u8, u8) {
     let sum =tfullsum_gate(a,b,c_in);// 和
@@ -30,7 +22,7 @@ pub fn ternary_stack_adder(mut stack1: Vec<u8>,mut stack2: Vec<u8>)-> Vec<u8>{
         let v1 = stack1.pop().unwrap_or(0);
         let v2 = stack2.pop().unwrap_or(0);
  
-        let (s_out, next_carry) =ternary_full_adder2(v1, v2, c_in);
+        let (s_out, next_carry) =ternary_full_adder(v1, v2, c_in);
         result.push(s_out);//存结果
         c_in=next_carry;//进位传递
     }
