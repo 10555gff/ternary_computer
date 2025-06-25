@@ -12,7 +12,7 @@ pub fn ternary_full_adder(a: u8, b: u8, c_in: u8) -> (u8, u8) {
     let carry=tfullcons_gate(a, b, c_in);// 进位
     (sum, carry)
 }
-///多位三进制加法器,输入两个的三进制向量，返回加法结果向量和最终进位
+///多位三进制加法器,输入两个的三进制向量，返回加法结果向量
 pub fn ternary_stack_adder(mut stack1: Vec<u8>,mut stack2: Vec<u8>)-> Vec<u8>{
     let mut result:Vec<u8> = Vec::new();//存储和
     let mut c_in:u8=0;
