@@ -20,10 +20,7 @@ pub fn ternary_full_adder(a: u8, b: u8, c_in: u8) -> (u8, u8) {
     let carry=tfullcons_gate(a, b, c_in);// 进位
     (sum, carry)
 }
-
-
-
-///多位三进制加法器基础,输入两个的三进制向量，返回加法结果向量和最终进位
+///多位三进制加法器,输入两个的三进制向量，返回加法结果向量和最终进位
 pub fn ternary_stack_adder(mut stack1: Vec<u8>,mut stack2: Vec<u8>)-> Vec<u8>{
     let mut result:Vec<u8> = Vec::new();//存储和
     let mut c_in:u8=0;
@@ -33,7 +30,7 @@ pub fn ternary_stack_adder(mut stack1: Vec<u8>,mut stack2: Vec<u8>)-> Vec<u8>{
         let v1 = stack1.pop().unwrap_or(0);
         let v2 = stack2.pop().unwrap_or(0);
  
-        let (s_out, next_carry) =ternary_full_adder(v1, v2, c_in);
+        let (s_out, next_carry) =ternary_full_adder2(v1, v2, c_in);
         result.push(s_out);//存结果
         c_in=next_carry;//进位传递
     }
@@ -42,11 +39,9 @@ pub fn ternary_stack_adder(mut stack1: Vec<u8>,mut stack2: Vec<u8>)-> Vec<u8>{
     result
 }
 
-
-
-///多位三进制乘法器基础
+///多位三进制乘法器
 pub fn ternary_mul_base(stack1: Vec<u8>, stack2: Vec<u8>)-> Vec<u8>{
-    let partial_t: Vec<u8> = stack1.iter().map(|&m| logical_table::TNEG[m as usize]).collect();
+    let partial_t: Vec<u8> = stack1.iter().map(|&x| tneg_gate(x)).collect();
     // 构建偏积表：分别是乘以 0, 1, T 的情况
     let partials = vec![
         vec![0; stack1.len()], //0乘任何数，都得0
