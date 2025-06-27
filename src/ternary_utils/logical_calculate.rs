@@ -12,8 +12,8 @@ pub fn ternary_full_adder(a: u8, b: u8, c_in: u8) -> (u8, u8) {
     let carry=tfullcons_gate(a, b, c_in);// 进位
     (sum, carry)
 }
-///多位三进制加法器,输入两个的三进制向量，返回加法结果向量
-pub fn ternary_stack_adder(mut stack1: Vec<u8>,mut stack2: Vec<u8>)-> Vec<u8>{
+///多位三进制加减器基础,输入两个的三进制向量，返回加法结果向量和最终进位
+fn ternary_stack_base(mut stack1: Vec<u8>,mut stack2: Vec<u8>,is_sub:bool)-> Vec<u8>{
     let mut result:Vec<u8> = Vec::new();//存储和
     let mut c_in:u8=0;
     
@@ -21,14 +21,25 @@ pub fn ternary_stack_adder(mut stack1: Vec<u8>,mut stack2: Vec<u8>)-> Vec<u8>{
     while !stack1.is_empty() || !stack2.is_empty() {
         let v1 = stack1.pop().unwrap_or(0);
         let v2 = stack2.pop().unwrap_or(0);
+        let v3=if is_sub {tneg_gate(v2)}else{v2};
  
-        let (s_out, next_carry) =ternary_full_adder(v1, v2, c_in);
+        let (s_out, next_carry) =ternary_full_adder(v1, v3, c_in);
         result.push(s_out);//存结果
         c_in=next_carry;//进位传递
     }
-    result.push(c_in);// 推入最高位
+    if c_in!=0{
+        result.push(c_in);// 推入最高位
+    }
     result.reverse(); // 反转，从高位到低位排列
     result
+}
+///多位三进制加法器
+pub fn ternary_stack_adder(stack1: Vec<u8>,stack2: Vec<u8>)-> Vec<u8>{
+    ternary_stack_base(stack1, stack2, false)
+}
+///多位三进制减法器
+pub fn ternary_stack_sub(stack1: Vec<u8>,stack2: Vec<u8>)-> Vec<u8>{
+    ternary_stack_base(stack1, stack2, true)
 }
 
 ///多位三进制乘法器

@@ -17,8 +17,8 @@ fn main() {
 
 
 
-    let stack1=vec![1,1];
-    let stack2=vec![1,1];
+    let stack1=vec![1,1,0,1];
+    let stack2=vec![1,0,1,1];
     let re=logical_calculate::ternary_mul_base(stack1,stack2);
     print!("{:?}",re);
 }
