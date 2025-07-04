@@ -18,8 +18,30 @@ fn main() {
 
 
 
-    let stack1=vec![1,1,0,1];
-    let stack2=vec![1,0,1,1];
-    let re=logical_calculate::ternary_mul_base(stack1,stack2);
+
+
+    // let stack1=vec![1,0,1,1,0,1];
+    // let stack2=vec![0,0,0,1,0,2];
+
+    let stack1=vec![1,0,1];
+    let stack2=vec![2,1];
+    
+    let re=logical_calculate::ternary_div_base(stack1,stack2);
     print!("{:?}",re);
+
+    let stack3=vec![1,0,1];
+    println!("{}",logical_calculate::ternary_sign(&stack3));
+
+
+//    let mut qq = vec![0];
+//    qq =logical_calculate::ternary_stack_accumulate(qq, 1);
+//    qq =logical_calculate::ternary_stack_accumulate(qq, 1);
+//    //qq =logical_calculate::ternary_stack_accumulate(qq, 2);
+//    qq =logical_calculate::ternary_stack_accumulate(qq, 0);
+//    println!("{:?}",qq);
+
+
+//    qq=logical_calculate::ternary_tneg(qq);
+//    println!("{:?}",qq);
+
 }
