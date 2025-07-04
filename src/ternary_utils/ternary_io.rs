@@ -22,6 +22,16 @@ fn encode_trits(input: &str) -> Vec<u8> {
         .collect()
 }
 
+//平衡三进制栈多位乘法器输出
+pub fn test_stack_mul(s1: &str ,s2:&str){
+    let stack1: Vec<u8> = encode_trits(&s1);
+    let stack2: Vec<u8> = encode_trits(&s2);
+
+    let sum =logical_calculate::ternary_mul_base(stack1,stack2);
+    println!("结果: {}", decode_trits(&sum));
+}
+
+
 //平衡三进制栈多位加器输出
 pub fn test_stack_adder(s1: &str ,s2:&str){
     let stack1: Vec<u8> = encode_trits(&s1);

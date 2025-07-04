@@ -14,6 +14,7 @@ fn main() {
 
     // ternary_io::test_stack_adder(&s1, &s2);
     // ternary_io::test_stack_adder("++++++++", "+0000000");
+    //ternary_io::test_stack_mul("++0+","+0++");
 
 
 
