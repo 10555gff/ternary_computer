@@ -23,19 +23,19 @@ fn main() {
     // let stack1=vec![1,0,1,1,0,1];
     // let stack2=vec![0,0,0,1,0,2];
 
-    let stack1=vec![1,0,1];
-    let stack2=vec![2,0];
+    // let stack1=vec![1,0,1];
+    // let stack2=vec![2,0];
     
-    let re=logical_calculate::ternary_div_base(stack1,stack2);
-    print!("{:?}",re);
+    // let re=logical_calculate::ternary_div_base(stack1,stack2);
+    // print!("{:?}",re);
 
-    // let stack3=vec![1,0,1];
-    // println!("{}",logical_calculate::ternary_sign(&stack3));
+    // // let stack3=vec![1,0,1];
+    // // println!("{}",logical_calculate::ternary_sign(&stack3));
 
-        let stack1=vec![1,1];
-    let stack2=vec![1,1];
-    let result=logical_calculate::ternary_mul_base(stack1, stack2);
-    println!("乘法结果:{:?}",result);
+    //     let stack1=vec![1,1];
+    // let stack2=vec![1,1];
+    // let result=logical_calculate::ternary_mul_base(stack1, stack2);
+    // println!("乘法结果:{:?}",result);
 
 
 //    let mut qq = vec![0];
@@ -48,5 +48,30 @@ fn main() {
 
 //    qq=logical_calculate::ternary_tneg(qq);
 //    println!("{:?}",qq);
+
+let stack1=vec![1,0,1];
+    let stack2=vec![1,0];
+    
+    let re=logical_calculate::ternary_div_base(stack1,stack2);
+    println!("商和余数:{:?}",re);
+
+    let stack1=vec![2,0,2];
+    let stack2=vec![2,0];
+    
+    let re=logical_calculate::ternary_div_base(stack1,stack2);
+    println!("商和余数:{:?}",re);
+
+
+    let stack1=vec![2,0,2];
+    let stack2=vec![1,0];
+    
+    let re=logical_calculate::ternary_div_base(stack1,stack2);
+    println!("商和余数:{:?}",re);
+
+    let stack1=vec![1,0,1];
+    let stack2=vec![2,0];
+    
+    let re=logical_calculate::ternary_div_base(stack1,stack2);
+    println!("商和余数:{:?}",re);
 
 }

@@ -82,13 +82,9 @@ pub fn ternary_mul_base(stack1: Vec<u8>, stack2: Vec<u8>)-> Vec<u8>{
 
 ///多位三进制除法器：累加版
 pub fn ternary_div_base(stack1: Vec<u8>, stack2: Vec<u8>)-> (Vec<u8>,Vec<u8>){
-    let sign_divided=ternary_sign(&stack1);//被除数符号
+    let sign_divided=ternary_sign(&stack1);//最初被除数符号
     let sign_divisor=ternary_sign(&stack2);//除数符号
-    let mut current_sign =sign_divided;//当前余数符号
-    let is_equal=sign_divided==sign_divisor;
-    let digit = if is_equal { 1 } else { 2 }; //同符号上1，反之上T
-    let num_tneg=if is_equal{ternary_tneg(stack2)}else{stack2};    //被除数与除数，要互为相反数
- 
+
     // 零不能作为除数
     if sign_divisor == 0 {
         panic!("零不能作为除数");
@@ -97,31 +93,30 @@ pub fn ternary_div_base(stack1: Vec<u8>, stack2: Vec<u8>)-> (Vec<u8>,Vec<u8>){
     if sign_divided == 0{
         return (vec![0], vec![0]);
     }
- 
- 
-    let mut remainder = stack1;
-    let mut last_valid = vec![0];
+
+    let is_equal=sign_divided==sign_divisor;
+    //被除数与除数，要互为相反数，先将被除数取反，一直加直到加回来 
+    let mut remainder = if is_equal{ternary_tneg(stack1)}else{stack1};
+    let digit = if is_equal { 1 } else { 2 }; //同符号上1，反之上T
     let mut count = 0;//统计加了多少次
+
     loop{
-        if current_sign==sign_divided{ //最初符号与更新符合对比
-            count += 1;
-            last_valid = remainder.clone();
-            remainder = ternary_stack_adder(remainder, num_tneg.clone());
-            
-        }else {
-            //除不尽退回上一次有效结果
-            if current_sign != 0{
-                remainder=last_valid;
-                count=count-1;
-            }else{//除尽则得0
-                remainder=vec![0];
+        let current_sign=ternary_sign(&remainder);//获取当前被除数符号
+        if current_sign==sign_divisor{//如果加回来，被除数与除数符号相同
+            //撤回上一步结果
+            count -= 1;
+            if is_equal{
+                remainder=ternary_stack_adder(ternary_tneg(remainder), stack2.clone());
+            }else {
+                remainder=ternary_stack_adder(ternary_tneg(stack2.clone()), remainder);
             }
             break;
         }
-        //更新符号,获取余数的符号
-        current_sign=ternary_sign(&remainder);
+        count += 1;
+        remainder = ternary_stack_adder(remainder, stack2.clone());//取反的被除数不断加除数
     }
-    // 构建最终商
+
+    //构建最终商
     let mut quotient = vec![0];
     for _ in 0..count {
         quotient = ternary_stack_accumulate(quotient, digit);
@@ -130,3 +125,6 @@ pub fn ternary_div_base(stack1: Vec<u8>, stack2: Vec<u8>)-> (Vec<u8>,Vec<u8>){
     //商、余数
     (quotient,remainder)
 }
+
+
+
