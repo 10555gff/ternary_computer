@@ -130,4 +130,11 @@ fn main() {
     println!("商和余数:{:?}",re);
 
 
+    // // 构造初始商向量（1 或 2 开头 + shift 个 0）
+    // let mut quotient = Vec::with_capacity(1 + 3);
+    // quotient.push(1);
+    // quotient.resize(1 + 3, 0);
+
+    // println!("{:?}",quotient);
+
 }

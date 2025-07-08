@@ -148,48 +148,36 @@ pub fn ternary_div_base(stack1: Vec<u8>, stack2: Vec<u8>)-> (Vec<u8>,Vec<u8>){
 
 
 //二步计算法 传入被除数与除数
-pub fn ternary_div_step(stack1: Vec<u8>, stack2: Vec<u8>,shift:usize)->(Vec<u8>,Vec<u8>){
-    let digit=logical_table::TDIV[stack1[0] as usize][stack2[0] as usize];//商的符号
+pub fn ternary_div_step(mut remainder: Vec<u8>, stack2: Vec<u8>,shift:usize)->(Vec<u8>,Vec<u8>){
+    let digit=logical_table::TDIV[remainder[0] as usize][stack2[0] as usize];//获取商的符号
 
-    let mut remainder = stack1;
-    let mut quotient = vec![0];
     let (neg_divisor,pos_divisor)=(ternary_tneg(stack2.clone()),stack2);
 
+    //提前构造商向量：digit（1 或 2）+ shift 个 0
+    let mut quotient = Vec::with_capacity(1 + shift);//提前分配空间
+    quotient.push(digit);
+    quotient.resize(1 + shift, 0);
+
+
     match digit {
-        0=>{//商上0，返回原本被除数
-            //println!("零除于任何非零数都等于零,直接返回");
-            return (remainder,quotient);
-        },
-        1=>{
-            quotient=vec![1];
-            quotient.extend(vec![0; shift]);
-            remainder=ternary_stack_adder(remainder,neg_divisor.clone());
-        },
-        2=>{
-            quotient=vec![2];
-            quotient.extend(vec![0; shift]);
-            remainder=ternary_stack_adder(remainder,pos_divisor.clone());
-            
+        0=>return (remainder,vec![0]),////商上0,零除于任何非零数都等于零,直接返回
+        1 | 2=>{
+            remainder=ternary_stack_adder(
+            remainder,
+            if digit==1{neg_divisor.clone()}else {pos_divisor.clone()}
+            );
         },
         3=>panic!("零不能作为除数"),
         _=>{},
     }
-        
 
-        //println!("cur:{:?}{:?}{:?}",remainder,neg_divisor,pos_divisor);
-
+    //println!("cur:{:?}{:?}{:?}",remainder,neg_divisor,pos_divisor);
     if !in_open_interval(&remainder, &neg_divisor, &pos_divisor){//未符合半封闭区间，第二轮减法
-        match digit {
-        1=>{
-            quotient=ternary_stack_adder(quotient.clone(),quotient);
-            remainder=ternary_stack_adder(remainder,neg_divisor.clone());
-        },
-        2=>{
-            quotient=ternary_stack_adder(quotient.clone(),quotient);
-            remainder=ternary_stack_adder(remainder,pos_divisor.clone());
-        },
-        _=>{},
-        }
+        quotient=ternary_stack_adder(quotient.clone(),quotient);//双倍商
+        remainder=ternary_stack_adder(
+            remainder,
+            if digit==1{neg_divisor}else {pos_divisor}
+        );
     }
 
     //余数、商
