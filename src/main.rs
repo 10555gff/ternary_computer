@@ -104,37 +104,29 @@ fn main() {
 
 
 
-    let stack1=vec![1,0,1];
+    let stack1=vec![1,0,1];//10/-2
     let stack2=vec![2,1];
-    let re=logical_calculate::ternary_div_base2(stack1,stack2);
+    let re=logical_calculate::ternary_div_choose(stack1,stack2);
     println!("商和余数:{:?}",re);
 
-    let stack1=vec![1,0,1];
+    let stack1=vec![1,0,1];//10/3
     let stack2=vec![1,0];
-    let re=logical_calculate::ternary_div_base2(stack1,stack2);
+    let re=logical_calculate::ternary_div_choose(stack1,stack2);
     println!("商和余数:{:?}",re);
 
     let stack1=vec![1,2,1,1,2];//65/5
     let stack2=vec![1,2,2];
-    let re=logical_calculate::ternary_div_base2(stack1,stack2);
+    let re=logical_calculate::ternary_div_choose(stack1,stack2);
     println!("商和余数:{:?}",re);
 
     let stack1=vec![1,0,1,1,0,1];//280/8
     let stack2=vec![1,0,2];
-    let re=logical_calculate::ternary_div_base2(stack1,stack2);
+    let re=logical_calculate::ternary_div_choose(stack1,stack2);
     println!("商和余数:{:?}",re);
 
     let stack1=vec![1,2,1,1];//22/-5
     let stack2=vec![2,1,1];
-    let re=logical_calculate::ternary_div_base2(stack1,stack2);
+    let re=logical_calculate::ternary_div_choose(stack1,stack2);
     println!("商和余数:{:?}",re);
-
-
-    // // 构造初始商向量（1 或 2 开头 + shift 个 0）
-    // let mut quotient = Vec::with_capacity(1 + 3);
-    // quotient.push(1);
-    // quotient.resize(1 + 3, 0);
-
-    // println!("{:?}",quotient);
 
 }
