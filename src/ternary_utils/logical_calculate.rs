@@ -15,6 +15,26 @@ pub fn ternary_sign(stack: &[u8]) -> u8 {
     }
     state
 }
+/// 比较两个平衡三进制大小（从高位到低位,位数要相同）
+/// - 返回 0 表示相等
+/// - 返回 1 表示 a > b
+/// - 返回 2 表示 a < b
+/// 向量：返回 -1 (T), 0, 1
+pub fn ternary_cmp(stack1: &[u8], stack2: &[u8]) -> u8 {
+    let mut state: u8 = 0;
+    for (&a, &b) in stack1.iter().zip(stack2.iter()) {
+        state=logical_table::TCMP[a as usize][b as usize];
+        if state!=0{break;}//全部对比过，则相等
+    }
+    state
+}
+/// 判断是否在半封闭区间(neg与pos互为相反数)，是则True,反之False
+pub fn in_open_interval(stack: &[u8], neg: &[u8], pos: &[u8]) -> bool {
+    // 判断 stack ∈ (min, max)
+    let cmp_min = ternary_cmp(neg, stack);
+    let cmp_max = ternary_cmp(stack, pos);
+    cmp_max==cmp_min
+}
 
 /// 半加器：返回 (sum, carry)
 pub fn ternary_half_adder(a: u8, b: u8) -> (u8, u8) {
@@ -125,6 +145,92 @@ pub fn ternary_div_base(stack1: Vec<u8>, stack2: Vec<u8>)-> (Vec<u8>,Vec<u8>){
     //商、余数
     (quotient,remainder)
 }
+
+
+//二步计算法 传入被除数与除数
+pub fn ternary_div_step(stack1: Vec<u8>, stack2: Vec<u8>,shift:usize)->(Vec<u8>,Vec<u8>){
+    let digit=logical_table::TDIV[stack1[0] as usize][stack2[0] as usize];//商的符号
+
+    let mut remainder = stack1;
+    let mut quotient = vec![0];
+    let (neg_divisor,pos_divisor)=(ternary_tneg(stack2.clone()),stack2);
+
+    match digit {
+        0=>{//商上0，返回原本被除数
+            //println!("零除于任何非零数都等于零,直接返回");
+            return (remainder,quotient);
+        },
+        1=>{
+            quotient=vec![1];
+            quotient.extend(vec![0; shift]);
+            remainder=ternary_stack_adder(remainder,neg_divisor.clone());
+        },
+        2=>{
+            quotient=vec![2];
+            quotient.extend(vec![0; shift]);
+            remainder=ternary_stack_adder(remainder,pos_divisor.clone());
+            
+        },
+        3=>panic!("零不能作为除数"),
+        _=>{},
+    }
+        
+
+        //println!("cur:{:?}{:?}{:?}",remainder,neg_divisor,pos_divisor);
+
+    if !in_open_interval(&remainder, &neg_divisor, &pos_divisor){//未符合半封闭区间，第二轮减法
+        match digit {
+        1=>{
+            quotient=ternary_stack_adder(quotient.clone(),quotient);
+            remainder=ternary_stack_adder(remainder,neg_divisor.clone());
+        },
+        2=>{
+            quotient=ternary_stack_adder(quotient.clone(),quotient);
+            remainder=ternary_stack_adder(remainder,pos_divisor.clone());
+        },
+        _=>{},
+        }
+    }
+
+    //余数、商
+    (remainder,quotient)
+}
+
+
+///多位三进制除法器：判断版
+pub fn ternary_div_base2(stack1: Vec<u8>, stack2: Vec<u8>)-> (Vec<u8>,Vec<u8>){
+    let fixed_len = stack2.len();
+    let (mut remainder, mut s) = (
+        stack1[..fixed_len].to_vec(),
+        stack1[fixed_len..].to_vec()
+    );
+    let fixed=s.len();
+    let mut quotient = vec![0];
+
+
+    for shift in 0..=fixed{
+        let mut current_quot= Vec::new();
+        // 调用试商逻辑：返回 (新的余数, 当前商位)
+        (remainder,current_quot ) = ternary_div_step(remainder, stack2.clone(),fixed-shift);
+        quotient=ternary_stack_adder(quotient, current_quot);
+
+
+
+        println!("bb{:?}{:?}{:?}",remainder,quotient,s);
+
+        if !s.is_empty() {
+            remainder.remove(0);// 左移一位
+            remainder.push(s[0]);// 拉一位进来
+            s.remove(0);// s 去掉这一位
+        }
+       
+    }
+
+
+    (quotient,remainder)
+    //(vec![0],vec![0])
+}
+
 
 
 

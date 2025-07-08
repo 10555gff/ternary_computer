@@ -46,32 +46,88 @@ fn main() {
 //    println!("{:?}",qq);
 
 
-//    qq=logical_calculate::ternary_tneg(qq);
-//    println!("{:?}",qq);
-
-let stack1=vec![1,0,1];
-    let stack2=vec![1,0];
-    
-    let re=logical_calculate::ternary_div_base(stack1,stack2);
-    println!("商和余数:{:?}",re);
-
-    let stack1=vec![2,0,2];
-    let stack2=vec![2,0];
-    
-    let re=logical_calculate::ternary_div_base(stack1,stack2);
-    println!("商和余数:{:?}",re);
 
 
-    let stack1=vec![2,0,2];
-    let stack2=vec![1,0];
-    
-    let re=logical_calculate::ternary_div_base(stack1,stack2);
+    // let stack1=vec![1,1];
+    // let stack2=vec![1,2];
+    // let re=logical_calculate::ternary_div_step(stack1,stack2);
+    // println!("商和余数:{:?}",re);
+
+    // let stack1=vec![2,2];
+    // let stack2=vec![2,1];
+    // let re=logical_calculate::ternary_div_step(stack1,stack2);
+    // println!("商和余数:{:?}",re);
+
+
+    // let stack1=vec![1,1];
+    // let stack2=vec![2,1];
+    // let re=logical_calculate::ternary_div_step(stack1,stack2);
+    // println!("商和余数:{:?}",re);
+
+    // let stack1=vec![2,2];
+    // let stack2=vec![1,2];
+    // let re=logical_calculate::ternary_div_step(stack1,stack2);
+    // println!("商和余数:{:?}",re);
+
+//println!("//---------------------------------------------------------------------------------------//");
+
+    // let stack1=vec![1,0,0];
+    // let stack2=vec![1,0,2];
+    // let re=logical_calculate::ternary_div_step(stack1,stack2);
+    // println!("商和余数:{:?}",re);
+
+    // let stack1=vec![2,0,0];
+    // let stack2=vec![2,0,1];
+    // let re=logical_calculate::ternary_div_step(stack1,stack2);
+    // println!("商和余数:{:?}",re);
+
+
+    // let stack1=vec![2,0,0];
+    // let stack2=vec![1,0,2];
+    // let re=logical_calculate::ternary_div_step(stack1,stack2);
+    // println!("商和余数:{:?}",re);
+
+    // let stack1=vec![1,0,0];
+    // let stack2=vec![2,0,1];
+    // let re=logical_calculate::ternary_div_step(stack1,stack2);
+    // println!("商和余数:{:?}",re);
+
+//println!("//---------------------------------------------------------------------------------------//");
+
+
+
+//     let stack1=vec![1,0,1];
+//     let stack2=vec![2,1];
+//     let re=logical_calculate::ternary_div_base2(stack1,stack2);
+
+//    
+
+
+
+    let stack1=vec![1,0,1];
+    let stack2=vec![2,1];
+    let re=logical_calculate::ternary_div_base2(stack1,stack2);
     println!("商和余数:{:?}",re);
 
     let stack1=vec![1,0,1];
-    let stack2=vec![2,0];
-    
-    let re=logical_calculate::ternary_div_base(stack1,stack2);
+    let stack2=vec![1,0];
+    let re=logical_calculate::ternary_div_base2(stack1,stack2);
     println!("商和余数:{:?}",re);
+
+    let stack1=vec![1,2,1,1,2];//65/5
+    let stack2=vec![1,2,2];
+    let re=logical_calculate::ternary_div_base2(stack1,stack2);
+    println!("商和余数:{:?}",re);
+
+    let stack1=vec![1,0,1,1,0,1];//280/8
+    let stack2=vec![1,0,2];
+    let re=logical_calculate::ternary_div_base2(stack1,stack2);
+    println!("商和余数:{:?}",re);
+
+    let stack1=vec![1,2,1,1];//22/-5
+    let stack2=vec![2,1,1];
+    let re=logical_calculate::ternary_div_base2(stack1,stack2);
+    println!("商和余数:{:?}",re);
+
 
 }
