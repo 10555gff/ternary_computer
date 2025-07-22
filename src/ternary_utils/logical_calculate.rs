@@ -1,11 +1,17 @@
 pub mod logical_table;
-use core::ops::{Add, BitAnd, BitOr, BitXor, Div, Mul, Neg, Not, Sub};
+use core::ops::{Neg, Not, BitOr, BitAnd, BitXor, Add, Sub, Mul, Div};
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 #[repr(u8)]
 pub enum Digit {
     Z =0,
     P =1,
     N =2,
+}
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct DigitResult {
+    pub carry: Digit,
+    pub sum: Digit,
 }
 
 impl Digit {
@@ -188,11 +194,97 @@ pub const fn full_adder(self, b: Self,c_in: Self) -> (u8, u8) {
 }
 
 
+//Neg -x	数学意义的“负号”运算
+impl Neg for Digit {
+    type Output = Self;
+
+    fn neg(self) -> Self::Output {
+        match self {
+            Digit::Z => Digit::Z,
+            Digit::P => Digit::N,
+            Digit::N => Digit::P,
+        }
+    }
+}
+//Not !x	按位/逻辑意义的“非”或“取反”运算
+impl Not for Digit {
+    type Output = Self;
+
+    fn not(self) -> Self::Output {
+        -self  //行为一致，直接重用 Neg 实现
+    }
+}
+
 /// Performs a bitwise OR (`|`) operation between two `Digit` values and returns the result.
 impl BitOr for Digit {
     type Output = Self;
+    
     fn bitor(self, other: Self) -> Self::Output {
         let n=logical_table::TOR[self as usize][other as usize];
         Digit::from_u8(n)
     }
 }
+/// Performs a bitwise AND (`&`) operation between two `Digit` values and returns the result.
+impl BitAnd for Digit {
+    type Output = Self;
+    
+    fn bitand(self, other: Self) -> Self::Output {
+        let n=logical_table::TAND[self as usize][other as usize];
+        Digit::from_u8(n)
+    }
+}
+
+/// Performs a bitwise XOR(`^`) (exclusive OR) operation between two `Digit` values.
+impl BitXor for Digit {
+    type Output = Self;
+    
+    fn bitxor(self, other: Self) -> Self::Output {
+        let n=logical_table::TXOR[self as usize][other as usize];
+        Digit::from_u8(n)
+    }
+}
+
+/// Multiplies two `Digit` values together and returns the product as a `Digit`.
+impl Mul<Digit> for Digit {
+    type Output = Digit;
+
+    fn mul(self, other: Digit) -> Self::Output {
+        let n=logical_table::TXNOR[self as usize][other as usize];
+        Digit::from_u8(n)
+    }
+}
+/// Divides one `Digit` value by another and returns the result as a `Digit`.
+impl Div<Digit> for Digit {
+    type Output = Digit;
+
+    fn div(self, other: Digit) -> Self::Output {
+        if other == Digit::Z {panic!("Cannot divide by zero.");}
+        let n=logical_table::TDIV[self as usize][other as usize];
+        Digit::from_u8(n)
+    }
+}
+
+
+/// Adds two `Digit` values together and returns a `Digit` result.
+impl Add<Digit> for Digit {
+    type Output = DigitResult;
+
+    fn add(self, other: Self) -> Self::Output {
+        let sum = Digit::from_u8(logical_table::TSUM[self as usize][other as usize]);
+        let carry = Digit::from_u8(logical_table::TCONS[self as usize][other as usize]);
+        DigitResult { carry, sum }
+    }
+}
+
+/// Subtracts two `Digit` values and returns a `Digit` result.
+impl Sub<Digit> for Digit {
+    type Output = DigitResult;
+
+    fn sub(self, other: Digit) -> Self::Output {
+        let sum = Digit::from_u8(logical_table::TSUM[self as usize][-other as usize]);
+        let carry = Digit::from_u8(logical_table::TCONS[self as usize][-other as usize]);
+        DigitResult { carry, sum }
+    }
+}
+
+
