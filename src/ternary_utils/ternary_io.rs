@@ -1,4 +1,4 @@
-use crate::ternary_utils::logical_calculate::Digit;
+use crate::ternary_utils::logical_calculate::{logical_table, Digit};
 use core::ops::{Deref,Add, BitAnd, BitOr, BitXor, Div, Mul, Neg, Not, Sub, Shl, Shr};
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
@@ -18,6 +18,18 @@ impl Ternary {
 
     pub fn parse(s: &str) -> Self {
         Self(s.chars().map(Digit::from_char).collect())
+    }
+
+    pub fn to_neg(&self) -> Self {
+        Self(self.iter().copied().map(Digit::to_neg).collect())
+    }
+
+    pub fn to_sign(&self) -> Digit {
+        let mut state=Digit::Z;
+        for &digit in self.iter() {
+            state = Digit::from_u8(logical_table::TPOZ[state as usize][digit as usize]);
+        }
+        state
     }
 
     pub fn to_string(&self) -> String {
@@ -77,6 +89,13 @@ impl Ternary {
 
 
 
+// impl Ord for Ternary {
+    //     assert!(ter("-+") < ter("0"));
+    // assert!(ter("0") < ter("++"));
+//     fn cmp(&self, other: &Self) -> Ordering {
+//         self.to_dec().cmp(&other.to_dec())
+//     }
+// }
 
 
 

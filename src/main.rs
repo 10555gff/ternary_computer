@@ -5,16 +5,13 @@ use ternary_utils::ternary_io::Ternary;
 
 fn main() {
 
-//     let d=a.full_adder(b, c);
+    //let t1 = Ternary::parse("++00--");
+    //let t2=t1.to_neg();
+    //let c=t1.sign();
 
-//    println!("result1 :{:?}",d);
-
-//     let digits = vec![Digit::N, Digit::Z, Digit::P];
-//     println!("result :{:?}",a.tor(b));
-
-
-
-    // let t1 = Ternary::parse("00+++");
+    //println!("{:?}",c);
+    // println!("{:?}",t2);
+    
 
     //let c=Ternary::from_dec(-5);
     // let t2 = Ternary::new(vec![1, 0, 2]); // + 0 -
@@ -42,16 +39,23 @@ fn main() {
 
 
 
-    // let a=Digit::P;
-    // let b=Digit::N;
-    // let c=a/b;
-    // println!("{:?}",c);
+    let a=Digit::P;
+    let b=Digit::P;
+    let c=Digit::P;
 
-    let a = Digit::P;
-    let b = Digit::N;
-    let result = a - b;
-    println!("sum = {:?}, carry = {:?}", result.sum, result.carry);
-    println!("{:?}",result);
+
+    let d=a.full_adder(b, c);
+
+    println!("result1 :{:?}",d.sum);
+
+
+    println!("result :{:?}",a.half_adder(b));
+
+    // let a = Digit::P;
+    // let b = Digit::N;
+    // let result = a - b;
+    // println!("sum = {:?}, carry = {:?}", result.sum, result.carry);
+    // println!("{:?}",result);
 
 
     

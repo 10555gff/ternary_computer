@@ -180,15 +180,15 @@ pub const fn t3and(self, b: Self,c: Self) -> Self {
     Digit::from_u8(n)
 }
 
-pub const fn half_adder(self, other: Self) -> (u8, u8) {
-    let sum = logical_table::TSUM[self as usize][other as usize];// 和
-    let carry=logical_table::TCONS[self as usize][other as usize];// 进位;
-    (carry,sum)
+pub const fn half_adder(self, other: Self) -> DigitResult {
+    let sum = Digit::from_u8(logical_table::TSUM[self as usize][other as usize]);// 和
+    let carry=Digit::from_u8(logical_table::TCONS[self as usize][other as usize]);// 进位;
+    DigitResult { carry, sum }
 }
-pub const fn full_adder(self, b: Self,c_in: Self) -> (u8, u8) {
-    let sum =logical_table::TFULLSUM[self as usize][b as usize][c_in as usize];// 和
-    let carry=logical_table::TFULLCONS[self as usize][b as usize][c_in as usize];// 进位
-    (carry,sum)
+pub const fn full_adder(self, b: Self,c_in: Self) -> DigitResult {
+    let sum =Digit::from_u8(logical_table::TFULLSUM[self as usize][b as usize][c_in as usize]);// 和
+    let carry=Digit::from_u8(logical_table::TFULLCONS[self as usize][b as usize][c_in as usize]);// 进位
+    DigitResult { carry, sum }
 }
 
 }
