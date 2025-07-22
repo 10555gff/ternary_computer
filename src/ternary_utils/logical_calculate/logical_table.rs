@@ -10,17 +10,6 @@
 ///       TNAND <------->  TAND
 
 
-// **非门(TNEG)逻辑表 输入T，输出1；输入0，输出0；输入1，输出T；**
-pub const TNEG:[u8; 3]= [0, 2, 1];
-// **右偏门(RIGHT_MUX)逻辑表(A+1) 输入T，输出0；输入0，输出1；输入1，输出T；**
-pub const RIGHT_MUX:[u8; 3]= [1, 2, 0];
-// **左偏门(LEFT_MUX)逻辑表(A-1)  输入T，输出1；输入0，输出T；输入1，输出0；**
-pub const LEFT_MUX: [u8; 3]= [2, 0, 1];
-// **最大门(MAX_MUX)逻辑表max(A,0) A与0比较，较大的输出 **
-pub const MAX_MUX:[u8; 3]= [0, 1, 0];
-// **最小门(MIN_MUX)逻辑表min(A,0) A与0比较，较小的输出 **
-pub const MIN_MUX:[u8; 3]= [0, 0, 2];
-
 // **或门(TOR)逻辑表MAX(A,B) 有1出1、双T出T、其余为0 **
 pub const TOR:[[u8; 3];3]= [
     [0, 1, 0],

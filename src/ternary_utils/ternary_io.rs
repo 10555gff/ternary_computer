@@ -1,60 +1,110 @@
-// 导入 ternary_logic 模块
-use crate::ternary_utils::logical_calculate;
+use crate::ternary_utils::logical_calculate::Digit;
+use core::ops::{Deref,Add, BitAnd, BitOr, BitXor, Div, Mul, Neg, Not, Sub, Shl, Shr};
 
-// **全局三进制字符映射**
-const BALANCE_INDEX:[char; 3]=['0', '+', '-'];
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct Ternary(pub Vec<Digit>);
 
-/// trit 向量转换为字符串,输入时检测过，输出则不检测
-fn decode_trits(trits: &[u8])->String {
-    trits.iter().map(|&t| BALANCE_INDEX[t as usize]).collect()
+impl Deref for Ternary {
+    type Target = Vec<Digit>;
+    fn deref(&self) -> &Self::Target {
+        &self.0
+    }
 }
 
-/// 字符串编码成 trit 向量，('0','+','-') 映射为 trit 数值 (0,1,2)
-fn encode_trits(input: &str) -> Vec<u8> {
-    input
-        .chars()
-        .map(|c| match c {
-            '0' => 0,
-            '+' => 1,
-            '-' => 2,
-            other => panic!("Invalid character in trit string: '{}'", other),
-        })
-        .collect()
+impl Ternary {
+    pub fn new(vec: Vec<u8>) -> Self {
+        Self(vec.into_iter().map(Digit::from_u8).collect())
+    }
+
+    pub fn parse(s: &str) -> Self {
+        Self(s.chars().map(Digit::from_char).collect())
+    }
+
+    pub fn to_string(&self) -> String {
+        self.iter().map(Digit::to_char).collect()
+    }
+
+    /// Converts the `Ternary` object to its integer (decimal) representation.
+    pub fn to_dec(&self) -> i64 {
+        let mut dec = 0;
+        for (rank, digit) in self.iter().rev().enumerate() {
+            dec += digit.to_i8() as i64 * 3_i64.pow(rank as u32);
+        }
+        dec
+    }
+
+    /// Creates a balanced ternary number from a decimal integer.
+    pub fn from_dec(mut dec: i64) -> Self {
+        if dec == 0 {return Self(vec![Digit::Z]);}
+
+        let mut repr = Vec::new();
+        while dec!=0 {
+            let remainder = dec % 3;
+            match remainder {
+                -1 | 2=>{
+                    repr.push(Digit::N);
+                    dec=(dec+1)/3;
+                },
+                -2 | 1=>{
+                    repr.push(Digit::P);
+                    dec=(dec-1)/3;
+                },
+                _=>{
+                    repr.push(Digit::Z);
+                    dec=dec/3;
+                },
+            }
+        }
+        repr.reverse();
+        Self(repr)
+    }
+
+    pub fn digits_print(&self) {
+        for d in self.iter() {
+            print!("{}", d.to_char());
+        }
+        println!();
+    }
+    pub fn digits_print_t(&self) {
+        for d in self.iter() {
+            print!("{}", d.to_char_t());
+        }
+        println!();
+    }
+
 }
 
-//平衡三进制栈多位乘法器输出
-pub fn test_stack_mul(s1: &str ,s2:&str){
-    let stack1: Vec<u8> = encode_trits(&s1);
-    let stack2: Vec<u8> = encode_trits(&s2);
 
-    let sum =logical_calculate::ternary_mul_base(stack1,stack2);
-    println!("结果: {}", decode_trits(&sum));
+
+
+
+
+
+
+impl Add<&Ternary> for &Ternary {
+    type Output = Ternary;
+
+    fn add(self, rhs: &Ternary) -> Self::Output {
+        Ternary::from_dec(
+            self.to_dec()
+                .checked_add(rhs.to_dec())
+                .expect("Overflow in addition."),
+        )
+    }
+}
+
+impl Add<Digit> for &Ternary {
+    type Output = Ternary;
+
+    fn add(self, rhs: Digit) -> Self::Output {
+        Ternary::from_dec(
+            self.to_dec()
+                .checked_add(rhs.to_i8() as i64)
+                .expect("Overflow in addition."),
+        )
+    }
 }
 
 
-//平衡三进制栈多位加器输出
-pub fn test_stack_adder(s1: &str ,s2:&str){
-    let stack1: Vec<u8> = encode_trits(&s1);
-    let stack2: Vec<u8> = encode_trits(&s2);
 
-    let sum =logical_calculate::ternary_stack_adder(stack1, stack2);
-    println!("结果: {}", decode_trits(&sum));
-}
-
-//平衡三进制全加器输出
-pub fn test_full_adder(a: u8, b: u8, c_in: u8){
-    let (sum, carry) =logical_calculate::ternary_full_adder(a, b, c_in);
-    println!(
-        "输入: a={} b={} c_in={} => 输出:sum={}, carry={}",
-        a, b, c_in, sum, carry
-    );
-}
-//平衡三进制半加器输出
-pub fn test_half_adder(a: u8, b: u8){
-    let (sum, carry) =logical_calculate::ternary_half_adder(a, b);
-    println!(
-        "输入: a={} b={} => 输出:sum={}, carry={}",
-        a, b, sum, carry
-    );
-}
 

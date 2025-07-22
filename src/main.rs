@@ -1,60 +1,40 @@
-mod ternary_utils;// 引入模块
-use ternary_utils::ternary_io;
-use ternary_utils::logical_calculate;
+mod ternary_utils;
+use ternary_utils::logical_calculate::Digit;
+use ternary_utils::ternary_io::Ternary;
+
 
 fn main() {
-    let a = 1;
-    let b = 1;
-    let c=1;
-    ternary_io::test_half_adder(a, b);//半加器
-    ternary_io::test_full_adder(a, b, c);//平衡全加器
+     let aa=Digit::P;
+//     let b=Digit::P;
+//     let c=Digit::P;
+//     let d=a.full_adder(b, c);
 
-    let s1=String::from("++++++++");
-    let s2=String::from("+0000000");
+//    println!("result1 :{:?}",d);
 
-    ternary_io::test_stack_adder(&s1, &s2);
-    ternary_io::test_stack_adder("++++++++", "+0000000");
-    ternary_io::test_stack_mul("++0+","+0++");
+//     let digits = vec![Digit::N, Digit::Z, Digit::P];
+//     println!("result :{:?}",a.tor(b));
 
 
-    let stack1=vec![1,0,1];
-    let stack2=vec![2,0];
+
+    // let t1 = Ternary::parse("00+++");
+
+    //let c=Ternary::from_dec(-5);
+    // let t2 = Ternary::new(vec![1, 0, 2]); // + 0 -
+    // println!("{:?}{:?}",t1,t2);
+
+    //println!("{}",t1.to_dec());
+    //println!("{:?}",c.to_string());
+    //c.digits_print();
+
+    let repr9 = Ternary::parse("+00");
+    let repr4 = Ternary::parse("++");
+    let repr13 = &repr9 + &repr4;
+    let repr17 = &repr13 + &repr4;
+    let repr34 = &repr17 + &repr17;
+
+    repr13.digits_print();
+    repr17.digits_print();
+    repr34.digits_print();
+
     
-    let re=logical_calculate::ternary_div_base(stack1,stack2);
-    print!("{:?}",re);
-
-
-
-    let stack1=vec![1,1];
-    let stack2=vec![1,1];
-    let result=logical_calculate::ternary_mul_base(stack1, stack2);
-    println!("乘法结果:{:?}",result);
-
-
-
-    let stack1=vec![1,0,1,1,0,1];
-    let stack2=vec![1,0,2];
-    let re=logical_calculate::ternary_div_choose(stack1,stack2);
-    println!("商和余数:{:?}",re);
-
-    let stack1=vec![1,0,1];//10/3
-    let stack2=vec![1,0];
-    let re=logical_calculate::ternary_div_choose(stack1,stack2);
-    println!("商和余数:{:?}",re);
-
-    let stack1=vec![1,2,1,1,2];//65/5
-    let stack2=vec![1,2,2];
-    let re=logical_calculate::ternary_div_choose(stack1,stack2);
-    println!("商和余数:{:?}",re);
-
-    let stack1=vec![1,0,1,1,0,1];//280/8
-    let stack2=vec![1,0,2];
-    let re=logical_calculate::ternary_div_choose(stack1,stack2);
-    println!("商和余数:{:?}",re);
-
-    let stack1=vec![1,2,1,1];//22/-5
-    let stack2=vec![2,1,1];
-    let re=logical_calculate::ternary_div_choose(stack1,stack2);
-    println!("商和余数:{:?}",re);
-
 }
