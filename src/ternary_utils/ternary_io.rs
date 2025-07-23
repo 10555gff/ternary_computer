@@ -1,4 +1,4 @@
-use super::logical_calculate::{logical_table,Digit};
+use super::logical_calculate::Digit;
 
 use core::ops::{Deref,Add, BitAnd, BitOr, BitXor, Div, Mul, Neg, Not, Sub, Shl, Shr};
 
@@ -29,9 +29,6 @@ impl Ternary {
         let mut state=Digit::Z;
         for &digit in self.iter() {
             state=state.tpoz(digit);
-            
-            
-            //= logical_table::TPOZ[state as usize][digit as usize];
         }
         state
     }

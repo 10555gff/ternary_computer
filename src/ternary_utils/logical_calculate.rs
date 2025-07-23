@@ -160,12 +160,10 @@ pub const fn tdiv(self, other: Self) -> Option<Self> {
     logical_table::TDIV[self as usize][other as usize]
 }
 pub const fn t3or(self, b: Self,c: Self) -> Self {
-    let n=logical_table::T3OR[self as usize][b as usize][c as usize];
-    Digit::from_u8(n)
+    logical_table::T3OR[self as usize][b as usize][c as usize]
 }
 pub const fn t3and(self, b: Self,c: Self) -> Self {
-    let n=logical_table::T3AND[self as usize][b as usize][c as usize];
-    Digit::from_u8(n)
+    logical_table::T3AND[self as usize][b as usize][c as usize]
 }
 
 pub const fn half_adder(self, other: Self) -> DigitResult {
@@ -174,8 +172,8 @@ pub const fn half_adder(self, other: Self) -> DigitResult {
     DigitResult { carry, sum }
 }
 pub const fn full_adder(self, b: Self,c_in: Self) -> DigitResult {
-    let sum =Digit::from_u8(logical_table::TFULLSUM[self as usize][b as usize][c_in as usize]);// 和
-    let carry=Digit::from_u8(logical_table::TFULLCONS[self as usize][b as usize][c_in as usize]);// 进位
+    let sum =logical_table::TFULLSUM[self as usize][b as usize][c_in as usize];// 和
+    let carry=logical_table::TFULLCONS[self as usize][b as usize][c_in as usize];// 进位
     DigitResult { carry, sum }
 }
 
@@ -243,7 +241,6 @@ impl Div<Digit> for Digit {
         self.tdiv(other).expect("Cannot divide by zero.")
     }
 }
-
 
 /// Adds two `Digit` values together and returns a `Digit` result.
 impl Add<Digit> for Digit {
