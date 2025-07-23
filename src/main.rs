@@ -7,16 +7,42 @@ fn main() {
 
     let t1 =Ternary::parse("--00+0++-");
     let t2 =Ternary::parse("-0-00++-+");
-    let t3=&t1 & &t2;
-    //let t3=t1.tand(&t2);
+    
+    // //对输出取反
+    // let t3=!&(t1.tor(&t2));
+    // let t5=t1.tnor(&t2);
+    
+    // //对输入取反
+    // let t3=t1.tnand(&t2);
+    // let (a,b)=(!&t1,!&t2);
+    // let t5=a.tor(&b);
 
+    // //对输入取反
+    // let t3=t1.tnand(&t2);
+    // let t5=(-t1).tor(&(-t2));
 
-    t1.digits_print();
-    t2.digits_print();
+    //对输入取反
+    let t3=t1.tnand(&t2);
+    let t5=(!t1).tor(&(!t2));
+ 
+
     t3.digits_print();
+    t5.digits_print();
 
 
+    let a = Ternary::parse_t("1T0");
 
+    let b = !a;    // 自动走 Not 所有权版本
+    println!("{:?}",b);
+    let c = !&b;   // 借用版本，避免拷贝
+    println!("{:?}",c);
+    let d = -b;    // 使用 Neg 所有权版本
+    let e = -&d;   // 使用 Neg 借用版本
+
+   
+
+
+//t1.digits_print();
 
     // let t3=&t1+t2;
 

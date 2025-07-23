@@ -1,5 +1,5 @@
 use super::logical_calculate::Digit;
-use core::ops::{Deref, DerefMut, Neg, Add, Sub, Mul, Div,BitAnd, BitOr, BitXor, Shl, Shr};
+use core::ops::{Deref, DerefMut, Neg, Not, Add, Sub, Mul, Div,BitAnd, BitOr, BitXor, Shl, Shr};
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct Ternary(pub Vec<Digit>);
@@ -24,6 +24,10 @@ impl Ternary {
 
     pub fn parse(s: &str) -> Self {
         Self(s.chars().map(Digit::from_char).collect())
+    }
+
+    pub fn parse_t(s: &str) -> Self {
+        Self(s.chars().map(Digit::from_char_t).collect())
     }
 
     pub fn to_neg(&self) -> Self {
@@ -189,6 +193,18 @@ impl Neg for Ternary {
     type Output = Ternary;
     fn neg(self) -> Self::Output {
         -&self
+    }
+}
+impl Not for &Ternary {
+    type Output = Ternary;
+    fn not(self) -> Self::Output {
+        -self
+    }
+}
+impl Not for Ternary {
+    type Output = Ternary;
+    fn not(self) -> Self::Output {
+        !&self
     }
 }
 
