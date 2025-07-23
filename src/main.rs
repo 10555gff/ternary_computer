@@ -17,14 +17,18 @@ fn main() {
     // let (a,b)=(!&t1,!&t2);
     // let t5=a.tor(&b);
 
-    // //对输入取反
-    // let t3=t1.tnand(&t2);
-    // let t5=(-t1).tor(&(-t2));
-
     //对输入取反
     let t3=t1.tnand(&t2);
-    let t5=(!t1).tor(&(!t2));
- 
+    //let t5 = (-&t1).tor(&(-&t2));
+    let t5 = (-&t1).tor(&- &t2);
+
+
+   // let t5=(-t1).tor(&(-t2));
+
+    // //对输入取反
+    // let t3=t1.tnand(&t2);
+    // let t5 = (!t1).tor(&!t2);
+
 
     t3.digits_print();
     t5.digits_print();
