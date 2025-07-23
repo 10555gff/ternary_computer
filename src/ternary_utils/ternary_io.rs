@@ -90,7 +90,7 @@ impl Ternary {
         println!();
     }
 
-
+    //左侧补0
     fn pad_left(&self, max_len: usize) -> Vec<Digit> {
         let mut result = Vec::with_capacity(max_len);
         let pad_len = max_len.saturating_sub(self.len());
@@ -98,7 +98,42 @@ impl Ternary {
         result.extend_from_slice(self);
         result
     }
+    /// 将两个三进制数填充到相同长度，返回填充后的副本
+    fn pad_pair(&self, other: &Self) -> (Vec<Digit>, Vec<Digit>) {
+        let max_len = self.len().max(other.len());
+        (self.pad_left(max_len), other.pad_left(max_len))
+    }
 
+    pub fn tor(&self, other: &Self) -> Self {
+        let (stack1, stack2) = self.pad_pair(other);
+        Self(stack1.into_iter().zip(stack2).map(|(a, b)| a.tor(b)).collect())
+    }
+
+    pub fn tand(&self, other: &Self) -> Self {
+        let (stack1, stack2) = self.pad_pair(other);
+        Self(stack1.into_iter().zip(stack2).map(|(a, b)| a.tand(b)).collect())
+    }
+
+    pub fn tnor(&self, other: &Self) -> Self {
+        let (stack1, stack2) = self.pad_pair(other);
+        Self(stack1.into_iter().zip(stack2).map(|(a, b)| a.tnor(b)).collect())
+    }
+
+    pub fn tnand(&self, other: &Self) -> Self {
+        let (stack1, stack2) = self.pad_pair(other);
+        Self(stack1.into_iter().zip(stack2).map(|(a, b)| a.tnand(b)).collect())
+    }
+
+    pub fn txor(&self, other: &Self) -> Self {
+        let (stack1, stack2) = self.pad_pair(other);
+        Self(stack1.into_iter().zip(stack2).map(|(a, b)| a.txor(b)).collect())
+    }
+
+    pub fn txnor(&self, other: &Self) -> Self {
+        let (stack1, stack2) = self.pad_pair(other);
+        Self(stack1.into_iter().zip(stack2).map(|(a, b)| a.txnor(b)).collect())
+    }
+    
     pub fn adder_base(&self, other: &Self, mut c_in: Digit)-> Self{
         let mut result:Vec<Digit> = Vec::new();//存储和
         let max_len=self.len().max(other.len());
@@ -210,3 +245,24 @@ impl Sub<Digit> for &Ternary {//&a - b，Ternary-Digit
 
 
 
+impl BitAnd<&Ternary> for &Ternary {
+    type Output = Ternary;
+
+    fn bitand(self, rhs: &Ternary) -> Self::Output {
+        self.tand(rhs)
+    }
+}
+impl BitOr<&Ternary> for &Ternary {
+    type Output = Ternary;
+
+    fn bitor(self, rhs: &Ternary) -> Self::Output {
+        self.tor(rhs)
+    }
+}
+impl BitXor<&Ternary> for &Ternary {
+    type Output = Ternary;
+
+    fn bitxor(self, rhs: &Ternary) -> Self::Output {
+        self.txor(rhs)
+    }
+}

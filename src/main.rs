@@ -5,15 +5,15 @@ use ternary_utils::logical_calculate::Digit;
 
 fn main() {
 
-    let t1 =Ternary::parse("+++++++0");
-    let t2 =-&t1;
+    let t1 =Ternary::parse("--00+0++-");
+    let t2 =Ternary::parse("-0-00++-+");
+    let t3=&t1 & &t2;
+    //let t3=t1.tand(&t2);
 
-
-    // let t3=&t1-t2;
 
     t1.digits_print();
     t2.digits_print();
-    // t3.digits_print();
+    t3.digits_print();
 
 
 
