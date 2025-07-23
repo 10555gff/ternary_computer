@@ -1,4 +1,5 @@
-use crate::ternary_utils::logical_calculate::{logical_table, Digit};
+use super::logical_calculate::{logical_table,Digit};
+
 use core::ops::{Deref,Add, BitAnd, BitOr, BitXor, Div, Mul, Neg, Not, Sub, Shl, Shr};
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
@@ -27,7 +28,10 @@ impl Ternary {
     pub fn to_sign(&self) -> Digit {
         let mut state=Digit::Z;
         for &digit in self.iter() {
-            state = Digit::from_u8(logical_table::TPOZ[state as usize][digit as usize]);
+            state=state.tpoz(digit);
+            
+            
+            //= logical_table::TPOZ[state as usize][digit as usize];
         }
         state
     }

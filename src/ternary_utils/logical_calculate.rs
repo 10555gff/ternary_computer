@@ -124,52 +124,40 @@ pub const fn min(self) -> Self {
 }
 
 pub const fn tor(self, other: Self) -> Self {
-    let n=logical_table::TOR[self as usize][other as usize];
-    Digit::from_u8(n)
+    logical_table::TOR[self as usize][other as usize]
 }
 pub const fn tand(self, other: Self) -> Self {
-    let n=logical_table::TAND[self as usize][other as usize];
-    Digit::from_u8(n)
+    logical_table::TAND[self as usize][other as usize]
 }
 pub const fn tnor(self, other: Self) -> Self {
-    let n=logical_table::TNOR[self as usize][other as usize];
-    Digit::from_u8(n)
+    logical_table::TNOR[self as usize][other as usize]
 }
 pub const fn tnand(self, other: Self) -> Self {
-    let n=logical_table::TNAND[self as usize][other as usize];
-    Digit::from_u8(n)
+    logical_table::TNAND[self as usize][other as usize]
 }
 pub const fn txor(self, other: Self) -> Self {
-    let n=logical_table::TXOR[self as usize][other as usize];
-    Digit::from_u8(n)
+    logical_table::TXOR[self as usize][other as usize]
 }
 pub const fn txnor(self, other: Self) -> Self {
-    let n=logical_table::TXNOR[self as usize][other as usize];
-    Digit::from_u8(n)
+    logical_table::TXNOR[self as usize][other as usize]
 }
 pub const fn tsum(self, other: Self) -> Self {
-    let n=logical_table::TSUM[self as usize][other as usize];
-    Digit::from_u8(n)
+    logical_table::TSUM[self as usize][other as usize]
 }
 pub const fn tcons(self, other: Self) -> Self {
-    let n=logical_table::TCONS[self as usize][other as usize];
-    Digit::from_u8(n)
+    logical_table::TCONS[self as usize][other as usize]
 }
 pub const fn tany(self, other: Self) -> Self {
-    let n=logical_table::TANY[self as usize][other as usize];
-    Digit::from_u8(n)
+    logical_table::TANY[self as usize][other as usize]
 }
 pub const fn tpoz(self, other: Self) -> Self {
-    let n=logical_table::TPOZ[self as usize][other as usize];
-    Digit::from_u8(n)
+    logical_table::TPOZ[self as usize][other as usize]
 }
 pub const fn tcmp(self, other: Self) -> Self {
-    let n=logical_table::TCMP[self as usize][other as usize];
-    Digit::from_u8(n)
+    logical_table::TCMP[self as usize][other as usize]
 }
-pub const fn tdiv(self, other: Self) -> Self {
-    let n=logical_table::TDIV[self as usize][other as usize];
-    Digit::from_u8(n)
+pub const fn tdiv(self, other: Self) -> Option<Self> {
+    logical_table::TDIV[self as usize][other as usize]
 }
 pub const fn t3or(self, b: Self,c: Self) -> Self {
     let n=logical_table::T3OR[self as usize][b as usize][c as usize];
@@ -181,8 +169,8 @@ pub const fn t3and(self, b: Self,c: Self) -> Self {
 }
 
 pub const fn half_adder(self, other: Self) -> DigitResult {
-    let sum = Digit::from_u8(logical_table::TSUM[self as usize][other as usize]);// 和
-    let carry=Digit::from_u8(logical_table::TCONS[self as usize][other as usize]);// 进位;
+    let sum = logical_table::TSUM[self as usize][other as usize];// 和
+    let carry=logical_table::TCONS[self as usize][other as usize];// 进位;
     DigitResult { carry, sum }
 }
 pub const fn full_adder(self, b: Self,c_in: Self) -> DigitResult {
@@ -218,19 +206,15 @@ impl Not for Digit {
 /// Performs a bitwise OR (`|`) operation between two `Digit` values and returns the result.
 impl BitOr for Digit {
     type Output = Self;
-    
     fn bitor(self, other: Self) -> Self::Output {
-        let n=logical_table::TOR[self as usize][other as usize];
-        Digit::from_u8(n)
+        self.tor(other)
     }
 }
 /// Performs a bitwise AND (`&`) operation between two `Digit` values and returns the result.
 impl BitAnd for Digit {
     type Output = Self;
-    
     fn bitand(self, other: Self) -> Self::Output {
-        let n=logical_table::TAND[self as usize][other as usize];
-        Digit::from_u8(n)
+        self.tand(other)
     }
 }
 
@@ -239,8 +223,7 @@ impl BitXor for Digit {
     type Output = Self;
     
     fn bitxor(self, other: Self) -> Self::Output {
-        let n=logical_table::TXOR[self as usize][other as usize];
-        Digit::from_u8(n)
+        self.txor(other)
     }
 }
 
@@ -249,8 +232,7 @@ impl Mul<Digit> for Digit {
     type Output = Digit;
 
     fn mul(self, other: Digit) -> Self::Output {
-        let n=logical_table::TXNOR[self as usize][other as usize];
-        Digit::from_u8(n)
+        self.txnor(other)
     }
 }
 /// Divides one `Digit` value by another and returns the result as a `Digit`.
@@ -258,9 +240,7 @@ impl Div<Digit> for Digit {
     type Output = Digit;
 
     fn div(self, other: Digit) -> Self::Output {
-        if other == Digit::Z {panic!("Cannot divide by zero.");}
-        let n=logical_table::TDIV[self as usize][other as usize];
-        Digit::from_u8(n)
+        self.tdiv(other).expect("Cannot divide by zero.")
     }
 }
 
@@ -270,9 +250,7 @@ impl Add<Digit> for Digit {
     type Output = DigitResult;
 
     fn add(self, other: Self) -> Self::Output {
-        let sum = Digit::from_u8(logical_table::TSUM[self as usize][other as usize]);
-        let carry = Digit::from_u8(logical_table::TCONS[self as usize][other as usize]);
-        DigitResult { carry, sum }
+        self.half_adder(other)
     }
 }
 
@@ -281,9 +259,7 @@ impl Sub<Digit> for Digit {
     type Output = DigitResult;
 
     fn sub(self, other: Digit) -> Self::Output {
-        let sum = Digit::from_u8(logical_table::TSUM[self as usize][-other as usize]);
-        let carry = Digit::from_u8(logical_table::TCONS[self as usize][-other as usize]);
-        DigitResult { carry, sum }
+        self.half_adder(-other)
     }
 }
 

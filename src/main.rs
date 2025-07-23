@@ -1,6 +1,6 @@
 mod ternary_utils;
-use ternary_utils::logical_calculate::Digit;
 use ternary_utils::ternary_io::Ternary;
+use ternary_utils::logical_calculate::Digit;
 
 
 fn main() {
@@ -54,11 +54,11 @@ fn main() {
 
     // println!("result :{:?}",a.half_adder(b));
 
-    // let a = Digit::P;
-    // let b = Digit::N;
-    // let result = a - b;
+    let a = Digit::P;
+    let b = Digit::N;
+    let result = a - b;
     // println!("sum = {:?}, carry = {:?}", result.sum, result.carry);
-    // println!("{:?}",result);
+    println!("{:?}",result);
 
 
     
