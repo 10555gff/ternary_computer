@@ -6,13 +6,14 @@ use ternary_utils::logical_calculate::Digit;
 fn main() {
 
     let t1 =Ternary::parse("+++++++0");
-    let t2 =Digit::P;
+    let t2 =-&t1;
 
-    let t3=&t1-t2;
 
-    // t1.digits_print();
-    // t2.digits_print();
-    t3.digits_print();
+    // let t3=&t1-t2;
+
+    t1.digits_print();
+    t2.digits_print();
+    // t3.digits_print();
 
 
 

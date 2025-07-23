@@ -1,5 +1,5 @@
 use super::logical_calculate::Digit;
-use core::ops::{Deref, DerefMut, Neg, Add, BitAnd, BitOr, BitXor, Div, Mul, Sub, Shl, Shr};
+use core::ops::{Deref, DerefMut, Neg, Add, Sub, Mul, Div,BitAnd, BitOr, BitXor, Shl, Shr};
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct Ternary(pub Vec<Digit>);
@@ -142,19 +142,18 @@ impl Ternary {
 
 }
 
-
-impl Neg for &Ternary {//不消耗原值，借用
+// 借用版本：核心实现
+impl Neg for &Ternary {
     type Output = Ternary;
-
     fn neg(self) -> Self::Output {
         self.to_neg()
     }
 }
-impl Neg for Ternary {//消耗原值，借用自身
+// 所有权版本：转发到借用
+impl Neg for Ternary {
     type Output = Ternary;
-
     fn neg(self) -> Self::Output {
-        (&self).to_neg()
+        -&self
     }
 }
 
