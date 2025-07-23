@@ -84,31 +84,57 @@ impl Ternary {
         println!();
     }
 
+
+    fn pad_left(&self, max_len: usize) -> Vec<Digit> {
+        let mut result = Vec::with_capacity(max_len);
+        let pad_len = max_len.saturating_sub(self.len());
+        result.extend(std::iter::repeat(Digit::Z).take(pad_len));
+        result.extend_from_slice(self);
+        result
+    }
+
+    pub fn adder_base(&self, other: &Self, mut c_in: Digit)-> Self{
+        let mut result:Vec<Digit> = Vec::new();//存储和
+
+        let max_len=self.len().max(other.len());
+        let stack1=self.pad_left(max_len);
+        let stack2=other.pad_left(max_len);
+
+        for i in (0..max_len).rev(){
+            let (v1,v2)=(stack1[i],stack2[i]);
+            let fulladder_out=v1.full_adder(v2, c_in);
+            result.push(fulladder_out.sum);//存结果
+            c_in=fulladder_out.carry;//进位传递
+        }
+        if c_in!=Digit::Z{
+            result.push(c_in);
+        }
+
+        result.reverse(); // 反转，从高位到低位排列
+        Self(result)
+    }
+
 }
 
 
 
 
-// impl Ord for Ternary {
-    //     assert!(ter("-+") < ter("0"));
-    // assert!(ter("0") < ter("++"));
-//     fn cmp(&self, other: &Self) -> Ordering {
-//         self.to_dec().cmp(&other.to_dec())
-//     }
-// }
+
+
+
+
+
+
+
+
 
 
 
 
 impl Add<&Ternary> for &Ternary {
     type Output = Ternary;
-
     fn add(self, rhs: &Ternary) -> Self::Output {
-        Ternary::from_dec(
-            self.to_dec()
-                .checked_add(rhs.to_dec())
-                .expect("Overflow in addition."),
-        )
+        self.adder_base(rhs, Digit::Z)
     }
 }
 
