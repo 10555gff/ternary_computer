@@ -5,8 +5,15 @@ use ternary_utils::logical_calculate::Digit;
 
 fn main() {
 
-    let t1 =Ternary::parse("--00+0++-");
-    let t2 =Ternary::parse("-0-00++-+");
+    let t1 =Ternary::parse("++0+++++++++++");
+    let t2 =Ternary::parse("+0++---------");
+ //   let t3=t1.mul_base(&t2);
+    let t4=&t1 * &t2;
+    // t3.digits_print();
+    t4.digits_print();
+    println!("{}",t4.to_dec());
+
+
     
     // //对输出取反
     // let t3=!&(t1.tor(&t2));
@@ -18,30 +25,30 @@ fn main() {
     // let t5=a.tor(&b);
 
     //对输入取反
-    let t3=t1.tnand(&t2);
-    //let t5 = (-&t1).tor(&(-&t2));
-    let t5 = (-&t1).tor(&- &t2);
+//     let t3=t1.tnand(&t2);
+//     //let t5 = (-&t1).tor(&(-&t2));
+//     let t5 = (-&t1).tor(&- &t2);
 
 
-   // let t5=(-t1).tor(&(-t2));
+//    // let t5=(-t1).tor(&(-t2));
 
-    // //对输入取反
-    // let t3=t1.tnand(&t2);
-    // let t5 = (!t1).tor(&!t2);
-
-
-    t3.digits_print();
-    t5.digits_print();
+//     // //对输入取反
+//     // let t3=t1.tnand(&t2);
+//     // let t5 = (!t1).tor(&!t2);
 
 
-    let a = Ternary::parse_t("1T0");
+//     t3.digits_print();
+//     t5.digits_print();
 
-    let b = !a;    // 自动走 Not 所有权版本
-    println!("{:?}",b);
-    let c = !&b;   // 借用版本，避免拷贝
-    println!("{:?}",c);
-    let d = -b;    // 使用 Neg 所有权版本
-    let e = -&d;   // 使用 Neg 借用版本
+
+//     let a = Ternary::parse_t("1T0");
+
+//     let b = !a;    // 自动走 Not 所有权版本
+//     println!("{:?}",b);
+//     let c = !&b;   // 借用版本，避免拷贝
+//     println!("{:?}",c);
+//     let d = -b;    // 使用 Neg 所有权版本
+//     let e = -&d;   // 使用 Neg 借用版本
 
    
 

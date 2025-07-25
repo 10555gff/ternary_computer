@@ -157,7 +157,6 @@ impl Ternary {
         Self(result)
     }
 
-
     pub fn adder_stack(mut self, mut other: Self, mut c_in: Digit) -> Self {
         let mut result:Vec<Digit> = Vec::new();//存储和
         
@@ -176,6 +175,21 @@ impl Ternary {
 
         result.reverse(); // 反转，从高位到低位排列
         Self(result)
+    }
+
+    pub fn mul_base(&self, other: &Self)-> Self{
+        let mut result:Ternary=Ternary::new(vec![0]);
+        for (shift, &m2) in other.iter().rev().enumerate() {
+            let mut part;
+            match m2 {
+                Digit::Z=>continue,
+                Digit::P=>part=self.clone(),
+                Digit::N=>part=self.to_neg(),
+            }
+            part.resize(self.len()+shift, Digit::Z);//高效偏移，低位补0
+            result=result.adder_base(&part, Digit::Z);//加入当前部分积
+        }
+        result
     }
 
 
@@ -207,6 +221,8 @@ impl Not for Ternary {
         !&self
     }
 }
+
+
 
 impl Add<&Ternary> for &Ternary {//&a + &b，不消耗原值，适合重用,借用 和 借用
     type Output = Ternary;
@@ -259,6 +275,14 @@ impl Sub<Digit> for &Ternary {//&a - b，Ternary-Digit
 }
 
 
+
+impl Mul<&Ternary> for &Ternary {//&a + &b，不消耗原值，适合重用,借用 和 借用
+    type Output = Ternary;
+
+    fn mul(self, rhs: &Ternary) -> Self::Output {
+        self.mul_base(rhs)
+    }
+}
 
 
 impl BitAnd<&Ternary> for &Ternary {
