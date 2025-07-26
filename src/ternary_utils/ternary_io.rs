@@ -38,12 +38,8 @@ impl Ternary {
         self.iter().map(Digit::to_char).collect()
     }
 
-    pub fn to_sign(&self) -> Digit {
-        let mut state=Digit::Z;
-        for &digit in self.iter() {
-            state=state.tpoz(digit);
-        }
-        state
+    pub fn to_sign(&self) -> Digit {//符号折叠得答案
+        self.iter().copied().fold(Digit::Z, Digit::tpoz)
     }
 
     /// Converts the `Ternary` object to its integer (decimal) representation.
@@ -136,6 +132,15 @@ impl Ternary {
     pub fn txnor(&self, other: &Self) -> Self {
         let (stack1, stack2) = self.pad_pair(other);
         Self(stack1.into_iter().zip(stack2).map(|(a, b)| a.txnor(b)).collect())
+    }
+
+    /// 比较两个平衡三进制大小（从高位到低位,位数要相同）
+    pub fn tcmp(&self, other: &Self) -> Digit {
+        for (&a, &b) in self.iter().zip(other.iter()) {
+            let d = a.tcmp(b);
+            if Digit::Z != d {return d;}
+        }
+        Digit::Z
     }
     
     pub fn adder_base(&self, other: &Self, mut c_in: Digit)-> Self{

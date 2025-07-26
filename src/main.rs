@@ -5,13 +5,28 @@ use ternary_utils::logical_calculate::Digit;
 
 fn main() {
 
-    let t1 =Ternary::parse("++0+++++++++++");
-    let t2 =Ternary::parse("+0++---------");
- //   let t3=t1.mul_base(&t2);
-    let t4=&t1 * &t2;
-    // t3.digits_print();
-    t4.digits_print();
-    println!("{}",t4.to_dec());
+    let t1 =Ternary::parse("+0-");
+    let t2 =Ternary::parse("+0+");
+
+    let t3=t1.tcmp(&t2);
+    println!("{:?}",t3);
+
+
+
+
+
+
+
+
+
+
+
+
+//  //   let t3=t1.mul_base(&t2);
+//     let t4=&t1 * &t2;
+//     // t3.digits_print();
+//     t4.digits_print();
+//     println!("{}",t4.to_dec());
 
 
     
