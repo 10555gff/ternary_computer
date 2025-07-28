@@ -233,9 +233,8 @@ impl Ternary {
 
         //println!("")
 
-        let b=(div_result.remainder[0]!=Digit::Z) |
-        (!divisor.in_open_interval(&div_result.remainder));
-//println!("aaaaaaaaaaaaaaaaaaa{}",(div_result.remainder[0]!=Digit::Z));
+        let b=div_result.remainder[0]!=Digit::Z;
+
         if b{//未符合半封闭区间，第二轮减法
             println!("aaaaaaaaaaaaaaaaaaa");
             current_quot=current_quot.adder_base(&current_quot, Digit::Z);//双倍商
