@@ -231,7 +231,13 @@ impl Ternary {
         //第一轮减法
         div_result.remainder=delta.adder_base(&div_result.remainder, Digit::Z);
 
-        if !divisor.in_open_interval(&div_result.remainder){//未符合半封闭区间，第二轮减法
+        //println!("")
+
+        let b=(div_result.remainder[0]!=Digit::Z) |
+        (!divisor.in_open_interval(&div_result.remainder));
+//println!("aaaaaaaaaaaaaaaaaaa{}",(div_result.remainder[0]!=Digit::Z));
+        if b{//未符合半封闭区间，第二轮减法
+            println!("aaaaaaaaaaaaaaaaaaa");
             current_quot=current_quot.adder_base(&current_quot, Digit::Z);//双倍商
             div_result.remainder=delta.adder_base(&div_result.remainder, Digit::Z);
         }
@@ -245,7 +251,7 @@ impl Ternary {
         let remainder = Ternary::new_d(self[..other.len()].to_vec());
         let mut div_result:DivResult=DivResult{quotient,remainder};
         let fixed=self.len().saturating_sub(other.len());
-        println!("{}",fixed);
+        //println!("{}",fixed);
         for shift in (0..=fixed).rev(){
             Self::div_step(&mut div_result, other, shift);//更新余数与商
             println!("bb{:?}",div_result);
