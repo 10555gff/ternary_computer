@@ -3,6 +3,12 @@ use core::ops::{Deref, DerefMut, Neg, Not, Add, Sub, Mul, Div,BitAnd, BitOr, Bit
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct Ternary(pub Vec<Digit>);
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct DivResult {
+    pub quotient: Ternary,
+    pub remainder: Ternary,
+}
+
 
 impl Deref for Ternary {
     type Target = Vec<Digit>;
@@ -20,6 +26,10 @@ impl DerefMut for Ternary {
 impl Ternary {
     pub fn new(vec: Vec<u8>) -> Self {
         Self(vec.into_iter().map(Digit::from_u8).collect())
+    }
+
+    pub fn new_d(digits: Vec<Digit>) -> Self {
+        Self(digits)
     }
 
     pub fn parse(s: &str) -> Self {
@@ -142,6 +152,12 @@ impl Ternary {
         }
         Digit::Z
     }
+    /// 判断是否在半封闭区间(neg与self互为相反数)，是则True,反之False
+    fn in_open_interval(&self,other: &Self) -> bool {
+        let neg=self.to_neg();
+        // 判断 x ∈ (min, max)
+        other.tcmp(self)==neg.tcmp(other)
+    }
     
     pub fn adder_base(&self, other: &Self, mut c_in: Digit)-> Self{
         let mut result:Vec<Digit> = Vec::new();//存储和
@@ -197,6 +213,52 @@ impl Ternary {
         result
     }
 
+    //两步试商法 传入被除数与除数及商的位移值
+    fn div_step(div_result:&mut DivResult,divisor: &Ternary,shift: usize){
+        let Some(digit) =div_result.remainder[0].tdiv(divisor[0]) else {//获取商的符号
+            panic!("除数不能为 0");
+        };
+        let delta;
+        match digit {
+            Digit::Z=>return,// 本轮商为 0，跳过
+            Digit::P=>delta=divisor.to_neg(),
+            Digit::N=>delta=divisor.clone(),
+        }
+        // 构造商位，位置靠左
+        let mut current_quot = Ternary::new_d(vec![digit]);
+        current_quot.resize(shift + 1, Digit::Z);
+
+        //第一轮减法
+        div_result.remainder=delta.adder_base(&div_result.remainder, Digit::Z);
+
+        if !divisor.in_open_interval(&div_result.remainder){//未符合半封闭区间，第二轮减法
+            current_quot=current_quot.adder_base(&current_quot, Digit::Z);//双倍商
+            div_result.remainder=delta.adder_base(&div_result.remainder, Digit::Z);
+        }
+        div_result.quotient=current_quot.adder_base(&div_result.quotient, Digit::Z);
+    }
+
+
+    ///多位三进制除法器：判断版
+    pub fn div_base(&self, other: &Self)-> DivResult{
+        let quotient = Ternary::new_d(vec![Digit::Z]);
+        let remainder = Ternary::new_d(self[..other.len()].to_vec());
+        let mut div_result:DivResult=DivResult{quotient,remainder};
+        let fixed=self.len().saturating_sub(other.len());
+        println!("{}",fixed);
+        for shift in (0..=fixed).rev(){
+            Self::div_step(&mut div_result, other, shift);//更新余数与商
+            println!("bb{:?}",div_result);
+
+            if shift!=0{
+                let d = self.len() - shift;
+                div_result.remainder.remove(0);
+                div_result.remainder.push(self[d]);
+            }
+        }
+        div_result
+    }
+    
 
 }
 
@@ -281,11 +343,19 @@ impl Sub<Digit> for &Ternary {//&a - b，Ternary-Digit
 
 
 
-impl Mul<&Ternary> for &Ternary {//&a + &b，不消耗原值，适合重用,借用 和 借用
+impl Mul<&Ternary> for &Ternary {//&a * &b，不消耗原值，适合重用,借用 和 借用
     type Output = Ternary;
 
     fn mul(self, rhs: &Ternary) -> Self::Output {
         self.mul_base(rhs)
+    }
+}
+
+impl Div<&Ternary> for &Ternary {//&a / &b，不消耗原值，适合重用,借用 和 借用
+    type Output = DivResult;
+
+    fn div(self, rhs: &Ternary) -> Self::Output {
+        self.div_base(rhs)
     }
 }
 
