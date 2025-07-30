@@ -154,26 +154,18 @@ impl Ternary {
         Digit::Z
     }
 
-    //a==b
-    pub fn eq(&self, other: &Self)->bool{
-        let (v1, v2) = self.pad_pair(other);
-        match Self::tcmp(v1,v2){
-            Digit::Z=>return true,
-            _=>return false,
+    //去除前导零
+    pub fn trim_leading_zeros(&self) -> &[Digit] {
+        let mut start = 0;
+        for (i, &digit) in self.iter().enumerate() {
+            if digit != Digit::Z {
+                start = i;
+                break;
+            }
         }
+        &self[start..]
     }
 
-    //a!=b
-    pub fn ne(&self, other: &Self)->bool{
-        let (v1, v2) = self.pad_pair(other);
-        match Self::tcmp(v1,v2){
-            Digit::P | Digit::N=>return true,
-            _=>return false,
-        }
-    }
-
-
-    
     pub fn adder_base(&self, other: &Self, mut c_in: Digit)-> Self{
         let mut result:Vec<Digit> = Vec::new();//存储和
         let max_len=self.len().max(other.len());
@@ -239,19 +231,14 @@ impl Ternary {
             Digit::P=>delta=divisor.to_neg(),
             Digit::N=>delta=divisor.clone(),
         }
-        // 构造商位，位置靠左
-        let mut current_quot = Ternary::new_d(vec![digit]);
-        current_quot.resize(shift + 1, Digit::Z);
+        // 构造商位，预分配容量
+        let mut current_quot = Ternary::new_d(vec![Digit::Z; shift + 1]);
+        current_quot[0] = digit;
 
         //第一轮减法
         div_result.remainder=delta.adder_base(&div_result.remainder, Digit::Z);
 
-        //println!("")
-
-        let b=div_result.remainder[0]!=Digit::Z;
-
-        if b{//未符合半封闭区间，第二轮减法
-            println!("aaaaaaaaaaaaaaaaaaa");
+        if div_result.remainder.get(0) != Some(&Digit::Z){//余数最高位不为0，第二轮减法
             current_quot=current_quot.adder_base(&current_quot, Digit::Z);//双倍商
             div_result.remainder=delta.adder_base(&div_result.remainder, Digit::Z);
         }
@@ -265,10 +252,9 @@ impl Ternary {
         let remainder = Ternary::new_d(self[..other.len()].to_vec());
         let mut div_result:DivResult=DivResult{quotient,remainder};
         let fixed=self.len().saturating_sub(other.len());
-        //println!("{}",fixed);
         for shift in (0..=fixed).rev(){
             Self::div_step(&mut div_result, other, shift);//更新余数与商
-            println!("bb{:?}",div_result);
+            //println!("bb{:?}",div_result);
 
             if shift!=0{
                 let d = self.len() - shift;
@@ -402,8 +388,8 @@ impl BitXor<&Ternary> for &Ternary {
     }
 }
 
-//使用 == 和 != 运算符
-impl PartialEq for Ternary {
+
+impl PartialEq for Ternary {//使用 == 和 != 运算符
     fn eq(&self, other: &Self) -> bool {
         let (v1, v2) = self.pad_pair(other);
         match Self::tcmp(v1, v2) {
@@ -412,10 +398,7 @@ impl PartialEq for Ternary {
         }
     }
 }
-
-
-//实现 Ord trait 的类型,以支持 >、<、>=、<= 操作
-impl Ord for Ternary {
+impl Ord for Ternary {//实现 Ord trait 的类型,以支持 >、<、>=、<= 操作
     fn cmp(&self, other: &Self) -> Ordering {
         let (v1, v2) = self.pad_pair(other);
         match Self::tcmp(v1, v2) {
@@ -425,8 +408,6 @@ impl Ord for Ternary {
         }
     }
 }
-
-
 impl PartialOrd for Ternary {
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
         Some(self.cmp(other))

@@ -4,19 +4,20 @@ use ternary_utils::logical_calculate::Digit;
 
 
 fn main() {
-    let t1 =Ternary::parse("++++-0");
-    let t2 =Ternary::parse("++++-0");
+    let t1 =Ternary::parse("++00+++++++++0+++");
+    let t2 =Ternary::parse("+0-+++");
+    // let t5 =Ternary::parse("++++-0");
     // let t3 =t1==t2;
-    // let t4=t1!=t2;
-    // println!("{} {}",t3,t4);
+    // let t4=t1.trim_leading_zeros();
+    // println!("{:?} ",t4);
 
-    if t1 >= t2 {
-    println!("t1 is greater than t2");
-} else if t1 <= t2 {
-    println!("t1 is less than t2");
-} else {
-    println!("t1 and t2 are equal");
-}
+//     if t1 >= t2 {
+//     println!("t1 is greater than t2");
+// } else if t1 <= t2 {
+//     println!("t1 is less than t2");
+// } else {
+//     println!("t1 and t2 are equal");
+// }
 
 //     let t1 = Ternary::new(vec![Digit::P, Digit::N]);
 // let t2 = Ternary::new(vec![Digit::P, Digit::N]);
@@ -24,11 +25,12 @@ fn main() {
 
 
     // 
-    // println!("商和余数:{:?}",t3);
+    let t3 =&t1 / &t2;
+    println!("商和余数:{:?}",t3);
 
 
-    // let (a,b,c)=(t1.to_dec(),t2.to_dec(),t3.quotient.to_dec());
-    // println!("{}/{}={}",a,b,c);
+    let (a,b,c)=(t1.to_dec(),t2.to_dec(),t3.quotient.to_dec());
+    println!("{}/{}={}",a,b,c);
 //  //   let t3=t1.mul_base(&t2);
 //     let t4=&t1 * &t2;
 //     // t3.digits_print();
