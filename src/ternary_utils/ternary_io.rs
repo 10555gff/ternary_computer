@@ -146,7 +146,7 @@ impl Ternary {
     }
 
     /// 比较两个平衡三进制大小（从高位到低位,位数要相同）
-    pub fn tcmp(stack1:Vec<Digit>, stack2:Vec<Digit>) -> Digit {
+    pub fn tcmp(stack1:&[Digit], stack2:&[Digit]) -> Digit {
         for (&a, &b) in stack1.iter().zip(stack2.iter()) {
             let d = a.tcmp(b);
             if Digit::Z != d {return d;}
@@ -392,7 +392,7 @@ impl BitXor<&Ternary> for &Ternary {
 impl PartialEq for Ternary {//使用 == 和 != 运算符
     fn eq(&self, other: &Self) -> bool {
         let (v1, v2) = self.pad_pair(other);
-        match Self::tcmp(v1, v2) {
+        match Self::tcmp(&v1, &v2) {
             Digit::Z => true,
             _ => false,
         }
@@ -401,7 +401,7 @@ impl PartialEq for Ternary {//使用 == 和 != 运算符
 impl Ord for Ternary {//实现 Ord trait 的类型,以支持 >、<、>=、<= 操作
     fn cmp(&self, other: &Self) -> Ordering {
         let (v1, v2) = self.pad_pair(other);
-        match Self::tcmp(v1, v2) {
+        match Self::tcmp(&v1, &v2) {
             Digit::Z => Ordering::Equal,//当前对象等于目标对象
             Digit::P => Ordering::Greater, //当前对象大于目标对象
             Digit::N => Ordering::Less,//当前对象小于目标对象

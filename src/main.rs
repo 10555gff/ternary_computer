@@ -5,7 +5,7 @@ use ternary_utils::logical_calculate::Digit;
 
 fn main() {
     let t1 =Ternary::parse("++00+++++++++0+++");
-    let t2 =Ternary::parse("+0-+++");
+    let t2 =Ternary::parse("+0-");
     // let t5 =Ternary::parse("++++-0");
     // let t3 =t1==t2;
     // let t4=t1.trim_leading_zeros();
