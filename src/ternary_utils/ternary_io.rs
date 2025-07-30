@@ -1,7 +1,8 @@
 use super::logical_calculate::Digit;
+use std::cmp::{Ordering, PartialOrd};
 use core::ops::{Deref, DerefMut, Neg, Not, Add, Sub, Mul, Div,BitAnd, BitOr, BitXor, Shl, Shr};
 
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+#[derive(Debug, Clone, Eq, Hash)]
 pub struct Ternary(pub Vec<Digit>);
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct DivResult {
@@ -145,19 +146,33 @@ impl Ternary {
     }
 
     /// 比较两个平衡三进制大小（从高位到低位,位数要相同）
-    pub fn tcmp(&self, other: &Self) -> Digit {
-        for (&a, &b) in self.iter().zip(other.iter()) {
+    pub fn tcmp(stack1:Vec<Digit>, stack2:Vec<Digit>) -> Digit {
+        for (&a, &b) in stack1.iter().zip(stack2.iter()) {
             let d = a.tcmp(b);
             if Digit::Z != d {return d;}
         }
         Digit::Z
     }
-    /// 判断是否在半封闭区间(neg与self互为相反数)，是则True,反之False
-    fn in_open_interval(&self,other: &Self) -> bool {
-        let neg=self.to_neg();
-        // 判断 x ∈ (min, max)
-        other.tcmp(self)==neg.tcmp(other)
+
+    //a==b
+    pub fn eq(&self, other: &Self)->bool{
+        let (v1, v2) = self.pad_pair(other);
+        match Self::tcmp(v1,v2){
+            Digit::Z=>return true,
+            _=>return false,
+        }
     }
+
+    //a!=b
+    pub fn ne(&self, other: &Self)->bool{
+        let (v1, v2) = self.pad_pair(other);
+        match Self::tcmp(v1,v2){
+            Digit::P | Digit::N=>return true,
+            _=>return false,
+        }
+    }
+
+
     
     pub fn adder_base(&self, other: &Self, mut c_in: Digit)-> Self{
         let mut result:Vec<Digit> = Vec::new();//存储和
@@ -384,5 +399,36 @@ impl BitXor<&Ternary> for &Ternary {
 
     fn bitxor(self, rhs: &Ternary) -> Self::Output {
         self.txor(rhs)
+    }
+}
+
+//使用 == 和 != 运算符
+impl PartialEq for Ternary {
+    fn eq(&self, other: &Self) -> bool {
+        let (v1, v2) = self.pad_pair(other);
+        match Self::tcmp(v1, v2) {
+            Digit::Z => true,
+            _ => false,
+        }
+    }
+}
+
+
+//实现 Ord trait 的类型,以支持 >、<、>=、<= 操作
+impl Ord for Ternary {
+    fn cmp(&self, other: &Self) -> Ordering {
+        let (v1, v2) = self.pad_pair(other);
+        match Self::tcmp(v1, v2) {
+            Digit::Z => Ordering::Equal,//当前对象等于目标对象
+            Digit::P => Ordering::Greater, //当前对象大于目标对象
+            Digit::N => Ordering::Less,//当前对象小于目标对象
+        }
+    }
+}
+
+
+impl PartialOrd for Ternary {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        Some(self.cmp(other))
     }
 }
