@@ -1,6 +1,6 @@
 mod ternary_utils;
 use ternary_utils::ternary_io::Ternary;
-use ternary_utils::logical_calculate::Digit;
+//use ternary_utils::logical_calculate::Digit;
 
 
 fn main() {
@@ -11,7 +11,7 @@ fn main() {
     // let t4=t1.trim_leading_zeros();
     // println!("{:?} ",t4);
 
-//     if t1 >= t2 {
+//     if t1 > t2 {
 //     println!("t1 is greater than t2");
 // } else if t1 <= t2 {
 //     println!("t1 is less than t2");

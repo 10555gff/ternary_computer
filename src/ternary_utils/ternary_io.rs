@@ -2,7 +2,7 @@ use super::logical_calculate::Digit;
 use std::cmp::{Ordering, PartialOrd};
 use core::ops::{Deref, DerefMut, Neg, Not, Add, Sub, Mul, Div,BitAnd, BitOr, BitXor, Shl, Shr};
 
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+#[derive(Debug, Clone, Eq, Hash)]
 pub struct Ternary(pub Vec<Digit>);
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct DivResult {
@@ -146,8 +146,8 @@ impl Ternary {
     }
 
     /// 比较两个平衡三进制大小（从高位到低位,位数要相同）
-    pub fn tcmp(&self, other: &Self) -> Digit {
-        for (&a, &b) in self.iter().zip(other.iter()) {
+    pub fn tcmp(v1:&[Digit], v2: &[Digit]) -> Digit {
+        for (&a, &b) in v1.iter().zip(v2.iter()) {
             let d = a.tcmp(b);
             if Digit::Z != d {return d;}
         }
@@ -238,10 +238,7 @@ impl Ternary {
         //第一轮减法
         div_result.remainder=delta.adder_base(&div_result.remainder, Digit::Z);
 
-        let b=div_result.remainder[0]!=Digit::Z;
-
-        if b{//余数最高位不为0，第二轮减法
-            println!("aaaaaaaaaaaaaaaaaaa");
+        if div_result.remainder[0] != Digit::Z{//余数最高位不为0，第二轮减法
             current_quot=current_quot.adder_base(&current_quot, Digit::Z);//双倍商
             div_result.remainder=delta.adder_base(&div_result.remainder, Digit::Z);
         }
