@@ -155,15 +155,8 @@ impl Ternary {
     }
 
     //去除前导零
-    pub fn trim_leading_zeros(&self) -> &[Digit] {
-        let mut start = 0;
-        for (i, &digit) in self.iter().enumerate() {
-            if digit != Digit::Z {
-                start = i;
-                break;
-            }
-        }
-        &self[start..]
+    pub fn trim_zeros(&self) -> &[Digit] {
+        self.iter().position(|&digit| digit != Digit::Z).map_or(&[Digit::Z], |i| &self[i..])
     }
     
     pub fn adder_base(&self, other: &Self, mut c_in: Digit)-> Self{
@@ -225,19 +218,14 @@ impl Ternary {
         let Some(digit) =div_result.remainder[0].tdiv(divisor[0]) else {//获取商的符号
             panic!("除数不能为 0");
         };
-        let delta;
-        match digit {
+        let delta=match digit {
             Digit::Z=>return,// 本轮商为 0，跳过
-            Digit::P=>delta=divisor.to_neg(),
-            Digit::N=>delta=divisor.clone(),
-        }
-        // 构造商位，预分配容量
+            Digit::P=>divisor.to_neg(),
+            Digit::N=>divisor.clone(),
+        };
         let mut current_quot = Ternary::new_d(vec![Digit::Z; shift + 1]);
-        current_quot[0] = digit;
-
-        //第一轮减法
-        div_result.remainder=delta.adder_base(&div_result.remainder, Digit::Z);
-
+        current_quot[0] = digit;// 构造商位，预分配容量
+        div_result.remainder=delta.adder_base(&div_result.remainder, Digit::Z);//第一轮减法
         if div_result.remainder[0] != Digit::Z{//余数最高位不为0，第二轮减法
             current_quot=current_quot.adder_base(&current_quot, Digit::Z);//双倍商
             div_result.remainder=delta.adder_base(&div_result.remainder, Digit::Z);
