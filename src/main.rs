@@ -8,8 +8,8 @@ fn main() {
     let t2 =Ternary::parse("+0-");
     // let t5 =Ternary::parse("++++-0");
     // let t3 =t1==t2;
-    let t4=t1.trim_zeros();
-    println!("{:?} ",t4);
+    // let t4=t1.trim_zeros();
+    // println!("{:?} ",t4);
 
 //     if t1 > t2 {
 //     println!("t1 is greater than t2");

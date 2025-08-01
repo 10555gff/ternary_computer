@@ -1,6 +1,14 @@
 [package]
-name = "ternary_computer"
+name = "ternary_arithmetic"
 version = "0.1.0"
 edition = "2024"
+authors = ["ctllo 1073245193@qq.com"]
+description = "blanceed ternary use array logic gate to arithmetic"
+license = "MIT"
+repository = ""
+homepage = ""
+readme = "README.md"
+keywords = ["ternary", "balanced_ternary", "ternary_arithmetic", "ternary_logic", "logic"]
+categories = ["mathematics"]
 
 [dependencies]
