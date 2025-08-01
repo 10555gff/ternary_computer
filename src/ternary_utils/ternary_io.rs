@@ -1,6 +1,6 @@
 use super::logical_calculate::Digit;
 use std::cmp::{Ordering, PartialOrd};
-use core::ops::{Deref, DerefMut, Neg, Not, Add, Sub, Mul, Div,BitAnd, BitOr, BitXor, Shl, Shr};
+use core::ops::{Deref, DerefMut, Neg, Not, Add, Sub, Mul, Div,BitAnd, BitOr, BitXor};
 
 #[derive(Debug, Clone, Eq, Hash)]
 pub struct Ternary(pub Vec<Digit>);
