@@ -9,7 +9,7 @@ a numeral system with digits `-1`, `0`, and `+1`.
 
 Add this to your `Cargo.toml`:
 
-```toml
+```rust
 cargo add ternary_arithmetic
 ```
 
