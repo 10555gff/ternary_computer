@@ -1,5 +1,5 @@
 [package]
-name = "ternary-arithmetic"
+name = "ternary_arithmetic"
 version = "0.1.1"
 edition = "2024"
 authors = ["ctllo 1073245193@qq.com"]

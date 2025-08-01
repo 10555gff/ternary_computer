@@ -3,5 +3,5 @@
 version = 4
 
 [[package]]
-name = "ternary-arithmetic"
+name = "ternary_arithmetic"
 version = "0.1.1"
