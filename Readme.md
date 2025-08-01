@@ -2,13 +2,15 @@
 
 A Rust library use array logic gate to arithmetic.
 
+a numeral system with digits `-1`, `0`, and `+1`.
+
 ## Installation
 
 Add this to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-text_to_emoji = "0.1.0"
+text_to_emoji = "0.1.1"
 ```
 
 ### Example
