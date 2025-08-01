@@ -1,5 +1,6 @@
-mod ternary_utils;
-
+pub mod ternary_utils;
+pub use ternary_utils::ternary_io;
+pub use ternary_utils::logical_calculate;
 
 /// Converts words in a given sentence to their corresponding emojis.
 ///
