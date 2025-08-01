@@ -1,9 +1,9 @@
 [package]
 name = "ternary_arithmetic"
-version = "0.1.1"
+version = "0.1.2"
 edition = "2024"
-authors = ["ctllo 1073245193@qq.com"]
-description = "blanceed ternary use array logic gate to arithmetic"
+authors = ["10555gff 1073245193@qq.com"]
+description = "balanced ternary use array logic gate to arithmetic"
 license = "MIT"
 repository = "https://github.com/10555gff/ternary_computer"
 homepage = "https://github.com/10555gff/ternary_computer"

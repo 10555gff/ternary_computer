@@ -9,17 +9,16 @@ pub use ternary_utils::logical_calculate;
 /// - `Z` for 0
 /// - `P` for +1
 ///
-/// # Arguments
-///
-/// * `text` - A string slice that holds the sentence to convert
-///
-/// # Returns
-///
-/// A new `String` with matching words replaced by emojis
-///
 /// # Examples
 ///
 /// ```
+/// use ternary_arithmetic::logical_calculate::Digit;
+/// use ternary_arithmetic::ternary_io::Ternary;
+/// 
+/// let t1=Ternary::parse("+-+++++++++++++-+");
+/// let t2=Ternary::parse("++-+-");
+/// let t3=&t1 / &t2;
+/// t3.quotient.digits_print();
 /// 
 /// ```
 

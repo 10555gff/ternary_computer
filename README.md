@@ -1,7 +1,8 @@
+[![Rust](https://github.com/Trehinos/balanced-ternary/actions/workflows/rust.yml/badge.svg)](https://github.com/10555gff/ternary_computer)
+
 # Ternary Arithmetic
 
 A Rust library use array logic gate to arithmetic.
-
 a numeral system with digits `-1`, `0`, and `+1`.
 
 ## Installation
@@ -9,17 +10,22 @@ a numeral system with digits `-1`, `0`, and `+1`.
 Add this to your `Cargo.toml`:
 
 ```toml
-[dependencies]
-text_to_emoji = "0.1.1"
+cargo add ternary_arithmetic
 ```
 
 ### Example
 
 ```rust
-use text_to_emoji::convert_to_emojis;
+use ternary_arithmetic::ternary_io::Ternary;
+use ternary_arithmetic::logical_calculate::Digit;
 
-let result = convert_to_emojis("I love coffee and pizza");
-assert_eq!(result, "I ❤️ ☕️ and 🍕");
+fn main() {
+    let a = Ternary::parse("+0-+-+");
+    let b = Ternary::parse("+-+-+");
+    let result=&a + &b;
+    result.digits_print();
+}
+
 ```
 
 ## License
