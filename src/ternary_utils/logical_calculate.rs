@@ -177,6 +177,15 @@ pub const fn full_adder(self, b: Self,c_in: Self) -> DigitResult {
     DigitResult { carry, sum }
 }
 
+//2个半加器及1个调和门,组成一个平衡三进制全加器
+pub fn full_adder_gate(self, b: Self, c_in: Self) -> DigitResult {
+    let half_adder1=Digit::half_adder(self, b);
+    let mut half_adder2=Digit::half_adder(half_adder1.sum, c_in);
+    let full_carry=logical_table::TANY[half_adder1.carry as usize][half_adder2.carry as usize];//两个进位数合成一个进位数;
+    half_adder2.carry=full_carry;
+    half_adder2
+}
+
 }
 
 
