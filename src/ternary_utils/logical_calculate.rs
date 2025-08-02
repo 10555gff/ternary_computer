@@ -1,3 +1,4 @@
+use std::cmp::{Ordering, PartialOrd};
 use core::ops::{Neg, Not, BitOr, BitAnd, BitXor, Add, Sub, Mul, Div};
 use logical_table::{TOR,TAND,TNOR,TNAND,TXOR,TXNOR,TSUM,TCONS,TANY,TPOZ,TCMP,TDIV,T3OR,T3AND,TFULLSUM,TFULLCONS};
 
@@ -270,4 +271,17 @@ impl Sub<Digit> for Digit {
     }
 }
 
-
+impl Ord for Digit {//实现 Ord trait 的类型,以支持 >、<、>=、<= 操作
+    fn cmp(&self, other: &Self) -> Ordering {
+        match self.tcmp(*other) {
+            Digit::Z => Ordering::Equal,//当前对象等于目标对象
+            Digit::P => Ordering::Greater, //当前对象大于目标对象
+            Digit::N => Ordering::Less,//当前对象小于目标对象
+        }
+    }
+}
+impl PartialOrd for Digit {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        Some(self.cmp(other))
+    }
+}
