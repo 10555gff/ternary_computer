@@ -1,5 +1,5 @@
 use core::ops::{Neg, Not, BitOr, BitAnd, BitXor, Add, Sub, Mul, Div};
-use logical_table::{TOR,TAND,TNOR,TNAND,TXOR,TXNOR,TSUM,TCONS,TANY,TPOZ,TCMP,TDIV,T3OR,T3AND};
+use logical_table::{TOR,TAND,TNOR,TNAND,TXOR,TXNOR,TSUM,TCONS,TANY,TPOZ,TCMP,TDIV,T3OR,T3AND,TFULLSUM,TFULLCONS};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 #[repr(u8)]
@@ -173,8 +173,8 @@ pub const fn half_adder(self, other: Self) -> DigitResult {
     DigitResult { carry, sum }
 }
 pub const fn full_adder(self, b: Self,c_in: Self) -> DigitResult {
-    let sum =logical_table::TFULLSUM[self as usize][b as usize][c_in as usize];// 和
-    let carry=logical_table::TFULLCONS[self as usize][b as usize][c_in as usize];// 进位
+    let sum =TFULLSUM[self as usize][b as usize][c_in as usize];// 和
+    let carry=TFULLCONS[self as usize][b as usize][c_in as usize];// 进位
     DigitResult { carry, sum }
 }
 
