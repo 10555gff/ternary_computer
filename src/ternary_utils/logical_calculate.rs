@@ -1,5 +1,5 @@
-use std::cmp::{Ordering, PartialOrd};
 use core::ops::{Neg, Not, BitOr, BitAnd, BitXor, Add, Sub, Mul, Div};
+use std::cmp::{Ordering, PartialOrd};
 use logical_table::{TOR,TAND,TNOR,TNAND,TXOR,TXNOR,TSUM,TCONS,TANY,TPOZ,TCMP,TDIV,T3OR,T3AND,TFULLSUM,TFULLCONS};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
