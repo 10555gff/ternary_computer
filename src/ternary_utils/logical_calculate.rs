@@ -1,5 +1,5 @@
-pub mod logical_table;
 use core::ops::{Neg, Not, BitOr, BitAnd, BitXor, Add, Sub, Mul, Div};
+use logical_table::{TOR,TAND,TNOR,TNAND,TXOR,TXNOR,TSUM,TCONS,TANY,TPOZ,TCMP,TDIV,T3OR,T3AND};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 #[repr(u8)]
@@ -13,6 +13,8 @@ pub struct DigitResult {
     pub carry: Digit,
     pub sum: Digit,
 }
+
+pub mod logical_table;
 
 impl Digit {
 pub const fn to_char(&self) -> char {
@@ -124,51 +126,50 @@ pub const fn min(self) -> Self {
 }
 
 pub const fn tor(self, other: Self) -> Self {
-    logical_table::TOR[self as usize][other as usize]
+    TOR[self as usize][other as usize]
 }
 pub const fn tand(self, other: Self) -> Self {
-    logical_table::TAND[self as usize][other as usize]
+    TAND[self as usize][other as usize]
 }
 pub const fn tnor(self, other: Self) -> Self {
-    logical_table::TNOR[self as usize][other as usize]
+    TNOR[self as usize][other as usize]
 }
 pub const fn tnand(self, other: Self) -> Self {
-    logical_table::TNAND[self as usize][other as usize]
+    TNAND[self as usize][other as usize]
 }
 pub const fn txor(self, other: Self) -> Self {
-    logical_table::TXOR[self as usize][other as usize]
+    TXOR[self as usize][other as usize]
 }
 pub const fn txnor(self, other: Self) -> Self {
-    logical_table::TXNOR[self as usize][other as usize]
+    TXNOR[self as usize][other as usize]
 }
 pub const fn tsum(self, other: Self) -> Self {
-    logical_table::TSUM[self as usize][other as usize]
+    TSUM[self as usize][other as usize]
 }
 pub const fn tcons(self, other: Self) -> Self {
-    logical_table::TCONS[self as usize][other as usize]
+    TCONS[self as usize][other as usize]
 }
 pub const fn tany(self, other: Self) -> Self {
-    logical_table::TANY[self as usize][other as usize]
+    TANY[self as usize][other as usize]
 }
 pub const fn tpoz(self, other: Self) -> Self {
-    logical_table::TPOZ[self as usize][other as usize]
+    TPOZ[self as usize][other as usize]
 }
 pub const fn tcmp(self, other: Self) -> Self {
-    logical_table::TCMP[self as usize][other as usize]
+    TCMP[self as usize][other as usize]
 }
 pub const fn tdiv(self, other: Self) -> Option<Self> {
-    logical_table::TDIV[self as usize][other as usize]
+    TDIV[self as usize][other as usize]
 }
 pub const fn t3or(self, b: Self,c: Self) -> Self {
-    logical_table::T3OR[self as usize][b as usize][c as usize]
+    T3OR[self as usize][b as usize][c as usize]
 }
 pub const fn t3and(self, b: Self,c: Self) -> Self {
-    logical_table::T3AND[self as usize][b as usize][c as usize]
+    T3AND[self as usize][b as usize][c as usize]
 }
-
 pub const fn half_adder(self, other: Self) -> DigitResult {
-    let sum = logical_table::TSUM[self as usize][other as usize];// 和
-    let carry=logical_table::TCONS[self as usize][other as usize];// 进位;
+    let sum = TSUM[self as usize][other as usize];// 和
+    let carry=TCONS[self as usize][other as usize];// 进位;
     DigitResult { carry, sum }
 }
 pub const fn full_adder(self, b: Self,c_in: Self) -> DigitResult {
@@ -181,7 +182,7 @@ pub const fn full_adder(self, b: Self,c_in: Self) -> DigitResult {
 pub fn full_adder_gate(self, b: Self, c_in: Self) -> DigitResult {
     let half_adder1=Digit::half_adder(self, b);
     let mut half_adder2=Digit::half_adder(half_adder1.sum, c_in);
-    let full_carry=logical_table::TANY[half_adder1.carry as usize][half_adder2.carry as usize];//两个进位数合成一个进位数;
+    let full_carry=TANY[half_adder1.carry as usize][half_adder2.carry as usize];//两个进位数合成一个进位数;
     half_adder2.carry=full_carry;
     half_adder2
 }
