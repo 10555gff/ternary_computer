@@ -116,6 +116,18 @@ mod tests {
 
     #[test]
     fn test_digit_ops() {
+        let a=Digit::P;
+        let b=Digit::N;
+        if a>=b{
+            println!("a >= b");
+        }else if a<b {
+            println!("a < b");
+        }else {
+            println!("a==b");
+        }
+
+
+
         let x=Digit::P;
         let result=-x;
         let result2=!result;
