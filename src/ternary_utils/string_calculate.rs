@@ -191,9 +191,17 @@ pub fn decimal_multiply(num1: &str, num2: &str) -> String {
         let zeros = "0".repeat(min_length-shift);
         let return_result = format!("{}{}", multiply_step(max_string, byte), zeros);
 
-        println!("{:?}:{:?}",return_result,shift);
+        //println!("{:?}:{:?}",return_result,shift);
         string_array=decimal_adder(&return_result,&string_array);//所以结果累加到一起
     }
-    string_array
+
+    // 去除前导零
+    let result = string_array.trim_start_matches('0');
+
+    if result.is_empty() {
+        "0".to_string()
+    } else {
+        result.to_string()
+    }
 }
 

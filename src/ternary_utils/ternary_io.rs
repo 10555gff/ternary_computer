@@ -1,6 +1,7 @@
 use super::logical_calculate::Digit;
 use std::cmp::{Ordering, PartialOrd};
 use core::ops::{Deref, DerefMut, Neg, Not, Add, Sub, Mul, Div,BitAnd, BitOr, BitXor};
+use super::string_calculate::{decimal_adder,decimal_subtractor,decimal_multiply};
 
 #[derive(Debug, Clone, Eq, Hash)]
 pub struct Ternary(pub Vec<Digit>);
@@ -60,6 +61,23 @@ impl Ternary {
             dec += digit.to_i8() as i64 * 3_i64.pow(rank as u32);
         }
         dec
+    }
+
+    pub fn to_dec_str(&self) -> String{
+        let mut neg_part= String::new(); // 累加 -1 的部分
+        let mut pos_part= String::new(); // 累加 +1 的部分
+        let mut weight=String::from("1");
+
+        for &digit in self.iter().rev(){
+            match digit {
+                Digit::Z=>{},
+                Digit::P=>pos_part=decimal_adder(&pos_part, &weight),
+                Digit::N=>neg_part=decimal_adder(&neg_part, &weight),
+            }
+            weight=decimal_multiply(&weight, "3");
+        }
+
+       decimal_subtractor(&pos_part, &neg_part)
     }
 
     /// Creates a balanced ternary number from a decimal integer.
