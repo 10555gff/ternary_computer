@@ -187,7 +187,7 @@ mod tests {
 
         let input = Ternary::parse("+++");
         let result=input.to_dec();//转成数值
-        assert_eq!(result, 13);
+        assert_eq!(result, "13");
 
         let input = Ternary::parse("++++");
         let result=Ternary::from_dec(40);
@@ -209,7 +209,7 @@ mod tests {
     #[test]
     fn test_ternary_ops() {
         let repr_neg120 = - &Ternary::parse("++++0");//获取相反数
-        assert_eq!(repr_neg120.to_dec(), -120);
+        assert_eq!(repr_neg120.to_dec(), "-120");
         assert_eq!(repr_neg120.to_string(), "----0");
 
         let repr9 = Ternary::parse("+00");
@@ -226,18 +226,18 @@ mod tests {
         let repr9 = Ternary::parse("+--");
         let repr4 = Ternary::parse("+0+");//a + b
         let result=repr9 + repr4;
-        assert_eq!(result.to_dec(), 15);
+        assert_eq!(result.to_dec(), "15");
 
         let repr9 = Ternary::parse("+--");
         let repr4 = Digit::P;//&a + b
         let result=&repr9 + repr4;
-        assert_eq!(result.to_dec(), 6);
+        assert_eq!(result.to_dec(), "6");
 
 
         let repr34 = Ternary::parse("+00");
         let repr4 = Ternary::parse("++");
         let repr30 = &repr34 - &repr4;//&a - &b
-        assert_eq!(repr30.to_dec(), 5);
+        assert_eq!(repr30.to_dec(), "5");
         assert_eq!(repr30.to_string(), "+--");
 
         let repr30 = repr34 - repr4;//a - b
@@ -246,13 +246,13 @@ mod tests {
         let repr9 = Ternary::parse("+++");
         let repr4 = Digit::P;//&a - b
         let result=&repr9 - repr4;
-        assert_eq!(result.to_dec(), 12);
+        assert_eq!(result.to_dec(), "12");
 
 
         let repr34 = Ternary::parse("+00");
         let repr4 = Ternary::parse("++");
         let repr120 = &repr34 * &repr4;//&a * &b
-        assert_eq!(repr120.to_dec(), 36);
+        assert_eq!(repr120.to_dec(), "36");
         assert_eq!(repr120.to_string(), "++00");
 
 
