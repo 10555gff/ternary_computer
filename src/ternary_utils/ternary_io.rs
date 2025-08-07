@@ -54,16 +54,7 @@ impl Ternary {
         self.iter().copied().fold(Digit::Z, Digit::tpoz)
     }
 
-    /// Converts the `Ternary` object to its integer (decimal) representation.
-    pub fn to_dec(&self) -> i64 {
-        let mut dec = 0;
-        for (rank, digit) in self.iter().rev().enumerate() {
-            dec += digit.to_i8() as i64 * 3_i64.pow(rank as u32);
-        }
-        dec
-    }
-
-    pub fn to_dec_str(&self) -> String{
+    pub fn to_dec(&self) -> String{
         let mut neg_part= String::new(); // 累加 -1 的部分
         let mut pos_part= String::new(); // 累加 +1 的部分
         let mut weight=String::from("1");
@@ -260,7 +251,7 @@ impl Ternary {
         let fixed=self.len().saturating_sub(other.len());
         for shift in (0..=fixed).rev(){
             Self::div_step(&mut div_result, other, shift);//更新余数与商
-            println!("bb{:?}",div_result);
+            //println!("bb{:?}",div_result);
 
             if shift!=0{
                 let d = self.len() - shift;
