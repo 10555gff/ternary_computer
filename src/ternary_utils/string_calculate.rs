@@ -87,6 +87,43 @@ fn decimal_cmp(num1: &str, num2: &str) -> u8 {
     }
 }
 
+fn subtract_unsigned(bytes1: &[u8], bytes2: &[u8]) -> String {
+    let mut result =  Vec::new();
+    let (mut i,mut j)=(bytes1.len(),bytes2.len());
+
+    let mut pre_borrow = 0;
+
+    while i > 0 || j > 0 {
+        let mut a = 0;
+        if i > 0 {
+            i -= 1;
+            a = bytes1[i] - OFFSET;
+        }
+        let mut b = 0;
+        if j > 0 {
+            j -= 1;
+            b = bytes2[j] - OFFSET;
+        }
+
+        let pre_diff = DSUB[a as usize][b as usize];
+        let now_diff = DSUB[pre_diff as usize][pre_borrow as usize];
+        pre_borrow =if DBORROW[a as usize][b as usize] != 0 || DBORROW[pre_diff as usize][pre_borrow as usize] != 0 {1} else {0};
+        result.push((OFFSET + now_diff) as char);
+        //println!("{}:{}", a, b);
+    }
+    result.reverse();
+    result.into_iter().collect()
+}
+// 逐位减法
+pub fn decimal_subtractor(str1: &str, str2: &str) -> String {
+    match decimal_cmp(str1, str2) {
+        0 => return "0".to_string(), // 相等
+        1 => subtract_unsigned(str1.as_bytes(), str2.as_bytes()), //保证str1 >= str2，直接减
+        2 =>format!("-{}", subtract_unsigned(str2.as_bytes(), str1.as_bytes())),// str1 < str2，交换后加负号
+        _ => unreachable!(),
+    }
+}
+
 // 逐位加法
 pub fn decimal_adder(num1: &str, num2: &str) -> String {
     let bytes1 = num1.as_bytes();
