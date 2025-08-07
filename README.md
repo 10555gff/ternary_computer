@@ -24,6 +24,17 @@ fn main() {
     let b = Ternary::parse("+-+-+");
     let result=&a + &b;
     result.digits_print();
+
+    let result=&a - &b;
+    result.digits_print_t();
+
+    let result=&a * &b;
+    result.digits_print();
+
+    let a = Ternary::parse("+-+-+-+-+++-+++-0++-000++--+-++-++-++++++++++++++-++++-+++--++++--0+++-++-+-++-++0+-0");
+    let b = Ternary::parse("+-+-+-+-+++-+++-0++-000++--+-++-+0+-0");
+    let c=&a / &b;
+    println!("{}/{}={}",a.to_dec(),b.to_dec(),c.quotient.to_dec());
 }
 
 ```
