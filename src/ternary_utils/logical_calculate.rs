@@ -200,6 +200,13 @@ pub trait DibitLogic {
     fn dibit_tand(&self, other: u8) -> u8;
     fn dibit_tnor(&self, other: u8) -> u8;
     fn dibit_tnand(&self, other: u8) -> u8;
+    fn dibit_txor(&self, other: u8) -> u8;
+    fn dibit_txnor(&self, other: u8) -> u8;
+    fn dibit_tsum(&self, other: u8) -> u8;
+    fn dibit_tcons(&self, other: u8) -> u8;
+    fn dibit_tany(&self, other: u8) -> u8;
+    fn dibit_tpoz(&self, other: u8) -> u8;
+    fn dibit_tcmp(&self, other: u8) -> u8;
 }
 
 impl DibitLogic for u8 {
@@ -242,7 +249,27 @@ impl DibitLogic for u8 {
     fn dibit_tnand(&self, other: u8) -> u8 {
         self.dibit_gate_table(other, &TNAND)
     }
-
+    fn dibit_txor(&self, other: u8) -> u8 {
+        self.dibit_gate_table(other, &TXOR)
+    }
+    fn dibit_txnor(&self, other: u8) -> u8 {
+        self.dibit_gate_table(other, &TXNOR)
+    }
+    fn dibit_tsum(&self, other: u8) -> u8 {
+        self.dibit_gate_table(other, &TSUM)
+    }
+    fn dibit_tcons(&self, other: u8) -> u8 {
+        self.dibit_gate_table(other, &TCONS)
+    }
+    fn dibit_tany(&self, other: u8) -> u8 {
+        self.dibit_gate_table(other, &TANY)
+    }
+    fn dibit_tpoz(&self, other: u8) -> u8 {
+        self.dibit_gate_table(other, &TPOZ)
+    }
+    fn dibit_tcmp(&self, other: u8) -> u8 {
+        self.dibit_gate_table(other, &TCMP)
+    }
 }
 
 
