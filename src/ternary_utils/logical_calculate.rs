@@ -202,14 +202,14 @@ pub fn dibit_gate_table(a: u8, b: u8, table: &[[Digit; 3]; 3]) -> u8 {
 }
 
 pub fn digits_print(a:u8) {
-    for i in 0..4 {
+    for i in (0..4).rev() {
         let d = Digit::from_u8((a >> (i * 2)) & 0b11);// 提取 a 的第 i 个双 bit
         print!("{}", d.to_char());
     }
     println!();
 }
 pub fn digits_print_t(a:u8) {
-    for i in 0..4 {
+    for i in (0..4).rev() {
         let d = Digit::from_u8((a >> (i * 2)) & 0b11);// 提取 a 的第 i 个双 bit
         print!("{}", d.to_char_t());
     }

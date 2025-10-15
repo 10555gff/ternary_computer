@@ -7,10 +7,10 @@ fn main() {
     let c = 0b00_00_00_00;
     let d = 0b01_01_01_00;
 
-    let r =Digit:: dibit_and(a, d);
+    let r =Digit:: dibit_or(a, c);
 
     println!("a = {:08b}", a);
     println!("b = {:08b}", b);
     println!("r = {:08b}", r);
-    Digit::digits_print_t(a);
+    Digit::digits_print_t(r);
 }
