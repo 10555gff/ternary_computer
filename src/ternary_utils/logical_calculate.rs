@@ -169,53 +169,6 @@ pub const fn t3and(self, b: Self,c: Self) -> Self {
     T3AND[self as usize][b as usize][c as usize]
 }
 
-/// 对整个字节进行双 bit 逻辑门，支持不同的逻辑操作
-pub fn dibit_gate_op<F>(a: u8, b: u8, op: F) -> u8 
-where 
-    F: Fn(Digit, Digit) -> Digit,
-{
-    let r0 = op(Digit::from_u8(a & 0b11), Digit::from_u8(b & 0b11)).to_u8();
-    let r1 = op(Digit::from_u8((a >> 2) & 0b11), Digit::from_u8((b >> 2) & 0b11)).to_u8();
-    let r2 = op(Digit::from_u8((a >> 4) & 0b11), Digit::from_u8((b >> 4) & 0b11)).to_u8();
-    let r3 = op(Digit::from_u8((a >> 6) & 0b11), Digit::from_u8((b >> 6) & 0b11)).to_u8();
-    
-    r0 | (r1 << 2) | (r2 << 4) | (r3 << 6)
-}
-
-pub fn dibit_and(a: u8, b: u8) -> u8 {
-    Digit::dibit_gate_op(a, b, |x, y| x.tand(y))
-}
-pub fn dibit_or(a: u8, b: u8) -> u8 {
-    Digit::dibit_gate_op(a, b, |x, y| x.tor(y))
-}
-pub fn dibit_xor(a: u8, b: u8) -> u8 {
-    Digit::dibit_gate_op(a, b, |x, y| x.txor(y))
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 pub const fn half_adder(self, other: Self) -> DigitResult {
     let sum = TSUM[self as usize][other as usize];// 和
     let carry=TCONS[self as usize][other as usize];// 进位;
@@ -234,6 +187,106 @@ pub fn full_adder_gate(self, b: Self, c_in: Self) -> DigitResult {
     let full_carry=TANY[half_adder1.carry as usize][half_adder2.carry as usize];//两个进位数合成一个进位数;
     half_adder2.carry=full_carry;
     half_adder2
+}
+
+
+// 直接使用逻辑表索引，避免闭包开销
+pub fn dibit_or(a: u8, b: u8) -> u8 {
+    let r0 = TOR[(a & 0b11) as usize][(b & 0b11) as usize] as u8;
+    let r1 = TOR[((a >> 2) & 0b11) as usize][((b >> 2) & 0b11) as usize] as u8;
+    let r2 = TOR[((a >> 4) & 0b11) as usize][((b >> 4) & 0b11) as usize] as u8;
+    let r3 = TOR[((a >> 6) & 0b11) as usize][((b >> 6) & 0b11) as usize] as u8;
+    
+    r0 | (r1 << 2) | (r2 << 4) | (r3 << 6)
+}
+pub fn dibit_and(a: u8, b: u8) -> u8 {
+    let r0 = TAND[(a & 0b11) as usize][(b & 0b11) as usize] as u8;
+    let r1 = TAND[((a >> 2) & 0b11) as usize][((b >> 2) & 0b11) as usize] as u8;
+    let r2 = TAND[((a >> 4) & 0b11) as usize][((b >> 4) & 0b11) as usize] as u8;
+    let r3 = TAND[((a >> 6) & 0b11) as usize][((b >> 6) & 0b11) as usize] as u8;
+    
+    r0 | (r1 << 2) | (r2 << 4) | (r3 << 6)
+}
+
+pub fn dibit_nor(a: u8, b: u8) -> u8 {
+    let r0 = TNOR[(a & 0b11) as usize][(b & 0b11) as usize] as u8;
+    let r1 = TNOR[((a >> 2) & 0b11) as usize][((b >> 2) & 0b11) as usize] as u8;
+    let r2 = TNOR[((a >> 4) & 0b11) as usize][((b >> 4) & 0b11) as usize] as u8;
+    let r3 = TNOR[((a >> 6) & 0b11) as usize][((b >> 6) & 0b11) as usize] as u8;
+    
+    r0 | (r1 << 2) | (r2 << 4) | (r3 << 6)
+}
+
+pub fn dibit_nand(a: u8, b: u8) -> u8 {
+    let r0 = TNAND[(a & 0b11) as usize][(b & 0b11) as usize] as u8;
+    let r1 = TNAND[((a >> 2) & 0b11) as usize][((b >> 2) & 0b11) as usize] as u8;
+    let r2 = TNAND[((a >> 4) & 0b11) as usize][((b >> 4) & 0b11) as usize] as u8;
+    let r3 = TNAND[((a >> 6) & 0b11) as usize][((b >> 6) & 0b11) as usize] as u8;
+    
+    r0 | (r1 << 2) | (r2 << 4) | (r3 << 6)
+}
+
+pub fn dibit_xor(a: u8, b: u8) -> u8 {
+    let r0 = TXOR[(a & 0b11) as usize][(b & 0b11) as usize] as u8;
+    let r1 = TXOR[((a >> 2) & 0b11) as usize][((b >> 2) & 0b11) as usize] as u8;
+    let r2 = TXOR[((a >> 4) & 0b11) as usize][((b >> 4) & 0b11) as usize] as u8;
+    let r3 = TXOR[((a >> 6) & 0b11) as usize][((b >> 6) & 0b11) as usize] as u8;
+    
+    r0 | (r1 << 2) | (r2 << 4) | (r3 << 6)
+}
+
+pub fn dibit_xnor(a: u8, b: u8) -> u8 {
+    let r0 = TXNOR[(a & 0b11) as usize][(b & 0b11) as usize] as u8;
+    let r1 = TXNOR[((a >> 2) & 0b11) as usize][((b >> 2) & 0b11) as usize] as u8;
+    let r2 = TXNOR[((a >> 4) & 0b11) as usize][((b >> 4) & 0b11) as usize] as u8;
+    let r3 = TXNOR[((a >> 6) & 0b11) as usize][((b >> 6) & 0b11) as usize] as u8;
+    
+    r0 | (r1 << 2) | (r2 << 4) | (r3 << 6)
+}
+
+pub fn dibit_sum(a: u8, b: u8) -> u8 {
+    let r0 = TSUM[(a & 0b11) as usize][(b & 0b11) as usize] as u8;
+    let r1 = TSUM[((a >> 2) & 0b11) as usize][((b >> 2) & 0b11) as usize] as u8;
+    let r2 = TSUM[((a >> 4) & 0b11) as usize][((b >> 4) & 0b11) as usize] as u8;
+    let r3 = TSUM[((a >> 6) & 0b11) as usize][((b >> 6) & 0b11) as usize] as u8;
+    
+    r0 | (r1 << 2) | (r2 << 4) | (r3 << 6)
+}
+
+pub fn dibit_cons(a: u8, b: u8) -> u8 {
+    let r0 = TCONS[(a & 0b11) as usize][(b & 0b11) as usize] as u8;
+    let r1 = TCONS[((a >> 2) & 0b11) as usize][((b >> 2) & 0b11) as usize] as u8;
+    let r2 = TCONS[((a >> 4) & 0b11) as usize][((b >> 4) & 0b11) as usize] as u8;
+    let r3 = TCONS[((a >> 6) & 0b11) as usize][((b >> 6) & 0b11) as usize] as u8;
+    
+    r0 | (r1 << 2) | (r2 << 4) | (r3 << 6)
+}
+
+pub fn dibit_any(a: u8, b: u8) -> u8 {
+    let r0 = TANY[(a & 0b11) as usize][(b & 0b11) as usize] as u8;
+    let r1 = TANY[((a >> 2) & 0b11) as usize][((b >> 2) & 0b11) as usize] as u8;
+    let r2 = TANY[((a >> 4) & 0b11) as usize][((b >> 4) & 0b11) as usize] as u8;
+    let r3 = TANY[((a >> 6) & 0b11) as usize][((b >> 6) & 0b11) as usize] as u8;
+    
+    r0 | (r1 << 2) | (r2 << 4) | (r3 << 6)
+}
+
+pub fn dibit_poz(a: u8, b: u8) -> u8 {
+    let r0 = TPOZ[(a & 0b11) as usize][(b & 0b11) as usize] as u8;
+    let r1 = TPOZ[((a >> 2) & 0b11) as usize][((b >> 2) & 0b11) as usize] as u8;
+    let r2 = TPOZ[((a >> 4) & 0b11) as usize][((b >> 4) & 0b11) as usize] as u8;
+    let r3 = TPOZ[((a >> 6) & 0b11) as usize][((b >> 6) & 0b11) as usize] as u8;
+    
+    r0 | (r1 << 2) | (r2 << 4) | (r3 << 6)
+}
+
+pub fn dibit_cmp(a: u8, b: u8) -> u8 {
+    let r0 = TCMP[(a & 0b11) as usize][(b & 0b11) as usize] as u8;
+    let r1 = TCMP[((a >> 2) & 0b11) as usize][((b >> 2) & 0b11) as usize] as u8;
+    let r2 = TCMP[((a >> 4) & 0b11) as usize][((b >> 4) & 0b11) as usize] as u8;
+    let r3 = TCMP[((a >> 6) & 0b11) as usize][((b >> 6) & 0b11) as usize] as u8;
+    
+    r0 | (r1 << 2) | (r2 << 4) | (r3 << 6)
 }
 
 }
