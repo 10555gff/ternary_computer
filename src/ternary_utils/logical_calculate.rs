@@ -126,6 +126,21 @@ pub const fn min(self) -> Self {
     }
 }
 
+/// 对整个字节进行 4 组双 bit 逻辑
+pub fn dibit_gate(a: u8, b: u8) -> u8 {
+    let mut result = 0u8;
+    for i in 0..4 {
+        let da = Digit::from_u8((a >> (i * 2)) & 0b11);// 提取 a 的第 i 个双 bit
+        let db = Digit::from_u8((b >> (i * 2)) & 0b11); // 提取 b 的第 i 个双 bit
+        println!("{:?}",da);
+        // 执行 Digit 逻辑表（这里用 AND，可换成 tor/txor等）
+        let rr = da.tand(db).to_u8();// 应用双 bit 门逻辑
+    
+        result |= rr << (i * 2);        // 写回结果
+    }
+    result
+}
+
 pub const fn tor(self, other: Self) -> Self {
     TOR[self as usize][other as usize]
 }
