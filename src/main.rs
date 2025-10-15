@@ -35,7 +35,7 @@ fn main() {
     let c = 0b00_00_00_00;
     let d = 0b01_01_01_00;
 
-    let r =Digit:: dibit_gate(a, c);
+    let r =Digit:: dibit_and(a, d);
 
     println!("a = {:08b}", a);
     println!("b = {:08b}", b);

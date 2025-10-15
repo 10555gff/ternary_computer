@@ -126,21 +126,6 @@ pub const fn min(self) -> Self {
     }
 }
 
-/// 对整个字节进行 4 组双 bit 逻辑
-pub fn dibit_gate(a: u8, b: u8) -> u8 {
-    let mut result = 0u8;
-    for i in 0..4 {
-        let da = Digit::from_u8((a >> (i * 2)) & 0b11);// 提取 a 的第 i 个双 bit
-        let db = Digit::from_u8((b >> (i * 2)) & 0b11); // 提取 b 的第 i 个双 bit
-        println!("{:?}",da);
-        // 执行 Digit 逻辑表（这里用 AND，可换成 tor/txor等）
-        let rr = da.tand(db).to_u8();// 应用双 bit 门逻辑
-    
-        result |= rr << (i * 2);        // 写回结果
-    }
-    result
-}
-
 pub const fn tor(self, other: Self) -> Self {
     TOR[self as usize][other as usize]
 }
@@ -183,6 +168,54 @@ pub const fn t3or(self, b: Self,c: Self) -> Self {
 pub const fn t3and(self, b: Self,c: Self) -> Self {
     T3AND[self as usize][b as usize][c as usize]
 }
+
+/// 对整个字节进行双 bit 逻辑门，支持不同的逻辑操作
+pub fn dibit_gate_op<F>(a: u8, b: u8, op: F) -> u8 
+where 
+    F: Fn(Digit, Digit) -> Digit,
+{
+    let r0 = op(Digit::from_u8(a & 0b11), Digit::from_u8(b & 0b11)).to_u8();
+    let r1 = op(Digit::from_u8((a >> 2) & 0b11), Digit::from_u8((b >> 2) & 0b11)).to_u8();
+    let r2 = op(Digit::from_u8((a >> 4) & 0b11), Digit::from_u8((b >> 4) & 0b11)).to_u8();
+    let r3 = op(Digit::from_u8((a >> 6) & 0b11), Digit::from_u8((b >> 6) & 0b11)).to_u8();
+    
+    r0 | (r1 << 2) | (r2 << 4) | (r3 << 6)
+}
+
+pub fn dibit_and(a: u8, b: u8) -> u8 {
+    Digit::dibit_gate_op(a, b, |x, y| x.tand(y))
+}
+pub fn dibit_or(a: u8, b: u8) -> u8 {
+    Digit::dibit_gate_op(a, b, |x, y| x.tor(y))
+}
+pub fn dibit_xor(a: u8, b: u8) -> u8 {
+    Digit::dibit_gate_op(a, b, |x, y| x.txor(y))
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 pub const fn half_adder(self, other: Self) -> DigitResult {
     let sum = TSUM[self as usize][other as usize];// 和
     let carry=TCONS[self as usize][other as usize];// 进位;
