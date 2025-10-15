@@ -168,7 +168,6 @@ pub const fn t3or(self, b: Self,c: Self) -> Self {
 pub const fn t3and(self, b: Self,c: Self) -> Self {
     T3AND[self as usize][b as usize][c as usize]
 }
-
 pub const fn half_adder(self, other: Self) -> DigitResult {
     let sum = TSUM[self as usize][other as usize];// 和
     let carry=TCONS[self as usize][other as usize];// 进位;
@@ -189,68 +188,60 @@ pub fn full_adder_gate(self, b: Self, c_in: Self) -> DigitResult {
     half_adder2
 }
 
-
-/// 对整个字节进行双 bit 逻辑门，支持不同的逻辑操作
-pub fn dibit_gate_table(a: u8, b: u8, table: &[[Digit; 3]; 3]) -> u8 {
-    // 直接使用逻辑表索引，避免闭包开销
-    let r0 = table[(a & 0b11) as usize][(b & 0b11) as usize] as u8;
-    let r1 = table[((a >> 2) & 0b11) as usize][((b >> 2) & 0b11) as usize] as u8;
-    let r2 = table[((a >> 4) & 0b11) as usize][((b >> 4) & 0b11) as usize] as u8;
-    let r3 = table[((a >> 6) & 0b11) as usize][((b >> 6) & 0b11) as usize] as u8;
-    
-    r0 | (r1 << 2) | (r2 << 4) | (r3 << 6)
 }
 
-pub fn digits_print(a:u8) {
-    for i in (0..4).rev() {
-        let d = Digit::from_u8((a >> (i * 2)) & 0b11);// 提取 a 的第 i 个双 bit
-        print!("{}", d.to_char());
+
+pub trait DibitLogic {
+    fn digits_print(&self);
+    fn digits_print_t(&self);
+
+    fn dibit_gate_table(&self, other: u8, table: &[[Digit; 3]; 3]) -> u8;
+    fn dibit_tor(&self, other: u8) -> u8;
+    fn dibit_tand(&self, other: u8) -> u8;
+    fn dibit_tnor(&self, other: u8) -> u8;
+    fn dibit_tnand(&self, other: u8) -> u8;
+}
+
+impl DibitLogic for u8 {
+    fn digits_print(&self) {
+        for i in (0..4).rev() {
+            let d = Digit::from_u8((self >> (i * 2)) & 0b11);// 提取 a 的第 i 个双 bit
+            print!("{}",d.to_char());
+        }
+        println!();
     }
-    println!();
-}
-pub fn digits_print_t(a:u8) {
-    for i in (0..4).rev() {
-        let d = Digit::from_u8((a >> (i * 2)) & 0b11);// 提取 a 的第 i 个双 bit
-        print!("{}", d.to_char_t());
+    fn digits_print_t(&self) {
+        for i in (0..4).rev() {
+            let d = Digit::from_u8((self >> (i * 2)) & 0b11);// 提取 a 的第 i 个双 bit
+            print!("{}",d.to_char_t());
+        }
+        println!();
     }
-    println!();
-}
 
+    /// 对整个字节进行双 bit 逻辑门，支持不同的逻辑操作
+    fn dibit_gate_table(&self, other: u8, table: &[[Digit; 3]; 3]) -> u8 {
+        // 直接使用逻辑表索引，避免闭包开销
+        let r0 = table[(self & 0b11) as usize][(other & 0b11) as usize] as u8;
+        let r1 = table[((self >> 2) & 0b11) as usize][((other >> 2) & 0b11) as usize] as u8;
+        let r2 = table[((self >> 4) & 0b11) as usize][((other >> 4) & 0b11) as usize] as u8;
+        let r3 = table[((self >> 6) & 0b11) as usize][((other >> 6) & 0b11) as usize] as u8;
+        
+        r0 | (r1 << 2) | (r2 << 4) | (r3 << 6)
+    }
 
-/// 使用函数别名，便于调用
-pub fn dibit_and(a: u8, b: u8) -> u8 {
-    Digit::dibit_gate_table(a, b, &TAND)
-}
-pub fn dibit_or(a: u8, b: u8) -> u8 {
-    Digit::dibit_gate_table(a, b, &TOR)
-}
-pub fn dibit_xor(a: u8, b: u8) -> u8 {
-    Digit::dibit_gate_table(a, b, &TXOR)
-}
-pub fn dibit_nand(a: u8, b: u8) -> u8 {
-    Digit::dibit_gate_table(a, b, &TNAND)
-}
-pub fn dibit_nor(a: u8, b: u8) -> u8 {
-    Digit::dibit_gate_table(a, b, &TNOR)
-}
-pub fn dibit_xnor(a: u8, b: u8) -> u8 {
-    Digit::dibit_gate_table(a, b, &TXNOR)
-}
-pub fn dibit_sum(a: u8, b: u8) -> u8 {
-    Digit::dibit_gate_table(a, b, &TSUM)
-}
-pub fn dibit_cons(a: u8, b: u8) -> u8 {
-    Digit::dibit_gate_table(a, b, &TCONS)
-}
-pub fn dibit_any(a: u8, b: u8) -> u8 {
-    Digit::dibit_gate_table(a, b, &TANY)
-}
-pub fn dibit_poz(a: u8, b: u8) -> u8 {
-    Digit::dibit_gate_table(a, b, &TPOZ)
-}
-pub fn dibit_cmp(a: u8, b: u8) -> u8 {
-   Digit::dibit_gate_table(a, b, &TCMP)
-}
+    /// 使用函数别名，便于调用
+    fn dibit_tor(&self, other: u8) -> u8 {
+        self.dibit_gate_table(other, &TOR)
+    }
+    fn dibit_tand(&self, other: u8) -> u8 {
+        self.dibit_gate_table(other, &TAND)
+    }
+    fn dibit_tnor(&self, other: u8) -> u8 {
+        self.dibit_gate_table(other, &TNOR)
+    }
+    fn dibit_tnand(&self, other: u8) -> u8 {
+        self.dibit_gate_table(other, &TNAND)
+    }
 
 }
 
