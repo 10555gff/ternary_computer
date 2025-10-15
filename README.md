@@ -17,7 +17,7 @@ cargo add ternary_arithmetic
 
 ```rust
 use ternary_arithmetic::ternary_io::Ternary;
-use ternary_arithmetic::logical_calculate::Digit;
+use ternary_arithmetic::logical_calculate::{Digit,DibitLogic};
 
 fn main() {
     let a:u8 = 0b10_10_10_10;
