@@ -1,5 +1,5 @@
 use core::ops::{Neg, Not, BitOr, BitAnd, BitXor, Add, Sub, Mul, Div};
-use std::{cmp::{Ordering, PartialOrd}, iter::Sum};
+use std::cmp::{Ordering, PartialOrd};
 use logical_table::{TOR,TAND,TNOR,TNAND,TXOR,TXNOR,TSUM,TCONS,TANY,TPOZ,TCMP,TDIV,T3OR,T3AND,TFULLSUM,TFULLCONS};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
@@ -199,6 +199,21 @@ pub fn dibit_gate_table(a: u8, b: u8, table: &[[Digit; 3]; 3]) -> u8 {
     let r3 = table[((a >> 6) & 0b11) as usize][((b >> 6) & 0b11) as usize] as u8;
     
     r0 | (r1 << 2) | (r2 << 4) | (r3 << 6)
+}
+
+pub fn digits_print(a:u8) {
+    for i in 0..4 {
+        let d = Digit::from_u8((a >> (i * 2)) & 0b11);// 提取 a 的第 i 个双 bit
+        print!("{}", d.to_char());
+    }
+    println!();
+}
+pub fn digits_print_t(a:u8) {
+    for i in 0..4 {
+        let d = Digit::from_u8((a >> (i * 2)) & 0b11);// 提取 a 的第 i 个双 bit
+        print!("{}", d.to_char_t());
+    }
+    println!();
 }
 
 
