@@ -308,27 +308,41 @@ impl DibitLogic for u8 {
 
 
 
-    fn dibit_gate_full(&self, other: &Self, c_in: Digit) -> (u8,u8) {
-         // 4trit全加器
-        let sum0 = TFULLSUM[(self & 0b11) as usize][(other & 0b11) as usize][c_in as usize] as u8;// 和
-        let carry0 = TFULLCONS[(self & 0b11) as usize][(other & 0b11) as usize][c_in as usize];// 进位
+    // fn dibit_gate_full(&self, other: &Self, c_in: Digit) -> (u8,u8) {
+    //      // 4trit全加器
+    //     let sum0 = TFULLSUM[(self & 0b11) as usize][(other & 0b11) as usize][c_in as usize] as u8;// 和
+    //     let carry0 = TFULLCONS[(self & 0b11) as usize][(other & 0b11) as usize][c_in as usize];// 进位
 
 
-        let sum1 = TFULLSUM[((self >> 2) & 0b11) as usize][((other >> 2) & 0b11) as usize][carry0 as usize] as u8;
-        let carry1 = TFULLCONS[((self >> 2) & 0b11) as usize][((other >> 2) & 0b11) as usize][carry0 as usize];
+    //     let sum1 = TFULLSUM[((self >> 2) & 0b11) as usize][((other >> 2) & 0b11) as usize][carry0 as usize] as u8;
+    //     let carry1 = TFULLCONS[((self >> 2) & 0b11) as usize][((other >> 2) & 0b11) as usize][carry0 as usize];
 
-        let sum2 = TFULLSUM[((self >> 4) & 0b11) as usize][((other >> 4) & 0b11) as usize][carry1 as usize] as u8;
-        let carry2 = TFULLCONS[((self >> 4) & 0b11) as usize][((other >> 4) & 0b11) as usize][carry1 as usize];
+    //     let sum2 = TFULLSUM[((self >> 4) & 0b11) as usize][((other >> 4) & 0b11) as usize][carry1 as usize] as u8;
+    //     let carry2 = TFULLCONS[((self >> 4) & 0b11) as usize][((other >> 4) & 0b11) as usize][carry1 as usize];
 
-        let sum3 = TFULLSUM[((self >> 6) & 0b11) as usize][((other >> 6) & 0b11) as usize][carry2 as usize] as u8;
-        let carry3 = TFULLCONS[((self >> 6) & 0b11) as usize][((other >> 6) & 0b11) as usize][carry2 as usize] as u8;
+    //     let sum3 = TFULLSUM[((self >> 6) & 0b11) as usize][((other >> 6) & 0b11) as usize][carry2 as usize] as u8;
+    //     let carry3 = TFULLCONS[((self >> 6) & 0b11) as usize][((other >> 6) & 0b11) as usize][carry2 as usize] as u8;
 
         
-        let sum=sum0 | (sum1 << 2) | (sum2 << 4) | (sum3 << 6);
-        (carry3 ,sum)        
+    //     let sum=sum0 | (sum1 << 2) | (sum2 << 4) | (sum3 << 6);
+    //     (carry3 ,sum)        
+    // }
+
+
+
+    fn dibit_gate_full(&self, other: &Self, c_in: Digit) -> (u8, u8) {
+        let mut carry = c_in;
+        let mut sum = 0;
+        for i in 0..4 {
+            let shift = i * 2;
+            let a = (self >> shift) & 0b11;
+            let b = (other >> shift) & 0b11;
+            let sum_i = TFULLSUM[a as usize][b as usize][carry as usize] as u8;
+            carry = TFULLCONS[a as usize][b as usize][carry as usize];
+            sum |= sum_i << shift;
+        }
+        (carry as u8, sum)
     }
-
-
 
 
 
