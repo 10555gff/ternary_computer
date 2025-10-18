@@ -3,18 +3,18 @@ use ternary_arithmetic::logical_calculate::{Digit,DibitLogic};
 
 fn main() {
 
-    let a:u8 = 0b00_10_10_10;
-    let b:u8 = 0b00_01_00_00;
+    let a:u8 = 0b10_10_10_10;
+    let b:u8 = 0b00_00_00_00;
+    let c:u8 = 0b01_01_01_01;
+    let d:u8 = 0b10_00_01_00;
     
     //println!("d = {:08b}", d);
-    let r=a.dibit_gate_full(&b,Digit::N);
-    // let r =a.dibit_tand(d);
-    // let r1 =b.dibit_tand(d);
-    // let r2 =c.dibit_tand(d);
-
-   // println!("{:?}",r);
-    r.0.digits_print_t();
-    r.1.digits_print_t();
+    let r =a.dibit_tor(d);
+    let r1 =b.dibit_tor(d);
+    let r2 =c.dibit_tor(d);
+    r.digits_print_t();
+    r1.digits_print_t();
+    r2.digits_print_t();
      //r.digits_print_t();
     // r1.digits_print_t();
     // r2.digits_print_t();

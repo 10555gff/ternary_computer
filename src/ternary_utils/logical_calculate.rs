@@ -197,7 +197,10 @@ pub trait DibitLogic {
     fn digits_print(&self);
     fn digits_print_t(&self);
 
-    fn dibit_gate_table(&self, other: u8, table: &[[Digit; 3]; 3]) -> u8;
+    fn dibit_gate_u8(&self, other: u8, table: &[[Digit; 3]; 3]) -> u8;
+    fn dibit_gate_u32(&self, other: u32, table: &[[Digit; 3]; 3]) -> u32;
+
+
     fn dibit_tor(&self, other: u8) -> u8;
     fn dibit_tand(&self, other: u8) -> u8;
     fn dibit_tnor(&self, other: u8) -> u8;
@@ -237,7 +240,7 @@ impl DibitLogic for u8 {
     }
 
     /// 对整个字节进行双 bit 逻辑门，支持不同的逻辑操作
-    fn dibit_gate_table(&self, other: u8, table: &[[Digit; 3]; 3]) -> u8 {
+    fn dibit_gate_u8(&self, other: u8, table: &[[Digit; 3]; 3]) -> u8 {
         // 直接使用逻辑表索引，避免闭包开销
         let r0 = table[(self & 0b11) as usize][(other & 0b11) as usize] as u8;
         let r1 = table[((self >> 2) & 0b11) as usize][((other >> 2) & 0b11) as usize] as u8;
@@ -247,49 +250,119 @@ impl DibitLogic for u8 {
         r0 | (r1 << 2) | (r2 << 4) | (r3 << 6)
     }
 
+
+
+
+
+    // fn dibit_gate_u8(&self, other: u8, table: &[[Digit; 3]; 3]) -> u8 {
+    //     let mut result = 0;
+    //     for i in 0..4 {
+    //         let shift = i * 2;
+    //         let a = (self >> shift) & 0b11;
+    //         let b = (other >> shift) & 0b11;
+    //         result |= (table[a as usize][b as usize] as u8) << shift;
+    //     }
+    //     result
+    // }
+
+
+    fn dibit_gate_u32(&self, other: u32, table: &[[Digit; 3]; 3]) -> u32 {
+        let mut result = 0u32;
+        for i in 0..16 {
+            let shift = i * 2;
+
+            let a = (self >> shift) & 0b11;
+            let b = (other >> shift) & 0b11;
+
+
+
+            result |= (table[a as usize][b as usize] as u32) << shift;
+
+
+        }
+        result
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+
     /// 使用函数别名，便于调用
     fn dibit_tor(&self, other: u8) -> u8 {
-        self.dibit_gate_table(other, &TOR)
+        self.dibit_gate_u8(other, &TOR)
     }
     fn dibit_tand(&self, other: u8) -> u8 {
-        self.dibit_gate_table(other, &TAND)
+        self.dibit_gate_u8(other, &TAND)
     }
     fn dibit_tnor(&self, other: u8) -> u8 {
-        self.dibit_gate_table(other, &TNOR)
+        self.dibit_gate_u8(other, &TNOR)
     }
     fn dibit_tnand(&self, other: u8) -> u8 {
-        self.dibit_gate_table(other, &TNAND)
+        self.dibit_gate_u8(other, &TNAND)
     }
     fn dibit_txor(&self, other: u8) -> u8 {
-        self.dibit_gate_table(other, &TXOR)
+        self.dibit_gate_u8(other, &TXOR)
     }
     fn dibit_txnor(&self, other: u8) -> u8 {
-        self.dibit_gate_table(other, &TXNOR)
+        self.dibit_gate_u8(other, &TXNOR)
     }
     fn dibit_tsum(&self, other: u8) -> u8 {
-        self.dibit_gate_table(other, &TSUM)
+        self.dibit_gate_u8(other, &TSUM)
     }
     fn dibit_tcons(&self, other: u8) -> u8 {
-        self.dibit_gate_table(other, &TCONS)
+        self.dibit_gate_u8(other, &TCONS)
     }
     fn dibit_tany(&self, other: u8) -> u8 {
-        self.dibit_gate_table(other, &TANY)
+        self.dibit_gate_u8(other, &TANY)
     }
     fn dibit_tpoz(&self, other: u8) -> u8 {
-        self.dibit_gate_table(other, &TPOZ)
+        self.dibit_gate_u8(other, &TPOZ)
     }
     fn dibit_tcmp(&self, other: u8) -> u8 {
-        self.dibit_gate_table(other, &TCMP)
+        self.dibit_gate_u8(other, &TCMP)
     }
 
 
-    fn dibit_gate_table3(&self, b: Self, c_in: Self, table: &[[[Digit; 3]; 3]; 3]) -> u8 {
-        // 直接使用逻辑表索引，避免闭包开销
-        let r0 = table[(self & 0b11) as usize][(b & 0b11) as usize][(c_in & 0b11) as usize] as u8;
-        let r1 = table[((self >> 2) & 0b11) as usize][((b >> 2) & 0b11) as usize][((c_in >> 2) & 0b11) as usize] as u8;
-        let r2 = table[((self >> 4) & 0b11) as usize][((b >> 4) & 0b11) as usize][((c_in >> 4) & 0b11) as usize] as u8;
-        let r3 = table[((self >> 6) & 0b11) as usize][((b >> 6) & 0b11) as usize][((c_in >> 6) & 0b11) as usize] as u8;
-        r0 | (r1 << 2) | (r2 << 4) | (r3 << 6)
+    // fn dibit_gate_table3(&self, b: Self, c_in: Self, table: &[[[Digit; 3]; 3]; 3]) -> u8 {
+    //     // 直接使用逻辑表索引，避免闭包开销
+    //     let r0 = table[(self & 0b11) as usize][(b & 0b11) as usize][(c_in & 0b11) as usize] as u8;
+    //     let r1 = table[((self >> 2) & 0b11) as usize][((b >> 2) & 0b11) as usize][((c_in >> 2) & 0b11) as usize] as u8;
+    //     let r2 = table[((self >> 4) & 0b11) as usize][((b >> 4) & 0b11) as usize][((c_in >> 4) & 0b11) as usize] as u8;
+    //     let r3 = table[((self >> 6) & 0b11) as usize][((b >> 6) & 0b11) as usize][((c_in >> 6) & 0b11) as usize] as u8;
+    //     r0 | (r1 << 2) | (r2 << 4) | (r3 << 6)
+    // }
+
+
+
+    fn dibit_gate_table3(&self, b: u8, c_in: u8, table: &[[[Digit; 3]; 3]; 3]) -> u8 {
+        let mut result = 0;
+        for i in 0..4 {
+            let shift = i * 2;
+            let a = (self >> shift) & 0b11;
+            let b_val = (b >> shift) & 0b11;
+            let c = (c_in >> shift) & 0b11;
+            result |= (table[a as usize][b_val as usize][c as usize] as u8) << shift;
+        }
+        result
     }
 
     fn dibit_t3or(&self, b: u8, c_in: u8) -> u8 {
