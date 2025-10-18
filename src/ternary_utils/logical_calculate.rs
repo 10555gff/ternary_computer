@@ -207,6 +207,15 @@ pub trait DibitLogic {
     fn dibit_tany(&self, other: u8) -> u8;
     fn dibit_tpoz(&self, other: u8) -> u8;
     fn dibit_tcmp(&self, other: u8) -> u8;
+
+    fn dibit_gate_table3(&self, b: Self, c_in: Self, table: &[[[Digit; 3]; 3]; 3]) -> u8;
+    fn dibit_t3or(&self, b: u8, c_in: u8) -> u8;
+    fn dibit_t3and(&self, b: u8, c_in: u8) -> u8;
+    fn dibit_tfullsum(&self, b: u8, c_in: u8) -> u8;
+    fn dibit_tfullcons(&self, b: u8, c_in: u8) -> u8;
+    fn dibit_gate_full(&self, other: &Self, c_in: Digit) -> (u8,u8);
+
+    
 }
 
 impl DibitLogic for u8 {
@@ -270,6 +279,58 @@ impl DibitLogic for u8 {
     fn dibit_tcmp(&self, other: u8) -> u8 {
         self.dibit_gate_table(other, &TCMP)
     }
+
+
+    fn dibit_gate_table3(&self, b: Self, c_in: Self, table: &[[[Digit; 3]; 3]; 3]) -> u8 {
+        // 直接使用逻辑表索引，避免闭包开销
+        let r0 = table[(self & 0b11) as usize][(b & 0b11) as usize][(c_in & 0b11) as usize] as u8;
+        let r1 = table[((self >> 2) & 0b11) as usize][((b >> 2) & 0b11) as usize][((c_in >> 2) & 0b11) as usize] as u8;
+        let r2 = table[((self >> 4) & 0b11) as usize][((b >> 4) & 0b11) as usize][((c_in >> 4) & 0b11) as usize] as u8;
+        let r3 = table[((self >> 6) & 0b11) as usize][((b >> 6) & 0b11) as usize][((c_in >> 6) & 0b11) as usize] as u8;
+        r0 | (r1 << 2) | (r2 << 4) | (r3 << 6)
+    }
+
+    fn dibit_t3or(&self, b: u8, c_in: u8) -> u8 {
+        self.dibit_gate_table3(b, c_in,&T3OR)
+    }
+    fn dibit_t3and(&self, b: u8, c_in: u8) -> u8 {
+        self.dibit_gate_table3(b, c_in,&T3AND)
+    }
+
+    fn dibit_tfullsum(&self, b: u8, c_in: u8) -> u8 {
+        self.dibit_gate_table3(b, c_in,&TFULLSUM)
+    }
+    fn dibit_tfullcons(&self, b: u8, c_in: u8) -> u8 {
+        self.dibit_gate_table3(b, c_in,&TFULLCONS)
+    }
+
+
+
+    fn dibit_gate_full(&self, other: &Self, c_in: Digit) -> (u8,u8) {
+         // 4trit全加器
+        let sum0 = TFULLSUM[(self & 0b11) as usize][(other & 0b11) as usize][c_in as usize] as u8;// 和
+        let carry0 = TFULLCONS[(self & 0b11) as usize][(other & 0b11) as usize][c_in as usize];// 进位
+
+
+        let sum1 = TFULLSUM[((self >> 2) & 0b11) as usize][((other >> 2) & 0b11) as usize][carry0 as usize] as u8;
+        let carry1 = TFULLCONS[((self >> 2) & 0b11) as usize][((other >> 2) & 0b11) as usize][carry0 as usize];
+
+        let sum2 = TFULLSUM[((self >> 4) & 0b11) as usize][((other >> 4) & 0b11) as usize][carry1 as usize] as u8;
+        let carry2 = TFULLCONS[((self >> 4) & 0b11) as usize][((other >> 4) & 0b11) as usize][carry1 as usize];
+
+        let sum3 = TFULLSUM[((self >> 6) & 0b11) as usize][((other >> 6) & 0b11) as usize][carry2 as usize] as u8;
+        let carry3 = TFULLCONS[((self >> 6) & 0b11) as usize][((other >> 6) & 0b11) as usize][carry2 as usize] as u8;
+
+        
+        let sum=sum0 | (sum1 << 2) | (sum2 << 4) | (sum3 << 6);
+        (carry3 ,sum)        
+    }
+
+
+
+
+
+
 }
 
 
