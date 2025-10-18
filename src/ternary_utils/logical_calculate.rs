@@ -169,14 +169,16 @@ pub const fn t3and(self, b: Self,c: Self) -> Self {
     T3AND[self as usize][b as usize][c as usize]
 }
 pub const fn half_adder(self, other: Self) -> DigitResult {
-    let sum = TSUM[self as usize][other as usize];// 和
-    let carry=TCONS[self as usize][other as usize];// 进位;
-    DigitResult { carry, sum }
+    DigitResult {
+        carry: TCONS[self as usize][other as usize],
+        sum: TSUM[self as usize][other as usize],
+    }
 }
-pub const fn full_adder(self, b: Self,c_in: Self) -> DigitResult {
-    let sum =TFULLSUM[self as usize][b as usize][c_in as usize];// 和
-    let carry=TFULLCONS[self as usize][b as usize][c_in as usize];// 进位
-    DigitResult { carry, sum }
+pub const fn full_adder(self, b: Self, c_in: Self) -> DigitResult {
+    DigitResult {
+        carry: TFULLCONS[self as usize][b as usize][c_in as usize],
+        sum: TFULLSUM[self as usize][b as usize][c_in as usize],
+    }
 }
 
 //2个半加器及1个调和门,组成一个平衡三进制全加器
