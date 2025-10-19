@@ -27,6 +27,7 @@ pub use ternary_utils::dibit_logic;
 
 #[cfg(test)]
 mod tests {
+    use crate::dibit_logic::DibitLogic;
     use super::ternary_io::Ternary;
     use super::logical_calculate::Digit;
 
@@ -332,6 +333,67 @@ mod tests {
     // let t5 = (!t1).tor(&!t2);
 
     }
+//---------------------------------------------------------------------------------------------------------------
+
+#[test]
+    fn test_ternary_dib() {
+        let a:u8 = 0b10_10_10_10;
+        let b:u8 = 0b00_00_00_00;
+        let c:u8 = 0b01_01_01_01;
+        let d:u8 = 0b10_00_01_00;
+        //TAND
+        assert_eq!(a.dibit_tand(d),0b10_10_10_10);
+        assert_eq!(b.dibit_tand(d),0b10_00_00_00);
+        assert_eq!(c.dibit_tand(d),0b10_00_01_00);
+        //TOR
+        assert_eq!(a.dibit_tor(d),0b10_00_01_00);
+        assert_eq!(b.dibit_tor(d),0b00_00_01_00);
+        assert_eq!(c.dibit_tor(d),0b01_01_01_01);
+        //TNOR
+        assert_eq!(a.dibit_tnor(d),0b01_00_10_00);
+        assert_eq!(b.dibit_tnor(d),0b00_00_10_00);
+        assert_eq!(c.dibit_tnor(d),0b10_10_10_10);
+        //TNAND
+        assert_eq!(a.dibit_tnand(d),0b01_01_01_01);
+        assert_eq!(b.dibit_tnand(d),0b01_00_00_00);
+        assert_eq!(c.dibit_tnand(d),0b01_00_10_00);
+
+        //TTTT+TTTT+0=T0001
+        let a:u8 = 0b10_10_10_10;
+        let b:u8 = 0b10_10_10_10;
+        let r=a.dibit_adder(b, Digit::Z);
+        assert_eq!(r.0,0b00_00_00_10);
+        assert_eq!(r.1,0b00_00_00_01);
+
+        //0111+0111+0=100T
+        let a:u8 = 0b00_01_01_01;
+        let b:u8 = 0b00_01_01_01;
+        let r=a.dibit_adder(b, Digit::Z);
+        assert_eq!(r.0,0b00_00_00_00);
+        assert_eq!(r.1,0b01_00_00_10);
+
+        //0111+0T00+1=1TT
+        let a:u8 = 0b00_01_01_01;
+        let b:u8 = 0b00_10_00_00;
+        let r=a.dibit_adder(b, Digit::P);
+        assert_eq!(r.0,0b00_00_00_00);
+        assert_eq!(r.1,0b00_01_10_10);
+
+        //1111_1111+1000_0000+0=1_T111_1111
+        let a:u16 = 0b0101_0101_0101_0101;
+        let b:u16 = 0b0100_0000_0000_0000;
+        let r=a.dibit_adder(b, Digit::Z);
+        assert_eq!(r.0,0b0000_0000_0000_0001);
+        assert_eq!(r.1,0b1001_0101_0101_0101);
+
+
+
+    }
+
+
+
+
+
 
 
 }
