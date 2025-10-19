@@ -1,6 +1,5 @@
-use std::ops::{Neg, Not};
 use super::logical_calculate::{Digit,logical_table};
-use logical_table::{TNEG,TOR,TAND,TNOR,TNAND,TXOR,TXNOR,TSUM,TCONS,TANY,TPOZ,TCMP,TDIV,T3OR,T3AND,TFULLSUM,TFULLCONS};
+use logical_table::{TNEG,TOR,TAND,TNOR,TNAND,TXOR,TXNOR,TSUM,TCONS,TANY,TPOZ,TCMP,TFULLSUM,TFULLCONS};
 
 pub trait DibitLogic: Sized{//按字节存储、按 2-bit 逻辑处理
     fn digits_print(&self);
@@ -13,18 +12,13 @@ pub trait DibitLogic: Sized{//按字节存储、按 2-bit 逻辑处理
     fn dibit_tand(&self, other: Self) -> Self;
     fn dibit_tnor(&self, other: Self) -> Self;
     fn dibit_tnand(&self, other: Self) -> Self;
-    // fn dibit_txor(&self, other: Self) -> Self;
-    // fn dibit_txnor(&self, other: Self) -> Self;
-    // fn dibit_tsum(&self, other: Self) -> Self;
-    // fn dibit_tcons(&self, other: Self) -> Self;
-    // fn dibit_tany(&self, other: Self) -> Self;
-    // fn dibit_tpoz(&self, other: Self) -> Self;
-    // fn dibit_tcmp(&self, other: Self) -> Self;
-    // fn dibit_gate_table3(&self, b: Self, c_in: Self, table: &[[[Digit; 3]; 3]; 3]) -> Self;
-    // fn dibit_t3or(&self, b: Self, c_in: Self) -> Self;
-    // fn dibit_t3and(&self, b: Self, c_in: Self) -> Self;
-    // fn dibit_tfullsum(&self, b: Self, c_in: Self) -> Self;
-    // fn dibit_tfullcons(&self, b: Self, c_in: Self) -> Self;
+    fn dibit_txor(&self, other: Self) -> Self;
+    fn dibit_txnor(&self, other: Self) -> Self;
+    fn dibit_tsum(&self, other: Self) -> Self;
+    fn dibit_tcons(&self, other: Self) -> Self;
+    fn dibit_tany(&self, other: Self) -> Self;
+    fn dibit_tpoz(&self, other: Self) -> Self;
+    fn dibit_tcmp(&self, other: Self) -> Self;
 }
 
 
@@ -106,13 +100,27 @@ macro_rules! impl_dibit_logic_for {
             fn dibit_tnand(&self, other: $t) -> $t{
                 self.dibit_gate(other, &TNAND)
             }
-
-
-
-
-
-
-
+            fn dibit_txor(&self, other: $t) -> $t {
+                self.dibit_gate(other, &TXOR)
+            }
+            fn dibit_txnor(&self, other: $t) -> $t {
+                self.dibit_gate(other, &TXNOR)
+            }
+            fn dibit_tsum(&self, other: $t) -> $t {
+                self.dibit_gate(other, &TSUM)
+            }
+            fn dibit_tcons(&self, other: $t) -> $t {
+                self.dibit_gate(other, &TCONS)
+            }
+            fn dibit_tany(&self, other: $t) -> $t {
+                self.dibit_gate(other, &TANY)
+            }
+            fn dibit_tpoz(&self, other: $t) -> $t {
+                self.dibit_gate(other, &TPOZ)
+            }
+            fn dibit_tcmp(&self, other: $t) -> $t {
+                self.dibit_gate(other, &TCMP)
+            }
         }
     };
 }
@@ -123,19 +131,3 @@ impl_dibit_logic_for!(u16, 8);
 impl_dibit_logic_for!(u32, 16);
 impl_dibit_logic_for!(u64, 32);
 
-
-
-// fn dibit_gate_table3(&self, other: $t, c_in: $t, table: &[[[Digit; 3]; 3]; 3]) -> $t {
-//     let mut result = 0;
-//     for i in 0..$count {
-//         let shift = i * 2;
-//         let da = (self >> shift) & 0b11;
-//         let db = (other >> shift) & 0b11;
-//         let dc = (c_in >> shift) & 0b11;
-//         result |= (table[da as usize][db as usize][dc as usize] as $t) << shift;
-//     }
-//     result
-// }
-// fn dibit_t3or(&self, other: $t, c_in: $t) -> $t {
-//     self.dibit_gate_table3(other, c_in, &T3OR)
-// }
