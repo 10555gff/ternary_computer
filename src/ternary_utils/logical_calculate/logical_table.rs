@@ -10,6 +10,9 @@
 ///       TNAND <------->  TAND
 use super::Digit::{self, Z, P, N};
 
+// **非门(TNEG)逻辑表 输入T，输出1；输入0，输出0；输入1，输出T；**
+pub const TNEG:[Digit; 3]=[Z,N,P];
+
 // **或门(TOR)逻辑表MAX(A,B) 有1出1、双T出T、其余为0 **
 pub const TOR: [[Digit; 3]; 3] = [
     [Z, P, Z],

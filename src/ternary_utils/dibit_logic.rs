@@ -1,13 +1,13 @@
-use super::logical_calculate::{Digit,DigitResult,logical_table};
-use logical_table::{TOR,TAND,TNOR,TNAND,TXOR,TXNOR,TSUM,TCONS,TANY,TPOZ,TCMP,TDIV,T3OR,T3AND,TFULLSUM,TFULLCONS};
+use std::ops::{Neg, Not};
+use super::logical_calculate::{Digit,logical_table};
+use logical_table::{TNEG,TOR,TAND,TNOR,TNAND,TXOR,TXNOR,TSUM,TCONS,TANY,TPOZ,TCMP,TDIV,T3OR,T3AND,TFULLSUM,TFULLCONS};
 
-//按字节存储、按 2-bit 逻辑处理
-pub trait DibitLogic: Sized{
+pub trait DibitLogic: Sized{//按字节存储、按 2-bit 逻辑处理
     fn digits_print(&self);
     fn digits_print_t(&self);
     fn dibit_adder(&self, other: Self, carry: Digit) -> (Digit, Self);
 
-
+    fn dibit_neg(&self) -> Self;
     fn dibit_gate(&self, other: Self, table: &[[Digit; 3]; 3]) -> Self;
     fn dibit_tor(&self, other: Self) -> Self;
     fn dibit_tand(&self, other: Self) -> Self;
@@ -60,7 +60,20 @@ macro_rules! impl_dibit_logic_for {
                 }
                 (carry , sum)
             }
-            
+
+
+            #[inline(always)]
+            fn dibit_neg(&self) -> Self {
+                let mut result: $t = 0;
+                for i in 0..$count {
+                    let shift = i * 2;
+                    let d = (self >> shift) & 0b11;
+                    result |= (TNEG[d as usize] as $t) << shift;
+                }
+                result
+            }
+
+        
             #[inline(always)]
             fn dibit_gate(&self, other: $t, table: &[[Digit; 3]; 3]) -> $t {
                 if $count == 4 {// u8 展开
@@ -80,13 +93,6 @@ macro_rules! impl_dibit_logic_for {
                     result
                 }
             }
-
-
-
-
-
-
-
             /// 使用函数别名，便于调用
             fn dibit_tor(&self, other: $t) -> $t {
                 self.dibit_gate(other, &TOR)

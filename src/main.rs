@@ -5,13 +5,19 @@ use ternary_arithmetic::dibit_logic::DibitLogic;
 
 fn main() {
     let a:u16 = 0b0101_0101_0101_0101;
-    let b:u16 = 0b0100_0000_0000_0000;
-    let r=a.dibit_adder(b, Digit::Z);
+    let b:u16 = 0b0100_0101_1010_1000;
 
-    //r.0.digits_print_t();
-    println!("{:?}",r.0);
-    r.1.digits_print_t();
+    b.digits_print_t();
+    let c=b.dibit_neg();
+    c.digits_print_t();
 
+    // let r=a.dibit_adder(b, Digit::Z);
+
+    // //r.0.digits_print_t();
+    // println!("{:?}",r.0);
+    // r.1.digits_print_t();
+    // let r2=r.1.dibit_neg();
+   // r2.digits_print_t();
 
     // let a = Ternary::parse("+0-+-+");
     // let b = Ternary::parse("+-+-+");
