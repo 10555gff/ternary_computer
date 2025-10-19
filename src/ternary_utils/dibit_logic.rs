@@ -15,7 +15,6 @@ pub trait DibitLogic: Sized{
     fn dibit_adder(&self, other: Self, carry: Digit) -> (Digit, Self);
     fn dibit_sub(&self, other: Self, carry: Digit) -> (Digit, Self); 
 
-    
     fn dibit_gate(&self, other: Self, table: &[[Digit; 3]; 3]) -> Self;
     fn dibit_tor(&self, other: Self) -> Self;
     fn dibit_tand(&self, other: Self) -> Self;

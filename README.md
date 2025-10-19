@@ -17,7 +17,8 @@ cargo add ternary_arithmetic
 
 ```rust
 use ternary_arithmetic::ternary_io::Ternary;
-use ternary_arithmetic::logical_calculate::{Digit,DibitLogic};
+use ternary_arithmetic::logical_calculate::Digit;
+use ternary_arithmetic::dibit_logic::DibitLogic;
 
 fn main() {
     let a:u8 = 0b10_10_10_10;
@@ -32,6 +33,20 @@ fn main() {
     r.digits_print_t();
     r1.digits_print_t();
     r2.digits_print_t();
+
+    //1111_1111+1000_0000+0=1_T111_1111
+    let a:u16 = 0b0101_0101_0101_0101;
+    let b:u16 = 0b0100_0000_0000_0000;
+    let r=a.dibit_adder(b, Digit::Z);
+    println!("{:?}",r.0);
+    r.1.digits_print_t();
+
+    //TTT-TT=T101
+    let a:u16 = 0b0000_0000_0010_1010;
+    let b:u16 = 0b0000_0000_0000_0101;
+    let r=a.dibit_sub(b, Digit::Z);
+    println!("{:?}",r.0);
+    r.1.digits_print_t();
 
     let a = Ternary::parse("+0-+-+");
     let b = Ternary::parse("+-+-+");
@@ -49,6 +64,7 @@ fn main() {
     let c=&a / &b;
     println!("{}/{}={}",a.to_dec(),b.to_dec(),c.quotient.to_dec());
 }
+
 
 ```
 
