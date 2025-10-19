@@ -362,39 +362,36 @@ mod tests {
         let a:u8 = 0b10_10_10_10;
         let b:u8 = 0b10_10_10_10;
         let r=a.dibit_adder(b, Digit::Z);
-        assert_eq!(r.0,0b00_00_00_10);
+        assert_eq!(r.0,Digit::N);
         assert_eq!(r.1,0b00_00_00_01);
 
         //0111+0111+0=100T
         let a:u8 = 0b00_01_01_01;
         let b:u8 = 0b00_01_01_01;
         let r=a.dibit_adder(b, Digit::Z);
-        assert_eq!(r.0,0b00_00_00_00);
+        assert_eq!(r.0,Digit::Z);
         assert_eq!(r.1,0b01_00_00_10);
 
         //0111+0T00+1=1TT
         let a:u8 = 0b00_01_01_01;
         let b:u8 = 0b00_10_00_00;
         let r=a.dibit_adder(b, Digit::P);
-        assert_eq!(r.0,0b00_00_00_00);
+        assert_eq!(r.0,Digit::Z);
         assert_eq!(r.1,0b00_01_10_10);
 
         //1111_1111+1000_0000+0=1_T111_1111
         let a:u16 = 0b0101_0101_0101_0101;
         let b:u16 = 0b0100_0000_0000_0000;
         let r=a.dibit_adder(b, Digit::Z);
-        assert_eq!(r.0,0b0000_0000_0000_0001);
+        assert_eq!(r.0,Digit::P);
         assert_eq!(r.1,0b1001_0101_0101_0101);
 
         //1111_1111_1111_1111+1000_0000_0000_0000=1_T111_1111_1111_1111
         let a: u32 =0b0101_0101_0101_0101_0101_0101_0101_0101;
         let b: u32 =0b0100_0000_0000_0000_0000_0000_0000_0000;
         let r=a.dibit_adder(b, Digit::Z);
-        assert_eq!(r.0,0b0000_0000_0000_0000_0000_0000_0000_0001);
+        assert_eq!(r.0,Digit::P);
         assert_eq!(r.1,0b1001_0101_0101_0101_0101_0101_0101_0101);
-
-
-
     }
 
 

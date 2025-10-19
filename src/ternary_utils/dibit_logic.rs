@@ -5,7 +5,7 @@ use logical_table::{TOR,TAND,TNOR,TNAND,TXOR,TXNOR,TSUM,TCONS,TANY,TPOZ,TCMP,TDI
 pub trait DibitLogic: Sized{
     fn digits_print(&self);
     fn digits_print_t(&self);
-    fn dibit_adder(&self, other: Self, c_in: Digit) -> (Self, Self);
+    fn dibit_adder(&self, other: Self, carry: Digit) -> (Digit, Self);
 
 
     fn dibit_gate(&self, other: Self, table: &[[Digit; 3]; 3]) -> Self;
@@ -48,7 +48,7 @@ macro_rules! impl_dibit_logic_for {
             }
 
             #[inline(always)]
-            fn dibit_adder(&self, other: $t, mut carry: Digit) -> ($t, $t) {
+            fn dibit_adder(&self, other: $t, mut carry: Digit) -> (Digit, $t) {
                 let mut sum = 0;
                 for i in 0..$count {
                     let shift = i * 2;
@@ -58,7 +58,7 @@ macro_rules! impl_dibit_logic_for {
                     carry = TFULLCONS[a as usize][b as usize][carry as usize];
                     sum |= sum_i << shift;
                 }
-                (carry as $t, sum)
+                (carry , sum)
             }
             
             #[inline(always)]
@@ -101,23 +101,15 @@ macro_rules! impl_dibit_logic_for {
                 self.dibit_gate(other, &TNAND)
             }
 
+
+
+
+
+
+
         }
     };
 }
-
-
-
-
-
-
-
-
-macro_rules! dibit_gate_impl {
-    ($t:ty, $count:expr) => {
-       
-    }
-}
-
 
 
 impl_dibit_logic_for!(u8, 4);
@@ -125,3 +117,19 @@ impl_dibit_logic_for!(u16, 8);
 impl_dibit_logic_for!(u32, 16);
 impl_dibit_logic_for!(u64, 32);
 
+
+
+// fn dibit_gate_table3(&self, other: $t, c_in: $t, table: &[[[Digit; 3]; 3]; 3]) -> $t {
+//     let mut result = 0;
+//     for i in 0..$count {
+//         let shift = i * 2;
+//         let da = (self >> shift) & 0b11;
+//         let db = (other >> shift) & 0b11;
+//         let dc = (c_in >> shift) & 0b11;
+//         result |= (table[da as usize][db as usize][dc as usize] as $t) << shift;
+//     }
+//     result
+// }
+// fn dibit_t3or(&self, other: $t, c_in: $t) -> $t {
+//     self.dibit_gate_table3(other, c_in, &T3OR)
+// }

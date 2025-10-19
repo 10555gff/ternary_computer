@@ -8,7 +8,8 @@ fn main() {
     let b:u16 = 0b0100_0000_0000_0000;
     let r=a.dibit_adder(b, Digit::Z);
 
-    r.0.digits_print_t();
+    //r.0.digits_print_t();
+    println!("{:?}",r.0);
     r.1.digits_print_t();
 
 
