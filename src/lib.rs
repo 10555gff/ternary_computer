@@ -1,6 +1,7 @@
 pub mod ternary_utils;
 pub use ternary_utils::ternary_io;
 pub use ternary_utils::logical_calculate;
+pub use ternary_utils::dibit_logic;
 
 /// A `Ternary` object in this module represents a number in the balanced ternary numeral system.
 /// Balanced ternary is a non-standard positional numeral system that uses three digits: {-1, 0, +1}
