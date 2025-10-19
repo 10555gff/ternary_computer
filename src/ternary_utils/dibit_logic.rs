@@ -1,12 +1,21 @@
 use super::logical_calculate::{Digit,logical_table};
 use logical_table::{TNEG,TOR,TAND,TNOR,TNAND,TXOR,TXNOR,TSUM,TCONS,TANY,TPOZ,TCMP,TFULLSUM,TFULLCONS};
+//==========================================================
+// 三值逻辑底层实现（1trit 占 2-bit，按字节存储、按2-bit 逻辑处理）
+// 存储于 u8/u16/u32/u64 等整数中
+//  - `01` 表示 +1
+//  - `00` 表示 0
+//  - `10` 表示 -1 (T)
+//==========================================================
 
-pub trait DibitLogic: Sized{//按字节存储、按 2-bit 逻辑处理
+pub trait DibitLogic: Sized{
     fn digits_print(&self);
     fn digits_print_t(&self);
-    fn dibit_adder(&self, other: Self, carry: Digit) -> (Digit, Self);
-
     fn dibit_neg(&self) -> Self;
+    fn dibit_adder(&self, other: Self, carry: Digit) -> (Digit, Self);
+    fn dibit_sub(&self, other: Self, carry: Digit) -> (Digit, Self); 
+
+    
     fn dibit_gate(&self, other: Self, table: &[[Digit; 3]; 3]) -> Self;
     fn dibit_tor(&self, other: Self) -> Self;
     fn dibit_tand(&self, other: Self) -> Self;
@@ -40,7 +49,16 @@ macro_rules! impl_dibit_logic_for {
                 }
                 println!();
             }
-
+            #[inline(always)]
+            fn dibit_neg(&self) -> Self {
+                let mut result: $t = 0;
+                for i in 0..$count {
+                    let shift = i * 2;
+                    let d = (self >> shift) & 0b11;
+                    result |= (TNEG[d as usize] as $t) << shift;
+                }
+                result
+            }
             #[inline(always)]
             fn dibit_adder(&self, other: $t, mut carry: Digit) -> (Digit, $t) {
                 let mut sum = 0;
@@ -54,20 +72,14 @@ macro_rules! impl_dibit_logic_for {
                 }
                 (carry , sum)
             }
-
-
             #[inline(always)]
-            fn dibit_neg(&self) -> Self {
-                let mut result: $t = 0;
-                for i in 0..$count {
-                    let shift = i * 2;
-                    let d = (self >> shift) & 0b11;
-                    result |= (TNEG[d as usize] as $t) << shift;
-                }
-                result
+            fn dibit_sub(&self, other: $t,carry: Digit) -> (Digit, $t) {
+                let neg_part=other.dibit_neg();
+                let diff=self.dibit_adder(neg_part,carry);
+                (diff.0 , diff.1)
             }
 
-        
+
             #[inline(always)]
             fn dibit_gate(&self, other: $t, table: &[[Digit; 3]; 3]) -> $t {
                 if $count == 4 {// u8 展开

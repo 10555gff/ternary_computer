@@ -4,12 +4,12 @@ use ternary_arithmetic::dibit_logic::DibitLogic;
 
 
 fn main() {
-    let a:u16 = 0b0101_0101_0101_0101;
-    let b:u16 = 0b0100_0101_1010_1000;
+    let a:u16 = 0b0000_0000_0010_1010;
+    let b:u16 = 0b0000_0000_0000_0101;
+    let c=a.dibit_sub(b, Digit::Z);
 
-    b.digits_print_t();
-    let c=b.dibit_neg();
-    c.digits_print_t();
+    println!("{:?}",c.0);
+    c.1.digits_print_t();
 
     // let r=a.dibit_adder(b, Digit::Z);
 
