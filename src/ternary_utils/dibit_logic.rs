@@ -61,17 +61,34 @@ macro_rules! impl_dibit_logic_for {
                 (carry as $t, sum)
             }
 
-             #[inline(always)]
-            fn dibit_gate(&self, other:$t, table: &[[Digit; 3]; 3]) -> $t {
-                let mut result=0;
-                for i in 0..$count {
-                    let shift = i * 2;
-                    let da = (self >> shift) & 0b11;
-                    let db = (other >> shift) & 0b11;
-                    result |= (table[da as usize][db as usize] as $t) << shift;
+            #[inline(always)]
+            fn dibit_gate(&self, other: $t, table: &[[Digit; 3]; 3]) -> $t {
+                // 为 u8 使用展开式实现
+                #[allow(unused_parens)]
+                if std::mem::size_of::<$t>() == 1 {
+                    let r0 = table[(self & 0b11) as usize][(other & 0b11) as usize] as $t;
+                    let r1 = table[((self >> 2) & 0b11) as usize][((other >> 2) & 0b11) as usize] as $t;
+                    let r2 = table[((self >> 4) & 0b11) as usize][((other >> 4) & 0b11) as usize] as $t;
+                    let r3 = table[((self >> 6) & 0b11) as usize][((other >> 6) & 0b11) as usize] as $t;
+                    r0 | (r1 << 2) | (r2 << 4) | (r3 << 6)
+                } else {
+                    // 为 u16、u32、u64 使用循环实现
+                    let mut result = 0;
+                    for i in 0..$count {
+                        let shift = i * 2;
+                        let da = (self >> shift) & 0b11;
+                        let db = (other >> shift) & 0b11;
+                        result |= (table[da as usize][db as usize] as $t) << shift;
+                    }
+                    result
                 }
-                result
             }
+
+
+
+
+
+
 
             /// 使用函数别名，便于调用
             fn dibit_tor(&self, other: $t) -> $t {
