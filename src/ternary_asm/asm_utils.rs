@@ -1,36 +1,43 @@
 use std::fs::File;
-use std::io::{self, Write, Read, BufWriter, BufRead, BufReader};
+use std::io::{Write, Read, BufWriter, BufRead, BufReader};
 
 pub static LINES: &[&str] = &[
     "0001T1100T01",
     "000000000001",
     "0000001T1111",
-    "0111TTT1100T",
+    "0111TTT1111T",
 ];
 
+pub fn write_tasm() -> std::io::Result<()> {
+    let file=File::create("prog.tasm")?;
+    let mut buf = BufWriter::new(file);
 
-/// 把单个 trit 转 2-bit
-fn trit_to_bits(t: char) -> u8 {
-    match t {
-        'T' => 0b10,
-        '0' => 0b00,
-        '1' => 0b01,
-        _ => panic!("非法 trit: {}", t),
+    for l in LINES {
+        writeln!(buf, "{l}")?;
     }
+    Ok(())
 }
 
-
-
+/// 把单个 trit 转 2-bit
+fn trit_index(c: u8) -> u8 {
+    match c {
+        b'T' => 0b10, // -1
+        b'0' => 0b00, // 0
+        b'1' => 0b01, // +1
+        _ => unreachable!(),
+    }
+}
 
 /// 把一条 trit 指令转成字节流
 fn pack_trits(trits: &str) -> Vec<u8> {
     let mut bytes = Vec::new();
     let mut cur_byte = 0u8;
     let mut count = 0;
+    const SHIFT: [u8; 4] = [6, 4, 2, 0];
 
-    for c in trits.chars() {
-        let bits = trit_to_bits(c);
-        cur_byte |= bits << (6 - count * 2); // 每 byte 放 4 trits
+    for &c in trits.as_bytes() {
+        let bits = trit_index(c);
+        cur_byte |= bits << SHIFT[count];// 每 byte 放 4 trits
         count += 1;
 
         if count == 4 {
@@ -48,42 +55,35 @@ fn pack_trits(trits: &str) -> Vec<u8> {
 }
 
 
-pub fn write_tasm() -> io::Result<()> {
-    let mut w = BufWriter::new(File::create("prog.tasm")?);
-    for l in LINES {
-        writeln!(w, "{l}")?;
-    }
-    Ok(())
-}
+pub fn write_tbin() -> std::io::Result<()> {
+    // 打开 .tasm 文件
+    let reader = BufReader::new(File::open("prog.tasm")?);
 
+    // 输出 .tbin 文件
+    let out_file = File::create("prog.tbin")?;
+    let mut buf = BufWriter::new(out_file);
 
-pub fn assemble() -> io::Result<()> {
-    let r = BufReader::new(File::open("prog.tasm")?);
-    let mut w = BufWriter::new(File::create("prog.tbin")?);
-
-    for line in r.lines().filter_map(Result::ok) {
+    for line in reader.lines() {
+        let line = line?;
         let line = line.trim();
+
+        // 忽略空行和注释
         if line.is_empty() || line.starts_with('#') {
             continue;
         }
-        w.write_all(&pack_trits(line))?;
+
+        let packed = pack_trits(line);
+        buf.write_all(&packed)?;
     }
 
-    println!("Assemble done.");
+    println!("Assemble done → prog.tbin");
     Ok(())
 }
 
 
-
-
-
-
-
-
-pub fn read() -> std::io::Result<()> {
-    // 打开文件
+pub fn read_tbin() -> std::io::Result<()> {
+    // 打开 .tbin 文件
     let file = File::open("prog.tbin")?;
-    //let file = File::open(path)?;
     let mut reader = BufReader::new(file);
 
     let mut buf = Vec::new();
