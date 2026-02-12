@@ -1,7 +1,43 @@
-struct CPU {
+struct T80CPU {
     pc: usize,      // byte PC
     mem: Vec<u8>,   // tbin memory
 }
 
+struct ROM{
+
+}
+struct RAM{
+
+}
 
 
+fn decodeExecute(byte){
+
+}
+
+fn CPU(){
+    let r0;
+    let r1;
+    let pc=0;
+}
+
+// this.run=fn(){
+//     while(true){
+//         const byte=read_byte(pc);
+//         decodeExecute(byte);
+//         pc++;
+//     }
+// }
+
+// const cpu=new CPU();
+// const rom=new ROM();
+// const ram=new RAM();
+
+
+// fn read_byte(address){
+//     if(address<0x4000){
+//         return rom.read(address);
+//     }else{
+//         read ram.read(address - 0X4000);
+//     }
+// }
