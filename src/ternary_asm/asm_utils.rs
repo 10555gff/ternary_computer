@@ -1,11 +1,11 @@
 use std::fs::File;
-use std::io::{Write, Read, BufWriter, BufRead, BufReader};
+use std::io::{Write, BufWriter, BufRead, BufReader};
 
 pub static LINES: &[&str] = &[
     "0001T1100T01",
     "000000000001",
     "0000001T1111",
-    "0111TTT1111T",
+    "TTTT00001111",
 ];
 
 pub fn write_tasm() -> std::io::Result<()> {
@@ -81,15 +81,8 @@ pub fn write_tbin() -> std::io::Result<()> {
 }
 
 
-
-
-
-
-
-
-
 pub fn read_tbin() -> std::io::Result<()> {
-    let mut buf = std::fs::read("prog.tbin")?;
+    let buf = std::fs::read("prog.tbin")?;
 
     let mut pc = 0;
     let inst_size = 3; // 12 trits = 3 bytes
@@ -108,29 +101,6 @@ pub fn read_tbin() -> std::io::Result<()> {
 
     Ok(())
 }
-
-
-// pub fn read_tbin() -> std::io::Result<()> {
-//     let file = File::open("prog.tbin")?;
-//     let mut reader = BufReader::new(file);
-
-//     let mut buf = Vec::new();
-//     reader.read_to_end(&mut buf)?;// 读取整个文件到内存
-
-//     println!("Read {} bytes", buf.len());
-
-//     // 每 3 bytes = 1 instruction
-//     for (i, inst) in buf.chunks_exact(3).enumerate() {
-//         println!(
-//             "INST {}: {:08b} {:08b} {:08b}",
-//             i,
-//             inst[0], inst[1], inst[2]
-//         );
-//     }
-
-//     Ok(())
-// }
-
 
 // while !halted {
 //     let inst = &mem[pc..pc+3];
