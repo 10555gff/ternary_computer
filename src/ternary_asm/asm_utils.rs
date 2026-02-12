@@ -81,18 +81,60 @@ pub fn write_tbin() -> std::io::Result<()> {
 }
 
 
+
+
+
+
+
+
+
 pub fn read_tbin() -> std::io::Result<()> {
-    // 打开 .tbin 文件
-    let file = File::open("prog.tbin")?;
-    let mut reader = BufReader::new(file);
+    let mut buf = std::fs::read("prog.tbin")?;
 
-    let mut buf = Vec::new();
-    reader.read_to_end(&mut buf)?; // 读取整个文件到内存
+    let mut pc = 0;
+    let inst_size = 3; // 12 trits = 3 bytes
 
-    println!("Read {} bytes", buf.len());
-    for (i, &b) in buf.iter().enumerate() {
-        println!("byte {} = {:08b}", i, b);
+    while pc + inst_size <= buf.len() {
+        let inst = &buf[pc..pc+3];
+
+        println!(
+            "PC={} INST={:08b} {:08b} {:08b}",
+            pc,
+            inst[0], inst[1], inst[2]
+        );
+
+        pc += inst_size; // next instruction
     }
 
     Ok(())
 }
+
+
+// pub fn read_tbin() -> std::io::Result<()> {
+//     let file = File::open("prog.tbin")?;
+//     let mut reader = BufReader::new(file);
+
+//     let mut buf = Vec::new();
+//     reader.read_to_end(&mut buf)?;// 读取整个文件到内存
+
+//     println!("Read {} bytes", buf.len());
+
+//     // 每 3 bytes = 1 instruction
+//     for (i, inst) in buf.chunks_exact(3).enumerate() {
+//         println!(
+//             "INST {}: {:08b} {:08b} {:08b}",
+//             i,
+//             inst[0], inst[1], inst[2]
+//         );
+//     }
+
+//     Ok(())
+// }
+
+
+// while !halted {
+//     let inst = &mem[pc..pc+3];
+//     pc += 3;
+
+//     decode_execute(inst);
+// }
