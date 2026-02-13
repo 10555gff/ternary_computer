@@ -7,33 +7,43 @@ pub struct Trit4(pub u8); // 包装一个 u8
 const MASK_EVEN: u8 = 0x55; // 偶数位掩码
 const MASK_ODD:  u8 = 0xAA; // 奇数位掩码
 
+// #[inline(always)]
+fn combine_even_odd(low: u8, high: u8) -> u8 {
+    (low & MASK_EVEN) | (high & MASK_ODD)
+}
+
+// #[inline(always)]
+fn combine_swap(low: u8, high: u8) -> u8 {
+    ((high & MASK_ODD) >> 1) | ((low & MASK_EVEN) << 1)
+}
+
 impl Trit4 {
-    pub fn tor(&self, other: Self) -> Self {
-        let (a,b)=(self.0,other.0);
-        let low_bits_or = (a | b) & MASK_EVEN;
-        let high_bits_and = (a & b) & MASK_ODD;
-        Trit4(low_bits_or | high_bits_and)
+
+    pub fn tor(self, other: Self) -> Self {
+        let a=self.0 | other.0;
+        let b=self.0 & other.0;
+        let res=combine_even_odd(a,b);
+        Trit4(res)
     }
-    pub fn tand(&self, other: Self) -> Self {
-        let (a,b)=(self.0,other.0);
-        let low_bits_or = (a & b) & MASK_EVEN;
-        let high_bits_and = (a | b) & MASK_ODD;
-        Trit4(low_bits_or | high_bits_and)
+    pub fn tand(self, other: Self) -> Self {
+        let a=self.0 | other.0;
+        let b=self.0 & other.0;
+        let res=combine_even_odd(b,a);
+        Trit4(res)
     }
 
-    pub fn tnor(&self, other: Self) -> Self {
-        let (a,b)=(self.0,other.0);
-        let res_bit0 = ((a & b) & MASK_ODD) >> 1;
-        let res_bit1 = ((a | b) & MASK_EVEN) << 1;
-        Trit4(res_bit0 | res_bit1)
+    pub fn tnor(self, other: Self) -> Self {
+        let a=self.0 | other.0;
+        let b=self.0 & other.0;
+        let res=combine_swap(a,b);
+        Trit4(res)
     }
-    pub fn tnand(&self, other: Self) -> Self {
-        let (a,b)=(self.0,other.0);
-        let res_bit0 = ((a | b) & MASK_ODD) >> 1;
-        let res_bit1 = ((a & b) & MASK_EVEN) << 1;
-        Trit4(res_bit0 | res_bit1)
+    pub fn tnand(self, other: Self) -> Self {
+        let a=self.0 | other.0;
+        let b=self.0 & other.0;
+        let res=combine_swap(b,a);
+        Trit4(res)
     }
-
 
 
 
