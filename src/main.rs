@@ -5,8 +5,8 @@ fn main() {
     let reg_b = Trit4(0b00_01_01_10); // 对应三进制序列 [Z, P, P, N]
 
     // 执行并行或运算
-    let result = reg_a.dibit_tor(reg_b);
+    let result = reg_a.dibit_txor(reg_b);
     
 
-    println!("结果内部值: {:08b}", result);
+    println!("结果内部值: {:08b}", result.0);
 }
