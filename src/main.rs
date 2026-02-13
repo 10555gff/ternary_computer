@@ -20,9 +20,9 @@ fn main() {
     let c = Trit4(0b00_00_00_00);
     let d = Trit4(0b01_01_01_00);
     
-    let result1 = a.tnand(b);
-    let result2 = a.tnand(c);
-    let result3 = a.tnand(d);
+    let result1 = a.tor(b);
+    let result2 = a.tor(c);
+    let result3 = a.tor(d);
 
 
 

@@ -4,48 +4,35 @@ use logical_table::{TOR,TAND,TNOR,TNAND,TXOR,TXNOR,TSUM,TCONS,TANY,TPOZ,TCMP};
 #[derive(Debug, Clone, Copy)]
 pub struct Trit4(pub u8); // 包装一个 u8
 
-const MASK_EVEN: u8 = 0x55; // 偶数位掩码
-const MASK_ODD:  u8 = 0xAA; // 奇数位掩码
-
-// #[inline(always)]
-fn combine_even_odd(low: u8, high: u8) -> u8 {
-    (low & MASK_EVEN) | (high & MASK_ODD)
-}
-
-// #[inline(always)]
-fn combine_swap(low: u8, high: u8) -> u8 {
-    ((high & MASK_ODD) >> 1) | ((low & MASK_EVEN) << 1)
-}
-
 impl Trit4 {
+    #[inline(always)]
+    fn or_and(self, other: Self) -> (u8, u8) {
+        let or  = self.0 | other.0;
+        let and = self.0 & other.0;
+        (or, and)
+    }
 
     pub fn tor(self, other: Self) -> Self {
-        let a=self.0 | other.0;
-        let b=self.0 & other.0;
-        let res=combine_even_odd(a,b);
+        let (or, and) = self.or_and(other);
+        let res=(or & 0x55) | (and & 0xAA);
         Trit4(res)
     }
     pub fn tand(self, other: Self) -> Self {
-        let a=self.0 | other.0;
-        let b=self.0 & other.0;
-        let res=combine_even_odd(b,a);
+        let (or, and) = self.or_and(other);
+        let res=(and & 0x55) | (or & 0xAA);
         Trit4(res)
     }
 
     pub fn tnor(self, other: Self) -> Self {
-        let a=self.0 | other.0;
-        let b=self.0 & other.0;
-        let res=combine_swap(a,b);
+        let (or, and) = self.or_and(other);
+        let res=((and & 0xAA) >> 1) | ((or & 0x55) << 1);
         Trit4(res)
     }
     pub fn tnand(self, other: Self) -> Self {
-        let a=self.0 | other.0;
-        let b=self.0 & other.0;
-        let res=combine_swap(b,a);
+        let (or, and) = self.or_and(other);
+        let res=((or & 0xAA) >> 1) | ((and & 0x55) << 1);
         Trit4(res)
     }
-
-
 
 
     fn dibit_gate(&self, other: Trit4, table: &[[Trit; 3]; 3]) -> Trit4 {
