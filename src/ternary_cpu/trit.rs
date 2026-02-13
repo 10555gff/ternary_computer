@@ -8,12 +8,6 @@ const MASK_EVEN: u8 = 0x55; // 偶数位掩码
 const MASK_ODD:  u8 = 0xAA; // 奇数位掩码
 
 impl Trit4 {
-    // pub fn tor(&self, other: Self) -> Self {
-    //     let (a,b)=(self.0,other.0);
-    //     let low_bits_or = (a & MASK_EVEN) | (b & MASK_EVEN);
-    //     let high_bits_and = (a & MASK_ODD) & (b & MASK_ODD);
-    //     Trit4(low_bits_or | high_bits_and)
-    // }
     pub fn tor(&self, other: Self) -> Self {
         let (a,b)=(self.0,other.0);
         let low_bits_or = (a | b) & MASK_EVEN;
@@ -27,22 +21,18 @@ impl Trit4 {
         Trit4(low_bits_or | high_bits_and)
     }
 
-
-
-    // /// Case 2: 交叉逻辑 (结果位0 = A1 | B0, 结果位1 = A0 & B1)
-    // pub fn tand(&self, other: Self) -> Self {
-    //     let (a,b)=(self.0,other.0);
-    //     let res_bit0 = (a & 0b01) & (b & 0b01);
-    //     let res_bit1 = (a & 0b10) | (b & 0b10);
-    //     Trit4(res_bit0 | res_bit1)
-    // }
-
-
-
-
-
-
-
+    pub fn tnor(&self, other: Self) -> Self {
+        let (a,b)=(self.0,other.0);
+        let res_bit0 = ((a & b) & MASK_ODD) >> 1;
+        let res_bit1 = ((a | b) & MASK_EVEN) << 1;
+        Trit4(res_bit0 | res_bit1)
+    }
+    pub fn tnand(&self, other: Self) -> Self {
+        let (a,b)=(self.0,other.0);
+        let res_bit0 = ((a | b) & MASK_ODD) >> 1;
+        let res_bit1 = ((a & b) & MASK_EVEN) << 1;
+        Trit4(res_bit0 | res_bit1)
+    }
 
 
 
