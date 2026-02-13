@@ -4,12 +4,50 @@ use logical_table::{TOR,TAND,TNOR,TNAND,TXOR,TXNOR,TSUM,TCONS,TANY,TPOZ,TCMP};
 #[derive(Debug, Clone, Copy)]
 pub struct Trit4(pub u8); // 包装一个 u8
 
-const MASK_EVEN: u8 = 0x55; // 0101_0101 偶位 (bit0)
-const MASK_ODD:  u8 = 0xAA; // 1010_1010 奇位 (bit1)
-
-
+const MASK_EVEN: u8 = 0x55; // 偶数位掩码
+const MASK_ODD:  u8 = 0xAA; // 奇数位掩码
 
 impl Trit4 {
+    // pub fn tor(&self, other: Self) -> Self {
+    //     let (a,b)=(self.0,other.0);
+    //     let low_bits_or = (a & MASK_EVEN) | (b & MASK_EVEN);
+    //     let high_bits_and = (a & MASK_ODD) & (b & MASK_ODD);
+    //     Trit4(low_bits_or | high_bits_and)
+    // }
+    pub fn tor(&self, other: Self) -> Self {
+        let (a,b)=(self.0,other.0);
+        let low_bits_or = (a | b) & MASK_EVEN;
+        let high_bits_and = (a & b) & MASK_ODD;
+        Trit4(low_bits_or | high_bits_and)
+    }
+    pub fn tand(&self, other: Self) -> Self {
+        let (a,b)=(self.0,other.0);
+        let low_bits_or = (a & b) & MASK_EVEN;
+        let high_bits_and = (a | b) & MASK_ODD;
+        Trit4(low_bits_or | high_bits_and)
+    }
+
+
+
+    // /// Case 2: 交叉逻辑 (结果位0 = A1 | B0, 结果位1 = A0 & B1)
+    // pub fn tand(&self, other: Self) -> Self {
+    //     let (a,b)=(self.0,other.0);
+    //     let res_bit0 = (a & 0b01) & (b & 0b01);
+    //     let res_bit1 = (a & 0b10) | (b & 0b10);
+    //     Trit4(res_bit0 | res_bit1)
+    // }
+
+
+
+
+
+
+
+
+
+
+
+
     fn dibit_gate(&self, other: Trit4, table: &[[Trit; 3]; 3]) -> Trit4 {
         let r0 = table[(self.0 & 0b11) as usize][(other.0 & 0b11) as usize] as u8;
         let r1 = table[((self.0 >> 2) & 0b11) as usize][((other.0 >> 2) & 0b11) as usize] as u8;
@@ -18,24 +56,8 @@ impl Trit4 {
 
         Trit4(r0 | (r1 << 2) | (r2 << 4) | (r3 << 6))
     }
-    // 这样你的 Trit4 逻辑会非常简洁：
 
-    pub fn tor(&self, other: Self) -> Self {
-        let a=self.0;
-        let b=other.0;
-    // 1. 提取所有偶数位 (0, 2, 4, 6) 执行 OR 运算
-    // 掩码 01010101b = 0x55
-    let low_bits_or = (a & 0x55) | (b & 0x55);
 
-    // 2. 提取所有奇数位 (1, 3, 5, 7) 执行 AND 运算
-    // 掩码 10101010b = 0xAA
-    let high_bits_and = (a & 0xAA) & (b & 0xAA);
-
-    // 3. 将结果合并
-    
-
-    Trit4(low_bits_or | high_bits_and) // 内部直接复用 u8 的逻辑
-    }
 
 //     fn process_circuits(a: u8, b: u8) {
 //     // 掩码定义

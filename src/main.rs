@@ -15,13 +15,18 @@ use ternary_arithmetic::ternary_cpu::trit::Trit4;
 
 
 fn main() {
-    let input_a = Trit4(0b1010_1010); 
-    let input_b = Trit4(0b0111_0101);
+    let a = Trit4(0b10_00_01_00); 
+    let b = Trit4(0b10_10_10_00);
+    let c = Trit4(0b00_00_00_00);
+    let d = Trit4(0b01_01_01_00);
     
-    let result = input_a.tor(input_b);
-    //Trit4::custom_logic_process(input_a, input_b);
+    let result1 = a.tand(b);
+    let result2 = a.tand(c);
+    let result3 = a.tand(d);
 
-    println!("输入 A: {:08b}", input_a.0);
-    println!("输入 B: {:08b}", input_b.0);
-    println!("结果  : {:08b}", result.0);
+
+
+    println!("结果  : {:08b}", result1.0);
+    println!("结果  : {:08b}", result2.0);
+    println!("结果  : {:08b}", result3.0);
 }
