@@ -75,4 +75,19 @@ impl Trit4 {
     pub fn dibit_tcmp(&self, other: Self) -> Self {
         self.dibit_gate(other, &TCMP)
     }
+
+    #[inline(always)]
+    pub fn gate_core(&self, other: Self, code:u8)-> Self{
+        let (or, and) = self.or_and(other);
+        let mut res:u8=0;
+
+        match code{
+            0=>res=(or & 0x55) | (and & 0xAA),//tor
+            1=>res=(and & 0x55) | (or & 0xAA),//tand
+            2=>res=((and & 0xAA) >> 1) | ((or & 0x55) << 1),//tnor
+            3=>res=((or & 0xAA) >> 1) | ((and & 0x55) << 1),//tnand
+            _ =>println!("else"),
+        }
+        Trit4(res)
+    }
 }
