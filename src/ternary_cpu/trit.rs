@@ -1,5 +1,9 @@
 use super::logical_table::{self,Trit};
-use logical_table::{TXOR,TXNOR,TSUM,TCONS,TANY,TPOZ,TCMP};
+use logical_table::{TXOR,TXNOR,TSUM,TCONS,TANY,TPOZ,TCMP,TFULLSUM,TFULLCONS};
+
+// 定义位掩码常量，增加可读性
+const MASK_EVEN: u8 = 0x55; // 01010101b (c0 位)
+const MASK_ODD:  u8 = 0xAA; // 10101010b (c1 位)
 
 #[derive(Debug, Clone, Copy)]
 pub struct Trit4(pub u8); // 包装一个 u8
@@ -18,10 +22,10 @@ impl Trit4 {
         let mut res:u8=0;
 
         match code{
-            0=>res=(or & 0x55) | (and & 0xAA),//tor
-            1=>res=(and & 0x55) | (or & 0xAA),//tand
-            2=>res=((or & 0x55) << 1) | ((and & 0xAA) >> 1),//tnor
-            3=>res=((and & 0x55) << 1) | ((or & 0xAA) >> 1),//tnand
+            0=>res=(or & MASK_EVEN) | (and & MASK_ODD),//tor
+            1=>res=(and & MASK_EVEN) | (or & MASK_ODD),//tand
+            2=>res=((or & MASK_EVEN) << 1) | ((and & MASK_ODD) >> 1),//tnor
+            3=>res=((and & MASK_EVEN) << 1) | ((or & MASK_ODD) >> 1),//tnand
             _ =>println!("undefine"),
         }
         Trit4(res)
@@ -62,6 +66,19 @@ impl Trit4 {
         let r3 = table[((self.0 >> 6) & 0b11) as usize][((other.0 >> 6) & 0b11) as usize] as u8;
 
         Trit4(r0 | (r1 << 2) | (r2 << 4) | (r3 << 6))
+    }
+
+    pub fn dibit_adder(&self, other: Trit4, mut carry: Trit) -> (Trit, Trit4) {
+        let mut sum = 0;
+        for i in 0..4 {
+            let shift = i * 2;
+            let a = (self.0 >> shift) & 0b11;
+            let b = (other.0 >> shift) & 0b11;
+            let sum_i = TFULLSUM[a as usize][b as usize][carry as usize] as u8;
+            carry = TFULLCONS[a as usize][b as usize][carry as usize];
+            sum |= sum_i << shift;
+        }
+        (carry , Trit4(sum))
     }
 
     /// 使用函数别名，便于调用
