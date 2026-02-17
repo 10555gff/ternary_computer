@@ -26,6 +26,8 @@ impl Trit4 {
             1=>res=(and & MASK_EVEN) | (or & MASK_ODD),//tand
             2=>res=((or & MASK_EVEN) << 1) | ((and & MASK_ODD) >> 1),//tnor
             3=>res=((and & MASK_EVEN) << 1) | ((or & MASK_ODD) >> 1),//tnand
+            4=>res=((or & (or >> 1)) & MASK_EVEN) | ((and | (and << 1)) & MASK_ODD),//txor
+            5=>res=((and | (and >> 1)) & MASK_EVEN) | ((or & (or << 1)) & MASK_ODD),//tnxor
             _ =>println!("undefine"),
         }
         Trit4(res)
