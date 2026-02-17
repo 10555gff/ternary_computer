@@ -61,12 +61,7 @@ impl Trit4 {
 
     pub fn txor(self, other: Self) -> Self {
         let (or, and) = self.or_and(other);
-
-        let low_or = or & 0x55;
-        let high_or = (or & 0xAA) >> 1;
-        let low_and = and & 0x55;
-        let high_and = (and & 0xAA) >> 1;
-        let res = ((low_or & high_or) << 1) | (low_and | high_and);
+        let res=((or & (or << 1)) & 0xAA) | ((and | (and >> 1)) & 0x55);
         Trit4(res)
     }
 
