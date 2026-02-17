@@ -59,44 +59,16 @@ impl Trit4 {
         Trit4(res)
     }
 
-    // pub fn txor(self, other: Self) -> Self {
-    //     let (or, and) = self.or_and(other);
-    //     let r1=Trit4((or & 0x55) | (and & 0xAA));
-    //     let r2=Trit4(((or & 0xAA) >> 1) | ((and & 0x55) << 1));
-
-    //     let (or, and) = r1.or_and(r2);
-    //     let res=((or & 0xAA) >> 1) | ((and & 0x55) << 1);
-    //     Trit4(res)
-    // }
-
     pub fn txor(self, other: Self) -> Self {
-        let (or1, and1) = self.or_and(other);
-        
-        // 构造中间置换层 r1 和 r2
-        let r1 = (or1 & 0x55) | (and1 & 0xAA);
-        let r2 = ((or1 & 0xAA) >> 1) | ((and1 & 0x55) << 1);
-        let res=(((r1 | r2) & 0xAA) >> 1) | (((r1 & r2) & 0x55) << 1);
+        let (or, and) = self.or_and(other);
 
-
-        // 最终映射回 Trit4 编码
+        let low_or = or & 0x55;
+        let high_or = (or & 0xAA) >> 1;
+        let low_and = and & 0x55;
+        let high_and = (and & 0xAA) >> 1;
+        let res = ((low_or & high_or) << 1) | (low_and | high_and);
         Trit4(res)
     }
-
-// pub fn txor(self, other: Self) -> Self {
-//     let or_ = self.0 | other.0;
-//     let and_ = self.0 & other.0;
-//     let low_or = or_ & 0x55;
-//     let high_or = (or_ & 0xAA) >> 1;
-//     let low_and = and_ & 0x55;
-//     let high_and = (and_ & 0xAA) >> 1;
-//     let res = ((low_or & high_or) << 1) | (low_and | high_and);
-//     Trit4(res)
-// }
-
-
-
-
-
 
     fn dibit_gate(&self, other: Trit4, table: &[[Trit; 3]; 3]) -> Trit4 {
         let r0 = table[(self.0 & 0b11) as usize][(other.0 & 0b11) as usize] as u8;
