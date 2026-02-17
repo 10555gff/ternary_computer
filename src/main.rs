@@ -14,9 +14,9 @@ fn main() {
 
 
 
-    let result1 = a.tncons(b);
-    let result2 = a.tncons(c);
-    let result3 = a.tncons(d);
+    let result1 = a.tand(b);
+    let result2 = a.tand(c);
+    let result3 = a.tand(d);
 
 
     println!("结果  : {:08b}", result1.0);

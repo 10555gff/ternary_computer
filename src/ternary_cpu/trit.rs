@@ -40,13 +40,13 @@ impl Trit4 {
     }
 
     pub fn tor(self, other: Self) -> Self {
-        let (or, and) = self.or_and(other);
-        let res=(or & 0x55) | (and & 0xAA);
+        let (a, b) = (self.0, other.0);
+        let res=((a | b) & 0x55) | ((a & b) & 0xAA);
         Trit4(res)
     }
     pub fn tand(self, other: Self) -> Self {
-        let (or, and) = self.or_and(other);
-        let res=(and & 0x55) | (or & 0xAA);
+        let (a, b) = (self.0, other.0);
+        let res=((a & b) & 0x55) | ((a | b) & 0xAA);
         Trit4(res)
     }
 
