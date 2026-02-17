@@ -61,9 +61,76 @@ impl Trit4 {
 
     pub fn txor(self, other: Self) -> Self {
         let (or, and) = self.or_and(other);
-        let res=((or & (or << 1)) & 0xAA) | ((and | (and >> 1)) & 0x55);
-        Trit4(res)
+
+        // 1. 提取 or 的高低位交集 (原本 txor 的高位 -> 现在的低位)
+        // (or & 0x55) & (or >> 1) 得到两位置 1 的情况
+        let res_low = (or & (or >> 1)) & 0x55;
+
+        // 2. 提取 and 的高低位并集 (原本 txor 的低位 -> 现在的高位)
+        // (and | (and << 1)) & 0xAA 得到任一位置 1 的情况
+        let res_high = (and | (and << 1)) & 0xAA;
+        //println!("ffffffffffffffffffffffffbbffffff");
+
+        Trit4(res_low | res_high)
     }
+
+
+    pub fn tnxor(self, other: Self) -> Self {
+        let (or, and) = self.or_and(other);
+
+        let res_low = (or & (or << 1)) & 0xAA;
+
+        // 2. 提取 and 的高低位并集 (原本 txor 的低位 -> 现在的高位)
+        // (and | (and << 1)) & 0xAA 得到任一位置 1 的情况
+        let res_high = (and | (and >> 1)) & 0x55;
+
+        
+        println!("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb");
+        Trit4(res_low | res_high)
+    }
+
+
+
+
+
+
+
+    // pub fn (self, other: Self) -> Self {
+    //     let (or, and) = self.or_and(other);
+
+    // }
+
+    // pub fn tnxor(self, other: Self) -> Self {
+    //     let (or, and) = self.or_and(other);
+
+    //     let low_or = or & 0x55;
+    //     let high_or = (or & 0xAA) >> 1;
+    //     let low_and = and & 0x55;
+    //     let high_and = (and & 0xAA) >> 1;
+    //     let res = ((low_or & high_or) << 1) | (low_and | high_and);
+    //     Trit4(res)
+    // }
+
+
+
+
+// pub fn tnxor(self, other: Self) -> Self {
+//     let (or, and) = self.or_and(other);
+
+//     let low_or  = or  & 0x55;
+//     let high_or = (or  & 0xAA) >> 1;
+//     let low_and = and & 0x55;
+//     let high_and= (and & 0xAA) >> 1;
+
+//     // 先算 txor 的结果
+//     let xor_res = ((low_or & high_or) << 1) | (low_and | high_and);
+
+//     // 直接在 xor_res 上做 tneg（高低位互换）
+//     let txnor_res = ((xor_res & 0xAA) >> 1) | ((xor_res & 0x55) << 1);
+
+//     Trit4(txnor_res)
+// }
+
 
     fn dibit_gate(&self, other: Trit4, table: &[[Trit; 3]; 3]) -> Trit4 {
         let r0 = table[(self.0 & 0b11) as usize][(other.0 & 0b11) as usize] as u8;

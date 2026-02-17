@@ -15,9 +15,9 @@ fn main() {
 
 
 
-    let result1 = a.txor(b);
-    let result2 = a.txor(c);
-    let result3 = a.txor(d);
+    let result1 = a.tnxor(b);
+    let result2 = a.tnxor(c);
+    let result3 = a.tnxor(d);
 
 
     println!("结果  : {:08b}", result1.0);
