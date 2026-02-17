@@ -5,18 +5,18 @@ fn main() {
     let b = Trit4(0b10_10_10_00);
     let c = Trit4(0b00_00_00_00);
     let d = Trit4(0b01_01_01_00);
-    let code=5;
+    // let code=5;
     
-    let result1 =a.gate_core(b,code);
-    let result2 =a.gate_core(c,code);
-    let result3 =a.gate_core(d,code);
+    // let result1 =a.gate_core(b,code);
+    // let result2 =a.gate_core(c,code);
+    // let result3 =a.gate_core(d,code);
 
 
 
 
-    // let result1 = a.txor(b);
-    // let result2 = a.txor(c);
-    // let result3 = a.txor(d);
+    let result1 = a.tncons(b);
+    let result2 = a.tncons(c);
+    let result3 = a.tncons(d);
 
 
     println!("结果  : {:08b}", result1.0);

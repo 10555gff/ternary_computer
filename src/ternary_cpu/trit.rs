@@ -72,6 +72,15 @@ impl Trit4 {
         Trit4(res)
     }
 
+    pub fn tcons(self, other: Self) -> Self {
+        Trit4(self.0 & other.0)
+    }
+    pub fn tncons(self, other: Self) -> Self {
+        let val = self.0 & other.0;
+        let res=((val >> 1) & 0x55) | ((val << 1) & 0xAA);
+        Trit4(res)
+    }
+
     fn dibit_gate(&self, other: Trit4, table: &[[Trit; 3]; 3]) -> Trit4 {
         let r0 = table[(self.0 & 0b11) as usize][(other.0 & 0b11) as usize] as u8;
         let r1 = table[((self.0 >> 2) & 0b11) as usize][((other.0 >> 2) & 0b11) as usize] as u8;
