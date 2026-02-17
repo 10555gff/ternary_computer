@@ -52,12 +52,12 @@ impl Trit4 {
 
     pub fn tnor(self, other: Self) -> Self {
         let (or, and) = self.or_and(other);
-        let res=((and & 0xAA) >> 1) | ((or & 0x55) << 1);
+        let res=((and >> 1) & 0x55) | ((or << 1) & 0xAA);
         Trit4(res)
     }
     pub fn tnand(self, other: Self) -> Self {
         let (or, and) = self.or_and(other);
-        let res=((or & 0xAA) >> 1) | ((and & 0x55) << 1);
+        let res=((or >> 1) & 0x55) | ((and << 1) & 0xAA);
         Trit4(res)
     }
 
