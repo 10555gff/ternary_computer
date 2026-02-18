@@ -1,3 +1,4 @@
+use std::fmt;
 use super::logical_table::{self,Trit};
 use logical_table::{TSUM,TANY,TPOZ,TCMP,TFULLSUM,TFULLCONS};
 
@@ -6,6 +7,7 @@ const MASK_EVEN: u8 = 0x55; // 01010101b (c0 位)
 const MASK_ODD:  u8 = 0xAA; // 10101010b (c1 位)
 const SHIFT: [u8;4] = [0,2,4,6];
 const MASK:  [u8;4] = [0x03,0x0C,0x30,0xC0];
+const DECODE: [char;4]=['0','1','T','X'];
 
 fn set_2bit(word: u8, k: usize, value: u8) -> u8 {
     let mask  = MASK[k];
@@ -32,8 +34,6 @@ impl Trit4 {
     pub fn set(&mut self,i:usize,v:u8){
         self.0 = set_2bit(self.0,i,v)
     }
-
-
 
     #[inline(always)]
     fn or_and(self, other: Self) -> (u8, u8) {
@@ -143,5 +143,19 @@ impl Trit4 {
     }
     pub fn dibit_tcmp(&self, other: Self) -> Self {
         self.dibit_gate(other, &TCMP)
+    }
+}
+
+
+impl fmt::Display for Trit4 {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        // 提取 4 个 trit
+        let t0 = DECODE[self.get(0) as usize];
+        let t1 = DECODE[self.get(1) as usize];
+        let t2 = DECODE[self.get(2) as usize];
+        let t3 = DECODE[self.get(3) as usize];
+        
+        // 格式化为 [t3, t2, t1, t0] (高位在前符合数值习惯)
+        write!(f, "Trit4[{}, {}, {}, {}]", t3, t2, t1, t0)
     }
 }
