@@ -7,26 +7,26 @@ const MASK_ODD:  u8 = 0xAA; // 10101010b (c1 位)
 const SHIFT: [u8;4] = [0,2,4,6];
 const MASK:  [u8;4] = [0x03,0x0C,0x30,0xC0];
 
+fn set_2bit(word: u8, k: usize, value: u8) -> u8 {
+    let mask  = MASK[k];
+    let shift = SHIFT[k];
+    (word & !mask) | ((value & 0x03) << shift)
+}
+fn read_2bit(word:u8,k:usize)->u8{
+    (word & MASK[k]) >> SHIFT[k]
+}
+fn clear_2bit(word: u8, k: usize) -> u8 {
+    word & !MASK[k]
+}
+fn toggle_2bit(word: u8, k: usize) -> u8 {
+    word ^ MASK[k]
+}
+
 
 #[derive(Debug, Clone, Copy)]
 pub struct Trit4(pub u8); // 包装一个 u8
 
 impl Trit4 {
-    fn set_2bit(word: u8, k: usize, value: u8) -> u8 {
-        let mask  = MASK[k];
-        let shift = SHIFT[k];
-        (word & !mask) | ((value & 0x03) << shift)
-    }
-    fn read_2bit(word:u8,k:usize)->u8{
-        (word & MASK[k]) >> SHIFT[k]
-    }
-    fn clear_2bit(word: u8, k: usize) -> u8 {
-        word & !MASK[k]
-    }
-    fn toggle_2bit(word: u8, k: usize) -> u8 {
-        word ^ MASK[k]
-    }
-
     pub fn get(&self, i:usize)->u8 { read_2bit(self.0,i) }
     pub fn set(&mut self,i:usize,v:u8){
         self.0 = set_2bit(self.0,i,v)
