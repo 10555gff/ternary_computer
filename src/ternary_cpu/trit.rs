@@ -1,5 +1,5 @@
 use super::logical_table::{self,Trit};
-use logical_table::{TXOR,TXNOR,TSUM,TCONS,TANY,TPOZ,TCMP,TFULLSUM,TFULLCONS};
+use logical_table::{TSUM,TANY,TPOZ,TCMP,TFULLSUM,TFULLCONS};
 
 // 定义位掩码常量，增加可读性
 const MASK_EVEN: u8 = 0x55; // 01010101b (c0 位)
@@ -55,6 +55,8 @@ impl Trit4 {
             3=>res=((and & MASK_EVEN) << 1) | ((or & MASK_ODD) >> 1),//tnand
             4=>res=((or & (or >> 1)) & MASK_EVEN) | ((and | (and << 1)) & MASK_ODD),//txor
             5=>res=((and | (and >> 1)) & MASK_EVEN) | ((or & (or << 1)) & MASK_ODD),//tnxor
+            6=>res=and,//tcons
+            7=>res=((and >> 1) & MASK_EVEN) | ((and << 1) & MASK_ODD),//tncons
             _ =>println!("undefine"),
         }
         Trit4(res)
@@ -131,17 +133,8 @@ impl Trit4 {
     }
 
     /// 使用函数别名，便于调用
-    pub fn dibit_txor(&self, other: Self) -> Self {
-        self.dibit_gate(other, &TXOR)
-    }
-    pub fn dibit_txnor(&self, other: Self) -> Self {
-        self.dibit_gate(other, &TXNOR)
-    }
     pub fn dibit_tsum(&self, other: Self) -> Self {
         self.dibit_gate(other, &TSUM)
-    }
-    pub fn dibit_tcons(&self, other: Self) -> Self {
-        self.dibit_gate(other, &TCONS)
     }
     pub fn dibit_tany(&self, other: Self) -> Self {
         self.dibit_gate(other, &TANY)
