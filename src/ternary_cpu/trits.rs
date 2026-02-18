@@ -22,8 +22,7 @@ fn toggle_2bit(word: u8, k: usize) -> u8 {
     word ^ MASK[k]
 }
 
-
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq)]
 pub struct Trit4(pub u8); // 包装一个 u8
 
 impl Trit4 {

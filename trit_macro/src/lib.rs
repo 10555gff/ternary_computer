@@ -21,6 +21,9 @@ pub fn trits(input: TokenStream) -> TokenStream {
         }
     }
 
-    let out = quote! { #value };
+    // let out = quote! { #value };
+    // out.into()
+
+    let out = quote! { Trit4(#value) }; 
     out.into()
 }
