@@ -13,9 +13,9 @@ fn main() {
     // let result2 =a.gate_core(c,code);
     // let result3 =a.gate_core(d,code);
 
-    // let result1 = a.tncons(b);
-    // let result2 = a.tncons(c);
-    // let result3 = a.tncons(d);
+    let result1 = a.tncons(b);
+    let result2 = a.tncons(c);
+    let result3 = a.tncons(d);
     println!("结果  : {:08b}", result1.0);
     println!("结果  : {:08b}", result2.0);
     println!("结果  : {:08b}", result3.0);
