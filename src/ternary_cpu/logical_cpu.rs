@@ -21,6 +21,17 @@ fn CPU(){
     let pc=0;
 }
 
+
+
+
+//Trit CPU 模拟器终极结构
+// struct Register {
+//     trits: [Trit4; 8], // 32 trits register
+// }
+
+
+
+
 // this.run=fn(){
 //     while(true){
 //         const byte=read_byte(pc);
