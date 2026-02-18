@@ -28,10 +28,11 @@ pub struct Trit4(pub u8); // 包装一个 u8
 
 impl Trit4 {
     pub fn get(&self, i:usize)->u8 { read_2bit(self.0,i) }
+    pub fn clear(&self, i:usize)->u8 { clear_2bit(self.0,i) }
+    pub fn toggle(&self, i:usize)->u8 { toggle_2bit(self.0,i) }
     pub fn set(&mut self,i:usize,v:u8){
         self.0 = set_2bit(self.0,i,v)
     }
-
 
 
 
