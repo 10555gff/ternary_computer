@@ -115,12 +115,10 @@ impl Trit4 {
     }
     pub fn tnany(self, other: Self) -> Self {
         let nor:u8 = !(self.0 | other.0);
-       // let m = (nor & (nor >> 1)) & 0x55;
-        let m = ((nor & 0xAA) >> 1) & (nor & 0x55);
-        let res=nor & !(m | m << 1);
+        let m = (nor & (nor >> 1)) & 0x55;
+        let res = nor ^ (m | m << 1);
         Trit4(res)
     }
-
 
     fn dibit_gate(&self, other: Trit4, table: &[[u8; 3]; 3]) -> Trit4 {
         let r0 = table[(self.0 & 0b11) as usize][(other.0 & 0b11) as usize] as u8;
