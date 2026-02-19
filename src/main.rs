@@ -7,15 +7,15 @@ fn main() {
     let c = trits!("000_0");
     let d = trits!("111_0");
 
-    let code=6;
+    // let code=6;
     
-    let result1 =a.gate_core(b,code);
-    let result2 =a.gate_core(c,code);
-    let result3 =a.gate_core(d,code);
+    // let result1 =a.gate_core(b,code);
+    // let result2 =a.gate_core(c,code);
+    // let result3 =a.gate_core(d,code);
 
-    // let result1 = a.tncons(b);
-    // let result2 = a.tncons(c);
-    // let result3 = a.tncons(d);
+    let result1 = a.tany(b);
+    let result2 = a.tany(c);
+    let result3 = a.tany(d);
     // println!("{}",a);
 
     println!("{}",result1);
