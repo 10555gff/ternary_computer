@@ -7,7 +7,7 @@ fn main() {
     let c = trits!("000_0");
     let d = trits!("111_0");
 
-    let code=9;
+    let code=8;
     
     let result1 =a.gate_core(b,code);
     let result2 =a.gate_core(c,code);
