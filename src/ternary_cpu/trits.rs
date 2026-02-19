@@ -1,6 +1,5 @@
 use std::fmt;
-use super::logical_table::{self,Trit};
-use logical_table::{TSUM,TANY,TPOZ,TCMP,TFULLSUM,TFULLCONS};
+use super::logical_table::{TSUM,TANY,TPOZ,TCMP,TFULLSUM,TFULLCONS};
 
 // 定义位掩码常量，增加可读性
 const MASK_EVEN: u8 = 0x55; // 01010101b (c0 位)
@@ -109,7 +108,7 @@ impl Trit4 {
         Trit4(res)
     }
 
-    fn dibit_gate(&self, other: Trit4, table: &[[Trit; 3]; 3]) -> Trit4 {
+    fn dibit_gate(&self, other: Trit4, table: &[[u8; 3]; 3]) -> Trit4 {
         let r0 = table[(self.0 & 0b11) as usize][(other.0 & 0b11) as usize] as u8;
         let r1 = table[((self.0 >> 2) & 0b11) as usize][((other.0 >> 2) & 0b11) as usize] as u8;
         let r2 = table[((self.0 >> 4) & 0b11) as usize][((other.0 >> 4) & 0b11) as usize] as u8;
@@ -118,7 +117,7 @@ impl Trit4 {
         Trit4(r0 | (r1 << 2) | (r2 << 4) | (r3 << 6))
     }
 
-    pub fn dibit_adder(&self, other: Trit4, mut carry: Trit) -> (Trit, Trit4) {
+    pub fn dibit_adder(&self, other: Trit4, mut carry: u8) -> (u8, Trit4) {
         let mut sum = 0;
         for i in 0..4 {
             let shift = i * 2;

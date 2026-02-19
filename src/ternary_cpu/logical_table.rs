@@ -8,163 +8,155 @@
 ///         |               |
 ///         v               v
 ///       TNAND <------->  TAND
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
-#[repr(u8)]
-pub enum Trit {
-    Z =0,
-    P =1,
-    N =2,
-}
-use Trit::*;
 
 
 // **非门(TNEG)逻辑表 输入T，输出1；输入0，输出0；输入1，输出T；**
-pub const TNEG:[Trit; 3]=[Z,N,P];
+pub const TNEG:[u8; 3]=[0,2,1];
 
 // **或门(TOR)逻辑表MAX(A,B) 有1出1、双T出T、其余为0 **
-pub const TOR: [[Trit; 3]; 3] = [
-    [Z, P, Z],
-    [P, P, P],
-    [Z, P, N],
+pub const TOR: [[u8; 3]; 3] = [
+    [0, 1, 0],
+    [1, 1, 1],
+    [0, 1, 2],
 ];
 // **与门(TAND)逻辑表MIN(A,B) 有T出T、双1出1、其余为0 **
-pub const TAND: [[Trit; 3]; 3] = [
-    [Z, Z, N],
-    [Z, P, N],
-    [N, N, N],
+pub const TAND: [[u8; 3]; 3] = [
+    [0, 0, 2],
+    [0, 1, 2],
+    [2, 2, 2],
 ];
 // **或非门(TNOR)逻辑表 有1出T、双T出1、其余为0 **
-pub const TNOR: [[Trit; 3]; 3] = [
-    [Z, N, Z],
-    [N, N, N],
-    [Z, N, P],
+pub const TNOR: [[u8; 3]; 3] = [
+    [0, 2, 0],
+    [2, 2, 2],
+    [0, 2, 1],
 ];
 // **与非门(TAND)逻辑表 有T出1、双1出T、其余为0 **
-pub const TNAND: [[Trit; 3]; 3] = [
-    [Z, Z, P],
-    [Z, N, P],
-    [P, P, P],
+pub const TNAND: [[u8; 3]; 3] = [
+    [0, 0, 1],
+    [0, 2, 1],
+    [1, 1, 1],
 ];
 // **异或门(TXOR)逻辑表 双T及双1出T、1T及T1出1、其余为0 **
-pub const TXOR: [[Trit; 3]; 3] = [
-    [Z, Z, Z],
-    [Z, N, P],
-    [Z, P, N],
+pub const TXOR: [[u8; 3]; 3] = [
+    [0, 0, 0],
+    [0, 2, 1],
+    [0, 1, 2],
 ];
 // **同或门(TXNOR)逻辑表 双T及双1出1、1T及T1出T、其余为0 此门相当于乘法表用于相乘处理 **
-pub const TXNOR: [[Trit; 3]; 3] = [
-    [Z, Z, Z],
-    [Z, P, N],
-    [Z, N, P],
+pub const TXNOR: [[u8; 3]; 3] = [
+    [0, 0, 0],
+    [0, 1, 2],
+    [0, 2, 1],
 ];
 
 // **加和(TSUM)逻辑表 当为TT、01、10时出1，当为11、0T、T0时出T，其余为0 此门用于半加器的加和位处理 **
-pub const TSUM: [[Trit; 3]; 3] = [
-    [Z, P, N],
-    [P, N, Z],
-    [N, Z, P],
+pub const TSUM: [[u8; 3]; 3] = [
+    [0, 1, 2],
+    [1, 2, 0],
+    [2, 0, 1],
 ];
 // **共识(TCONS)逻辑表 双T出T、双1出1、其余为0 此门用于半加器的进位处理 **
-pub const TCONS: [[Trit; 3]; 3] = [
-    [Z, Z, Z],
-    [Z, P, Z],
-    [Z, Z, N],
+pub const TCONS: [[u8; 3]; 3] = [
+    [0, 0, 0],
+    [0, 1, 0],
+    [0, 0, 2],
 ];
 // **调和(TANY)逻辑表 当为TT、0T、T0时出T，当为11、01、10时出1，其余为0 此门用于全加器进位处理 **
-pub const TANY: [[Trit; 3]; 3] = [
-    [Z, P, N],
-    [P, P, Z],
-    [N, Z, N],
+pub const TANY: [[u8; 3]; 3] = [
+    [0, 1, 2],
+    [1, 1, 0],
+    [2, 0, 2],
 ];
 
 // **非零门(TPOZ)逻辑表 当为T1、0T、T0、TT时出T，当为1T、01、10、11时出1，双0出0 此门用于检测其最高位的正负性，出T为负数，出1为正数，出0则0 **
-pub const TPOZ: [[Trit; 3]; 3] = [
-    [Z, P, N],
-    [P, P, P],
-    [N, N, N],
+pub const TPOZ: [[u8; 3]; 3] = [
+    [0, 1, 2],
+    [1, 1, 1],
+    [2, 2, 2],
 ];
 // **比较门(TCMP)逻辑表 （a=b）输出 0、 （a > b）输出 +1、(a < b)输出 -1**
-pub const TCMP: [[Trit; 3]; 3] = [
-    [Z, N, P],
-    [P, Z, P],
-    [N, N, Z],
+pub const TCMP: [[u8; 3]; 3] = [
+    [0, 2, 1],
+    [1, 0, 1],
+    [2, 2, 0],
 ];
 // **除法门(TDIV)逻辑表 零不能作为除数，3属于非法值**
-pub const TDIV: [[Option<Trit>; 3]; 3] = [
-    [None, Some(Z), Some(Z)],
-    [None, Some(P), Some(N)],
-    [None, Some(N), Some(P)],
+pub const TDIV: [[Option<u8>; 3]; 3] = [
+    [None, Some(0), Some(0)],
+    [None, Some(1), Some(2)],
+    [None, Some(2), Some(1)],
 ];
 
 // **全加器和(TFULLSUM) 逻辑表**
-pub const TFULLSUM: [[[Trit; 3]; 3]; 3] = [
+pub const TFULLSUM: [[[u8; 3]; 3]; 3] = [
     [
-        [Z, P, N],
-        [P, N, Z],
-        [N, Z, P],
+        [0, 1, 2],
+        [1, 2, 0],
+        [2, 0, 1],
     ],
     [
-        [P, N, Z],
-        [N, Z, P],
-        [Z, P, N],
+        [1, 2, 0],
+        [2, 0, 1],
+        [0, 1, 2],
     ],
     [
-        [N, Z, P],
-        [Z, P, N],
-        [P, N, Z],
+        [2, 0, 1],
+        [0, 1, 2],
+        [1, 2, 0],
     ],
 ];
 // **全加器进位(TFULLCONS) 逻辑表**
-pub const TFULLCONS: [[[Trit; 3]; 3]; 3] = [
+pub const TFULLCONS: [[[u8; 3]; 3]; 3] = [
     [
-        [Z, Z, Z],
-        [Z, P, Z],
-        [Z, Z, N],
+        [0, 0, 0],
+        [0, 1, 0],
+        [0, 0, 2],
     ],
     [
-        [Z, P, Z],
-        [P, P, Z],
-        [Z, Z, Z],
+        [0, 1, 0],
+        [1, 1, 0],
+        [0, 0, 0],
     ],
     [
-        [Z, Z, N],
-        [Z, Z, Z],
-        [N, Z, N],
+        [0, 0, 2],
+        [0, 0, 0],
+        [2, 0, 2],
     ],
 ];
 // **三与门(T3AND)逻辑表 有T出T、三1出1、其余为0 **
-pub const T3AND: [[[Trit; 3]; 3]; 3] = [
+pub const T3AND: [[[u8; 3]; 3]; 3] = [
     [
-        [Z, Z, N],
-        [Z, Z, N],
-        [N, N, N],
+        [0, 0, 2],
+        [0, 0, 2],
+        [2, 2, 2],
     ],
     [
-        [Z, Z, N],
-        [Z, P, N],
-        [N, N, N],
+        [0, 0, 2],
+        [0, 1, 2],
+        [2, 2, 2],
     ],
     [
-        [N, N, N],
-        [N, N, N],
-        [N, N, N],
+        [2, 2, 2],
+        [2, 2, 2],
+        [2, 2, 2],
     ],
 ];
 // **三或门(T3AND)逻辑表 有1出1、三T出T、其余为0 **
-pub const T3OR: [[[Trit; 3]; 3]; 3] = [
+pub const T3OR: [[[u8; 3]; 3]; 3] = [
     [
-        [Z, P, Z],
-        [P, P, P],
-        [Z, P, Z],
+        [0, 1, 0],
+        [1, 1, 1],
+        [0, 1, 0],
     ],
     [
-        [P, P, P],
-        [P, P, P],
-        [P, P, P],
+        [1, 1, 1],
+        [1, 1, 1],
+        [1, 1, 1],
     ],
     [
-        [Z, P, Z],
-        [P, P, P],
-        [Z, P, N],
+        [0, 1, 0],
+        [1, 1, 1],
+        [0, 1, 2],
     ],
 ];
