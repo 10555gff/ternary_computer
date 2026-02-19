@@ -130,6 +130,37 @@ impl Trit4 {
         Trit4(res)
     }
 
+    pub fn tsum(self, other: Self) -> Self {
+        let (or, and) = self.or_and(other);
+        let r1 = ((and >> 1) & 0x55) | ((and << 1) & 0xAA);
+        let r2 = or & !((or >> 1) | (or << 1));//tany
+
+
+        let or =r1 | r2;
+   
+        let mask = (or & (or >> 1)) & 0x55;
+        let r3 = or & !(mask | (mask << 1));
+
+
+
+
+        let or = r1 | r3;
+        let mask = (or & (or >> 1)) & 0x55;
+        let res = or & !(mask | (mask << 1));
+
+
+
+
+        // let r1=self.tncons(other);
+        // let r2=self.tany(other);
+
+        // let r3=r1.tany(r2);
+        // let r4=r3.tany(r1);
+
+        Trit4(res)
+    }
+
+
     fn dibit_gate(&self, other: Trit4, table: &[[u8; 3]; 3]) -> Trit4 {
         let r0 = table[(self.0 & 0b11) as usize][(other.0 & 0b11) as usize] as u8;
         let r1 = table[((self.0 >> 2) & 0b11) as usize][((other.0 >> 2) & 0b11) as usize] as u8;
