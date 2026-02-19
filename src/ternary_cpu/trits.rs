@@ -133,7 +133,7 @@ impl Trit4 {
     pub fn tsum(self, other: Self) -> Self {
         let (o, a) = self.or_and(other);
         let c = ((a & 0x55) << 1) | ((a & 0xAA) >> 1);
-        let res = (o ^ a) ^ c;
+        let res = o ^ a ^ c;
         let m = (res & (res >> 1)) & 0x55;
         Trit4(res ^ (m | (m << 1)))
     }
