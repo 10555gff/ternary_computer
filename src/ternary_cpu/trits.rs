@@ -55,6 +55,8 @@ impl Trit4 {
             5=>res=((and | (and >> 1)) & MASK_EVEN) | ((or & (or << 1)) & MASK_ODD),//tnxor
             6=>res=and,//tcons
             7=>res=((and >> 1) & MASK_EVEN) | ((and << 1) & MASK_ODD),//tncons
+            8=>res=or & !((or >> 1) | (or << 1)),//tany
+            9=>res= !or & !( ((!or & (!or >> 1)) & 0x55) | ( ((!or & (!or >> 1)) & 0x55) << 1)),//tnany
             _ =>println!("undefine"),
         }
         Trit4(res)
@@ -110,13 +112,14 @@ impl Trit4 {
 
     pub fn tany(self, other: Self) -> Self {
         let or:u8 =self.0 | other.0;
-        let res=or & !((or >> 1) | (or << 1));
+        let mask = (or & (or >> 1)) & 0x55;
+        let res = or & !(mask | (mask << 1));
         Trit4(res)
     }
     pub fn tnany(self, other: Self) -> Self {
         let nor:u8 = !(self.0 | other.0);
-        let m = (nor & (nor >> 1)) & 0x55;
-        let res = nor ^ (m | m << 1);
+        let mask = (nor & (nor >> 1)) & 0x55;
+        let res = nor & !(mask | (mask << 1));
         Trit4(res)
     }
 
