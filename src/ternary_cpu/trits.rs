@@ -133,20 +133,14 @@ impl Trit4 {
     pub fn tsum(self, other: Self) -> Self {
         let (or, and) = self.or_and(other);
         let r1 = ((and >> 1) & 0x55) | ((and << 1) & 0xAA);
-        let r2 = or;//tany
 
-
-        let or =r1 | r2;
+        let or =r1 | or;
    
         let mask = (or & (or >> 1)) & 0x55;
         let r3 = or & !(mask | (mask << 1));
 
 
-
-
-        let or = r1 | r3;
-        // let mask = (or & (or >> 1)) & 0x55;
-        let res = or ;
+        let res = r1 | r3;
 
 
 
