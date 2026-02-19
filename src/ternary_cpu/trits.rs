@@ -108,13 +108,42 @@ impl Trit4 {
         Trit4(res)
     }
 
-    pub fn tany(self, other: Self) -> Self {
-        let val = self.0 | other.0;
-        let conflict = (val & (val >> 1)) & 0x55;
-        let mask = conflict | (conflict << 1);
-        let res=val & !mask;
-        Trit4(res)
-    }
+
+
+
+#[inline(always)]
+pub fn tany(self, other: Self) -> Self {
+    let or_val = self.0 | other.0;
+    let conflict = (or_val & (or_val >> 1)) & MASK_EVEN;
+    let mask = conflict * 3;
+    Trit4(or_val & !mask)
+}
+
+#[inline(always)]
+pub fn tnany(self, other: Self) -> Self {
+    let or_val = self.0 | other.0;
+    let conflict = (or_val & (or_val >> 1)) & MASK_EVEN;
+    let mask = conflict * 3;
+    let neg_or = ((or_val & MASK_ODD) >> 1) | ((or_val & MASK_EVEN) << 1);
+    Trit4(neg_or & !mask)
+}
+
+
+
+pub fn tnany2(self, other: Self) -> Self {
+    let val = !(self.0 | other.0);
+    
+    // 只保留“位对”中不相等的位（即排除 00 和 11）
+    // 但因为我们要处理的是取反后的逻辑，直接用下面的位掩码最稳妥：
+    let low = val & 0x55;
+    let high = val & 0xAA;
+    
+    // 互斥保留：只有当高位和低位不同时，才保留该位
+    let diff = low ^ (high >> 1);
+    let res = (low & diff) | (high & (diff << 1));
+
+    Trit4(res)
+}
 
    
     fn dibit_gate(&self, other: Trit4, table: &[[u8; 3]; 3]) -> Trit4 {
