@@ -107,20 +107,20 @@ impl Trit4 {
         let res=((val >> 1) & 0x55) | ((val << 1) & 0xAA);
         Trit4(res)
     }
+
     pub fn tany(self, other: Self) -> Self {
-        let or: u8=self.0 | other.0;
+        let or:u8 =self.0 | other.0;
         let res=or & !((or >> 1) | (or << 1));
         Trit4(res)
     }
-
-
-
     pub fn tnany(self, other: Self) -> Self {
-        let or = !(self.0 | other.0);
-        let conflict = (or & (or >> 1)) & MASK_EVEN;
-        let res=or & !(conflict | conflict << 1);
+        let nor:u8 = !(self.0 | other.0);
+       // let m = (nor & (nor >> 1)) & 0x55;
+        let m = ((nor & 0xAA) >> 1) & (nor & 0x55);
+        let res=nor & !(m | m << 1);
         Trit4(res)
     }
+
 
     fn dibit_gate(&self, other: Trit4, table: &[[u8; 3]; 3]) -> Trit4 {
         let r0 = table[(self.0 & 0b11) as usize][(other.0 & 0b11) as usize] as u8;
