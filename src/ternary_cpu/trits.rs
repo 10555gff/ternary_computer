@@ -109,10 +109,10 @@ impl Trit4 {
     }
 
     pub fn tany(self, other: Self) -> Self {
-        let (or, _) = self.or_and(other);
-        let conflict = (or & (or >> 1)) & 0x55;
+        let val = self.0 | other.0;
+        let conflict = (val & (val >> 1)) & 0x55;
         let mask = conflict | (conflict << 1);
-        let res=or & !mask;
+        let res=val & !mask;
         Trit4(res)
     }
 
