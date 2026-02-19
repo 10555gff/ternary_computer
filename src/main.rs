@@ -13,9 +13,9 @@ fn main() {
     // let result2 =a.gate_core(c,code);
     // let result3 =a.gate_core(d,code);
 
-    let result1 = a.tnany(b);
-    let result2 = a.tnany(c);
-    let result3 = a.tnany(d);
+    let result1 = a.tany(b);
+    let result2 = a.tany(c);
+    let result3 = a.tany(d);
     // println!("{}",a);
 
     println!("{}",result1);
