@@ -109,11 +109,14 @@ impl Trit4 {
     }
 
     pub fn tany(self, other: Self) -> Self {
-        let (a, b) = (self.0, other.0);
-        let res=!(a | b);
+        let (or, _) = self.or_and(other);
+        let conflict = (or & (or >> 1)) & 0x55;
+        let mask = conflict | (conflict << 1);
+        let res=or & !mask;
         Trit4(res)
     }
 
+   
     fn dibit_gate(&self, other: Trit4, table: &[[u8; 3]; 3]) -> Trit4 {
         let r0 = table[(self.0 & 0b11) as usize][(other.0 & 0b11) as usize] as u8;
         let r1 = table[((self.0 >> 2) & 0b11) as usize][((other.0 >> 2) & 0b11) as usize] as u8;
