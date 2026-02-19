@@ -1,3 +1,10 @@
+use trit_macro::trits;
+use ternary_arithmetic::ternary_cpu::trits::Trit4;
+
+
+
+
+
 struct T80CPU {
     pc: usize,      // byte PC
     mem: Vec<u8>,   // tbin memory
