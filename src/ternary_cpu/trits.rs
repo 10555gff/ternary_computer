@@ -130,13 +130,13 @@ impl Trit4 {
         Trit4(res)
     }
 
-pub fn tsum(self, other: Self) -> Self {
-    let (o, a) = self.or_and(other);
-    let c = ((a & 0x55) << 1) | ((a & 0xAA) >> 1);
-    let res = (o ^ a) ^ c;
-    let m = (res & (res >> 1)) & 0x55;
-    Trit4(res ^ (m | (m << 1)))
-}
+    pub fn tsum(self, other: Self) -> Self {
+        let (o, a) = self.or_and(other);
+        let c = ((a & 0x55) << 1) | ((a & 0xAA) >> 1);
+        let res = (o ^ a) ^ c;
+        let m = (res & (res >> 1)) & 0x55;
+        Trit4(res ^ (m | (m << 1)))
+    }
 
     fn dibit_gate(&self, other: Trit4, table: &[[u8; 3]; 3]) -> Trit4 {
         let r0 = table[(self.0 & 0b11) as usize][(other.0 & 0b11) as usize] as u8;
