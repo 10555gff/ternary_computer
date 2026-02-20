@@ -151,7 +151,10 @@ impl Trit4 {
     pub fn half_adder(self, b: Self)->(Self,Self){
         let carry=self.tcons(b);
         let sum=self.tsum(b);
+
         let sum=(carry<<1).tsum(sum);
+        let carry=carry>>3;
+
         (carry,sum)
     }
 
