@@ -13,13 +13,14 @@ fn main() {
     // let result2 =a.gate_core(c,code);
     // let result3 =a.gate_core(d,code);
 
-// let x = c << 1;
-    let result1 = c.half_adder(d);
+let x = c >> 3;
+println!("{}",x);
+    //let result1 = c.half_adder(d);
     // let result3 = a.tsum(d);
     // println!("{}",a);
 
-    println!("CARRY:{}",result1.0);
-    println!("SUM  :{}",result1.1);
+    // println!("CARRY:{}",result1.0);
+    // println!("SUM  :{}",result1.1);
 
     // println!("{}",result3);
     // println!("结果  : {:08b}", result1.0);

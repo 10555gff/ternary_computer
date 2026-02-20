@@ -1,5 +1,5 @@
 use std::fmt;
-use std::ops::Shl;
+use std::ops::{Shl,Shr};
 use super::logical_table::{TSUM,TANY,TPOZ,TCMP,TFULLSUM,TFULLCONS};
 
 // 定义位掩码常量，增加可读性
@@ -71,10 +71,12 @@ impl Trit4 {
     }
 
     pub fn shl_trit(self, n: usize) -> Self {
-        if n >= 4 {
-            return Trit4(0);
-        }
+        if n >= 4 { return Trit4(0); }
         Trit4(self.0 << (n * 2))
+    }
+    pub fn shr_trit(self, n: usize) -> Self {
+        if n >= 4 { return Trit4(0); }
+        Trit4(self.0 >> (n * 2))
     }
 
     pub fn tneg(&self) -> Self {
@@ -208,5 +210,11 @@ impl Shl<usize> for Trit4 {
     type Output = Self;
     fn shl(self, rhs: usize) -> Self {
         self.shl_trit(rhs)
+    }
+}
+impl Shr<usize> for Trit4 {
+    type Output = Self;
+    fn shr(self, rhs: usize) -> Self {
+        self.shr_trit(rhs)
     }
 }
