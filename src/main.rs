@@ -13,7 +13,7 @@ fn main() {
     // let result2 =a.gate_core(c,code);
     // let result3 =a.gate_core(d,code);
 
-let x = c >> 3;
+let x = c << 1;
 println!("{}",x);
     //let result1 = c.half_adder(d);
     // let result3 = a.tsum(d);

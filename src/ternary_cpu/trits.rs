@@ -72,11 +72,11 @@ impl Trit4 {
 
     pub fn shl_trit(self, n: usize) -> Self {
         if n >= 4 { return Trit4(0); }
-        Trit4(self.0 << (n * 2))
+        Trit4((self.0 << (n << 1)) & 0xFF)
     }
     pub fn shr_trit(self, n: usize) -> Self {
         if n >= 4 { return Trit4(0); }
-        Trit4(self.0 >> (n * 2))
+        Trit4((self.0 >> (n << 1)) & 0xFF)
     }
 
     pub fn tneg(&self) -> Self {
