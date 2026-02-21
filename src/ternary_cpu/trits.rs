@@ -1,5 +1,6 @@
 use std::fmt;
 use std::ops::{Shl,Shr};
+use core::ops::{Neg, Not};
 use super::logical_table::{TFULLSUM,TFULLCONS};
 
 // 定义位掩码常量，增加可读性
@@ -198,5 +199,20 @@ impl Shr<usize> for Trit4 {
     type Output = Self;
     fn shr(self, rhs: usize) -> Self {
         self.shr_trit(rhs)
+    }
+}
+
+
+
+impl Neg for Trit4 {
+    type Output = Trit4;
+    fn neg(self) -> Self::Output {
+        self.tneg()
+    }
+}
+impl Not for Trit4 {
+    type Output = Trit4;
+    fn not(self) -> Self::Output {
+        self.tneg()
     }
 }

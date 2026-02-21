@@ -4,8 +4,9 @@ use ternary_arithmetic::ternary_cpu::trits::Trit4;
 fn main() {
  //   let a = trits!("T01_0");
     //let b = trits!("00_00");
-    let c = trits!("0011");
-    let d = trits!("1111");
+    let c = trits!("10-+");
+    // let d = trits!("0-00");
+    // let z =0b01;
 
     // let code=9;
     
@@ -15,14 +16,14 @@ fn main() {
 
 // let x = c.set(1,0b11);
 // println!("{}",x);
-    let result1 = c.adder(d,0);
+    // let result1 = c.adder(d,z);
     // let result3 = a.tsum(d);
     // println!("{}",a);
 
-    println!("CARRY:{}",result1.0);
-    println!("SUM  :{}",result1.1);
+    // println!("CARRY:{}",result1.0);
+    // println!("SUM  :{}",result1.1);
 // c.set(0,0b11);
-//     println!("{}",c);
+    println!("{}",-c);
     // println!("结果  : {:08b}", result1.0);
     // println!("结果  : {:08b}", result2.0);
     // println!("结果  : {:08b}", result3.0);
