@@ -1,6 +1,6 @@
 use std::fmt;
 use std::ops::{Shl,Shr};
-use core::ops::{Neg, Not};
+use core::ops::{Neg, Not, BitAnd, BitOr};
 use super::logical_table::{TFULLSUM,TFULLCONS};
 
 // 定义位掩码常量，增加可读性
@@ -214,5 +214,21 @@ impl Not for Trit4 {
     type Output = Trit4;
     fn not(self) -> Self::Output {
         self.tneg()
+    }
+}
+
+
+impl BitAnd<Trit4> for Trit4 {
+    type Output = Trit4;
+
+    fn bitand(self, rhs: Trit4) -> Self::Output {
+        self.tand(rhs)
+    }
+}
+impl BitOr<Trit4> for Trit4 {
+    type Output = Trit4;
+
+    fn bitor(self, rhs: Trit4) -> Self::Output {
+        self.tor(rhs)
     }
 }
