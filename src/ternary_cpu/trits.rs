@@ -273,10 +273,15 @@ impl BitXor<Trit4> for Trit4 {
 }
 
 
-impl Add<Trit4> for TritResult {
+
+
+// 实现 Trit4 + TritResult
+impl Add<TritResult> for Trit4 {
     type Output = TritResult;
 
-    fn add(self, rhs: Trit4) -> Self::Output {
-        rhs.adder(self.sum, self.carry)
+    fn add(self, rhs: TritResult) -> Self::Output {
+        // self 是 Trit4，rhs 包含了另一个 Trit4(sum) 和 进位(carry)
+        // 调用 adder 将它们合体
+        self.adder(rhs.sum, rhs.carry)
     }
 }

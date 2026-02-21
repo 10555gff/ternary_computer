@@ -3,14 +3,19 @@ use ternary_arithmetic::ternary_cpu::trits::Trit4;
 
 fn main() {
 
-    let c = trits!("0011");
-    let d = trits!("1111");
+    let a = trits!("0001"); // 1
+    let b = trits!("0001"); // 1
+    let c = trits!("0001"); // 1
 
-    let result1 = c.adder(d,0);
+    // 第一步：用 adder 初始化第一个 TritResult
+    // 假设初始进位是 0
+    let res = a.adder(b, 2); 
 
+    // 第二步：直接用 TritResult + Trit4
+    // 此时它内部会自动执行：c.adder(res.sum, res.carry)
+    let final_res = c +res ; 
 
-    println!("{}",result1);
-
+    println!("{}", final_res);
 
 
 
