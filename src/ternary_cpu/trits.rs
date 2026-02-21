@@ -163,8 +163,8 @@ impl Trit4 {
         let mut sum = 0;
         for i in 0..4 {
             let shift = i << 1;
-            let a = (self.0 >> shift) & 0b11;
-            let b = (other.0 >> shift) & 0b11;
+            let a = (self.0 >> shift) & 0x03;
+            let b = (other.0 >> shift) & 0x03;
             let sum_i = TFULLSUM[a as usize][b as usize][carry as usize] as u8;
             carry = TFULLCONS[a as usize][b as usize][carry as usize];
             sum |= sum_i << shift;

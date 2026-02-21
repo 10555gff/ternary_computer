@@ -4,8 +4,8 @@ use ternary_arithmetic::ternary_cpu::trits::Trit4;
 fn main() {
  //   let a = trits!("T01_0");
     //let b = trits!("00_00");
-    let c = trits!("0001");
-    let d = trits!("0011");
+    let c = trits!("0011");
+    let d = trits!("1111");
 
     // let code=9;
     
