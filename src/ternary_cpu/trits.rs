@@ -39,6 +39,10 @@ fn read_all(word: u8) -> [u8; 4] {
 pub struct Trit4(pub u8); // 包装一个 u8
 
 impl Trit4 {
+    pub const ZERO: Self = Trit4(0x00);
+    pub const POS:  Self = Trit4(0x01);
+    pub const NEG:  Self = Trit4(0x02);
+
     pub fn get_all(&self)->[u8; 4] { read_all(self.0) }
     pub fn get(&self, i:usize)->u8 { read_2bit(self.0,i) }
     pub fn clear(&self, i:usize)->u8 { clear_2bit(self.0,i) }
