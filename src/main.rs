@@ -2,10 +2,10 @@ use trit_macro::trits;
 use ternary_arithmetic::ternary_cpu::trits::Trit4;
 
 fn main() {
-    let a = trits!("T01_0");
+    let mut a = trits!("T01_0");
     let b = trits!("---0");
-    let c = trits!("0000");
-    let d = trits!("+++0");
+    // let c = trits!("0000");
+    // let d = trits!("+++0");
     // let z =0b01;
 
     // let code=9;
@@ -16,18 +16,18 @@ fn main() {
 
 // let x = c.set(1,0b11);
 // println!("{}",x);
-    let result1 = a ^ b;
-    let result2=  a ^ c;
-    let result3=  a ^ d;
+    a ^=b;
+    // let result2=  a ^ c;
+    // let result3=  a ^ d;
     // let result3 = a.tsum(d);
     // println!("{}",a);
 
     // println!("CARRY:{}",result1.0);
     // println!("SUM  :{}",result1.1);
 // c.set(0,0b11);
-    println!("{}",result1);
-    println!("{}",result2);
-    println!("{}",result3);
+    println!("{}",a);
+    // println!("{}",result2);
+    // println!("{}",result3);
 
     // println!("{}",a);
 

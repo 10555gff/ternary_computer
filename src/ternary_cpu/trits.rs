@@ -1,6 +1,6 @@
 use std::fmt;
 use std::ops::{Shl,Shr};
-use core::ops::{Neg, Not, BitAnd, BitOr, BitXor};
+use core::ops::{Neg, Not, BitAnd, BitOr, BitXor, BitAndAssign, BitOrAssign, BitXorAssign};
 use super::logical_table::{TFULLSUM,TFULLCONS};
 
 // 定义位掩码常量，增加可读性
@@ -214,6 +214,22 @@ impl Not for Trit4 {
     type Output = Trit4;
     fn not(self) -> Self::Output {
         self.tneg()
+    }
+}
+
+impl BitAndAssign for Trit4 {
+    fn bitand_assign(&mut self, rhs: Self) {
+        *self = self.tand(rhs);
+    }
+}
+impl BitOrAssign for Trit4 {
+    fn bitor_assign(&mut self, rhs: Self) {
+        *self = self.tor(rhs);
+    }
+}
+impl BitXorAssign for Trit4 {
+    fn bitxor_assign(&mut self, rhs: Self) {
+        *self = self.txor(rhs);
     }
 }
 
