@@ -1,6 +1,6 @@
 use std::fmt;
 use std::ops::{Shl,Shr};
-use core::ops::{Neg, Not, BitAnd, BitOr, BitXor, BitAndAssign, BitOrAssign, BitXorAssign};
+use core::ops::{Neg, Not, BitAnd, BitOr, BitXor, BitAndAssign, BitOrAssign, BitXorAssign, Add};
 use super::logical_table::{TFULLSUM,TFULLCONS};
 
 // 定义位掩码常量，增加可读性
@@ -166,7 +166,7 @@ impl Trit4 {
         Trit4(res & !(m | (m << 1)))
     }
 
-    pub fn adder(&self, other: Trit4, mut carry: u8) -> (u8, Trit4) {
+    pub fn adder(&self, other: Trit4, mut carry: u8) -> (Trit4,u8) {
         let mut sum = 0;
         for i in 0..4 {
             let shift = i << 1;
@@ -176,7 +176,7 @@ impl Trit4 {
             carry = TFULLCONS[a as usize][b as usize][carry as usize];
             sum |= sum_i << shift;
         }
-        (carry , Trit4(sum))
+        (Trit4(sum),carry)
     }
 
 }
@@ -258,5 +258,16 @@ impl BitXor<Trit4> for Trit4 {
 
     fn bitxor(self, rhs: Trit4) -> Self::Output {
         self.txor(rhs)
+    }
+}
+
+
+impl Add<(Trit4, u8)> for Trit4 {
+    type Output = (Trit4, u8);
+
+    fn add(self, rhs: (Trit4, u8)) -> Self::Output {
+        let (other_trit, in_carry) = rhs;
+
+        self.adder(other_trit, in_carry)
     }
 }

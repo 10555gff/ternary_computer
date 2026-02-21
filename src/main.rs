@@ -6,11 +6,11 @@ fn main() {
     let c = trits!("0011");
     let d = trits!("1111");
 
-    let result1 = c.adder(d,0);
+    let result1 = c +(d,0);
 
 
-    println!("CARRY:{}",result1.0);
-    println!("SUM  :{}",result1.1);
+    println!("CARRY:{}",result1.1);
+    println!("SUM  :{}",result1.0);
 
 
 
