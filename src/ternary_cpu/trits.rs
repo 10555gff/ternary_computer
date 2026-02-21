@@ -200,6 +200,11 @@ impl fmt::Display for Trit4 {
         write!(f, "Trit4[{}, {}, {}, {}]", t3, t2, t1, t0)
     }
 }
+impl fmt::Display for TritResult {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "sum: {}, carry: {}", self.sum, self.carry)
+    }
+}
 
 impl Shl<usize> for Trit4 {
     type Output = Self;

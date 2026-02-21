@@ -9,8 +9,7 @@ fn main() {
     let result1 = c.adder(d,0);
 
 
-    println!("CARRY:{}",result1.carry);
-    println!("SUM  :{}",result1.sum);
+    println!("{}",result1);
 
 
 
