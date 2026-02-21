@@ -42,6 +42,8 @@ impl Trit4 {
     pub const ZERO: Self = Trit4(0x00);
     pub const POS:  Self = Trit4(0x01);
     pub const NEG:  Self = Trit4(0x02);
+    pub const ALL_POS: Self = Trit4(0x55);
+    pub const ALL_NEG: Self = Trit4(0xAA);
 
     pub fn get_all(&self)->[u8; 4] { read_all(self.0) }
     pub fn get(&self, i:usize)->u8 { read_2bit(self.0,i) }
