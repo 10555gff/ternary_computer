@@ -16,9 +16,9 @@ fn main() {
 
 // let x = c.set(1,0b11);
 // println!("{}",x);
-    let result1 = a | b;
-    let result2=  a | c;
-    let result3=  a | d;
+    let result1 = a ^ b;
+    let result2=  a ^ c;
+    let result3=  a ^ d;
     // let result3 = a.tsum(d);
     // println!("{}",a);
 
@@ -28,6 +28,8 @@ fn main() {
     println!("{}",result1);
     println!("{}",result2);
     println!("{}",result3);
+
+    // println!("{}",a);
 
     // println!("结果  : {:08b}", result1.0);
     // println!("结果  : {:08b}", result2.0);
