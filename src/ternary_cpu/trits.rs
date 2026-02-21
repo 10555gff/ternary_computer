@@ -1,6 +1,6 @@
 use std::fmt;
 use std::ops::{Shl,Shr};
-use core::ops::{Neg, Not, BitAnd, BitOr, BitXor, BitAndAssign, BitOrAssign, BitXorAssign, Add};
+use core::ops::{Neg, Not, BitAnd, BitOr, BitXor, BitAndAssign, BitOrAssign, BitXorAssign, Add, Sub};
 use super::logical_table::{TFULLSUM,TFULLCONS};
 
 // 定义位掩码常量，增加可读性
@@ -273,15 +273,20 @@ impl BitXor<Trit4> for Trit4 {
 }
 
 
-
-
-// 实现 Trit4 + TritResult
-impl Add<TritResult> for Trit4 {
+impl Add<Trit4> for Trit4 {
     type Output = TritResult;
 
-    fn add(self, rhs: TritResult) -> Self::Output {
-        // self 是 Trit4，rhs 包含了另一个 Trit4(sum) 和 进位(carry)
-        // 调用 adder 将它们合体
-        self.adder(rhs.sum, rhs.carry)
+    fn add(self, rhs: Trit4) -> Self::Output {
+        self.adder(rhs, 0)
     }
 }
+
+impl Sub<Trit4> for Trit4 {
+    type Output = TritResult;
+
+    fn sub(self, rhs: Trit4) -> Self::Output {
+        let other = -rhs;
+        self.adder(other, 0)
+    }
+}
+
