@@ -172,7 +172,7 @@ impl Trit4 {
         Trit4(res & !(m | (m << 1)))
     }
 
-    pub fn adder(&self, other: Trit4, mut carry: u8) ->TritResult {
+    pub fn adder(&self, other: Trit4, mut carry: u8) -> TritResult {
         let mut sum = 0;
         for i in 0..4 {
             let shift = i << 1;
@@ -182,7 +182,7 @@ impl Trit4 {
             carry = TFULLCONS[a as usize][b as usize][carry as usize];
             sum |= sum_i << shift;
         }
-        TritResult { sum:Trit4(sum), carry }
+        TritResult { carry, sum: Trit4(sum) }
     }
 
 }
