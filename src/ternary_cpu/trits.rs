@@ -38,6 +38,7 @@ fn read_all(word: u8) -> [u8; 4] {
 pub struct Trit4(pub u8); // 包装一个 u8
 
 impl Trit4 {
+    pub fn get_all(&self)->[u8; 4] { read_all(self.0) }
     pub fn get(&self, i:usize)->u8 { read_2bit(self.0,i) }
     pub fn clear(&self, i:usize)->u8 { clear_2bit(self.0,i) }
     pub fn toggle(&self, i:usize)->u8 { toggle_2bit(self.0,i) }
@@ -159,13 +160,14 @@ impl Trit4 {
     }
 
     pub fn adder(&self, other: Trit4, mut carry: u8) -> (u8, Trit4) {
-        let mut sum = 0u8;
+        let mut sum = 0;
         for i in 0..4 {
-            let a=self.get(i);
-            let b=self.get(i);
+            let shift = i << 1;
+            let a = (self.0 >> shift) & 0b11;
+            let b = (other.0 >> shift) & 0b11;
             let sum_i = TFULLSUM[a as usize][b as usize][carry as usize] as u8;
             carry = TFULLCONS[a as usize][b as usize][carry as usize];
-            sum |= sum_i << (i << 1);
+            sum |= sum_i << shift;
         }
         (carry , Trit4(sum))
     }

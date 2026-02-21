@@ -3,7 +3,7 @@ use ternary_arithmetic::ternary_cpu::trits::Trit4;
 
 fn main() {
  //   let a = trits!("T01_0");
-    let b = trits!("00_00");
+    //let b = trits!("00_00");
     let c = trits!("0001");
     let d = trits!("0011");
 
