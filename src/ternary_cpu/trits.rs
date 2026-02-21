@@ -24,6 +24,16 @@ fn toggle_2bit(word: u8, k: usize) -> u8 {
     word ^ MASK[k]
 }
 
+fn read_all(word: u8) -> [u8; 4] {
+    [
+        word & 0x03,
+        (word >> 2) & 0x03,
+        (word >> 4) & 0x03,
+        (word >> 6) & 0x03,
+    ]
+}
+
+
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct Trit4(pub u8); // 包装一个 u8
 
@@ -149,14 +159,13 @@ impl Trit4 {
     }
 
     pub fn adder(&self, other: Trit4, mut carry: u8) -> (u8, Trit4) {
-        let mut sum = 0;
+        let mut sum = 0u8;
         for i in 0..4 {
-            let shift = i << 1;
-            let a = (self.0 >> shift) & 0b11;
-            let b = (other.0 >> shift) & 0b11;
+            let a=self.get(i);
+            let b=self.get(i);
             let sum_i = TFULLSUM[a as usize][b as usize][carry as usize] as u8;
             carry = TFULLCONS[a as usize][b as usize][carry as usize];
-            sum |= sum_i << shift;
+            sum |= sum_i << (i << 1);
         }
         (carry , Trit4(sum))
     }
