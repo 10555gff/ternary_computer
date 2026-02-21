@@ -38,6 +38,12 @@ fn read_all(word: u8) -> [u8; 4] {
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct Trit4(pub u8); // 包装一个 u8
 
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub struct TritResult {
+    pub carry: u8,
+    pub sum: Trit4,
+}
+
 impl Trit4 {
     pub const ZERO: Self = Trit4(0x00);
     pub const POS:  Self = Trit4(0x01);
@@ -166,7 +172,7 @@ impl Trit4 {
         Trit4(res & !(m | (m << 1)))
     }
 
-    pub fn adder(&self, other: Trit4, mut carry: u8) -> (Trit4,u8) {
+    pub fn adder(&self, other: Trit4, mut carry: u8) ->TritResult {
         let mut sum = 0;
         for i in 0..4 {
             let shift = i << 1;
@@ -176,7 +182,7 @@ impl Trit4 {
             carry = TFULLCONS[a as usize][b as usize][carry as usize];
             sum |= sum_i << shift;
         }
-        (Trit4(sum),carry)
+        TritResult { sum:Trit4(sum), carry }
     }
 
 }
@@ -262,12 +268,10 @@ impl BitXor<Trit4> for Trit4 {
 }
 
 
-impl Add<(Trit4, u8)> for Trit4 {
-    type Output = (Trit4, u8);
+impl Add<Trit4> for TritResult {
+    type Output = TritResult;
 
-    fn add(self, rhs: (Trit4, u8)) -> Self::Output {
-        let (other_trit, in_carry) = rhs;
-
-        self.adder(other_trit, in_carry)
+    fn add(self, rhs: Trit4) -> Self::Output {
+        rhs.adder(self.sum, self.carry)
     }
 }
