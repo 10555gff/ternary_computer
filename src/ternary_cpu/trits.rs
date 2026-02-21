@@ -1,6 +1,6 @@
 use std::fmt;
 use std::ops::{Shl,Shr};
-use super::logical_table::{TSUM,TANY,TPOZ,TCMP,TFULLSUM,TFULLCONS};
+use super::logical_table::{TFULLSUM,TFULLCONS};
 
 // 定义位掩码常量，增加可读性
 const MASK_EVEN: u8 = 0x55; // 01010101b (c0 位)
@@ -10,8 +10,8 @@ const MASK:  [u8;4] = [0x03,0x0C,0x30,0xC0];
 const DECODE: [char;4]=['0','1','T','X'];
 
 fn set_2bit(word: u8, k: usize, value: u8) -> u8 {
-    let mask  = MASK[k];
-    let shift = SHIFT[k];
+    let shift = k << 1;
+    let mask = 0x03 << shift;
     (word & !mask) | ((value & 0x03) << shift)
 }
 fn read_2bit(word:u8,k:usize)->u8{
@@ -145,32 +145,13 @@ impl Trit4 {
         let c = ((a & 0x55) << 1) | ((a & 0xAA) >> 1);
         let res = o ^ a ^ c;
         let m = (res & (res >> 1)) & 0x55;
-        Trit4(res ^ (m | (m << 1)))
+        Trit4(res & !(m | (m << 1)))
     }
 
-    pub fn half_adder(self, b: Self)->(Self,Self){
-        let carry=self.tcons(b);
-        let sum=self.tsum(b);
-
-        let sum=(carry<<1).tsum(sum);
-        let carry=carry>>3;
-
-        (carry,sum)
-    }
-
-    fn dibit_gate(&self, other: Trit4, table: &[[u8; 3]; 3]) -> Trit4 {
-        let r0 = table[(self.0 & 0b11) as usize][(other.0 & 0b11) as usize] as u8;
-        let r1 = table[((self.0 >> 2) & 0b11) as usize][((other.0 >> 2) & 0b11) as usize] as u8;
-        let r2 = table[((self.0 >> 4) & 0b11) as usize][((other.0 >> 4) & 0b11) as usize] as u8;
-        let r3 = table[((self.0 >> 6) & 0b11) as usize][((other.0 >> 6) & 0b11) as usize] as u8;
-
-        Trit4(r0 | (r1 << 2) | (r2 << 4) | (r3 << 6))
-    }
-
-    pub fn dibit_adder(&self, other: Trit4, mut carry: u8) -> (u8, Trit4) {
+    pub fn adder(&self, other: Trit4, mut carry: u8) -> (u8, Trit4) {
         let mut sum = 0;
         for i in 0..4 {
-            let shift = i * 2;
+            let shift = i << 1;
             let a = (self.0 >> shift) & 0b11;
             let b = (other.0 >> shift) & 0b11;
             let sum_i = TFULLSUM[a as usize][b as usize][carry as usize] as u8;
@@ -180,19 +161,6 @@ impl Trit4 {
         (carry , Trit4(sum))
     }
 
-    /// 使用函数别名，便于调用
-    pub fn dibit_tsum(&self, other: Self) -> Self {
-        self.dibit_gate(other, &TSUM)
-    }
-    pub fn dibit_tany(&self, other: Self) -> Self {
-        self.dibit_gate(other, &TANY)
-    }
-    pub fn dibit_tpoz(&self, other: Self) -> Self {
-        self.dibit_gate(other, &TPOZ)
-    }
-    pub fn dibit_tcmp(&self, other: Self) -> Self {
-        self.dibit_gate(other, &TCMP)
-    }
 }
 
 
