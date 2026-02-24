@@ -2,20 +2,35 @@ use trit_macro::trits;
 use ternary_arithmetic::ternary_cpu::trits::Trit4;
 
 fn main() {
+    let rom = vec![
+        0x10, 0x05, // LOAD R0, 5
+        0x11, 0x03, // LOAD R1, 3
+        0x21,       // ADD R1
+        0xF0,       // HALT
+    ];
 
-    let a = trits!("0011"); // 1
-    let b = trits!("0001"); // 1
-    let c = trits!("0001"); // 1
+    let mut cpu = T80CPU {
+        pc: 0,
+        mem: rom,
+        regs: [Register { trits: [Trit4(0); 8] }; 8],
+    };
 
-    // 第一步：用 adder 初始化第一个 TritResult
-    // 假设初始进位是 0
-    // let res = a.adder(b, 2); 
+    cpu.run();
 
-    // 第二步：直接用 TritResult + Trit4
-    // 此时它内部会自动执行：c.adder(res.sum, res.carry)
-    let final_res = a+b ; 
 
-    println!("{}", final_res);
+    // let a = trits!("0011"); // 1
+    // let b = trits!("0001"); // 1
+    // let c = trits!("0001"); // 1
+
+    // // 第一步：用 adder 初始化第一个 TritResult
+    // // 假设初始进位是 0
+    // // let res = a.adder(b, 2); 
+
+    // // 第二步：直接用 TritResult + Trit4
+    // // 此时它内部会自动执行：c.adder(res.sum, res.carry)
+    // let final_res = a+b ; 
+
+    // println!("{}", final_res);
 
 
 
