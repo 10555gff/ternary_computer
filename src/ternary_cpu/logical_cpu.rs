@@ -23,7 +23,7 @@ pub struct T80CPU {
     pub pc: usize,
     pub mem: Vec<u8>,
     pub regs: Register,
-    pub halted:bool,
+    pub halted: bool,
 }
 
 impl T80CPU {
@@ -43,14 +43,23 @@ impl T80CPU {
         [byte1, byte2, byte3]
     }
 
+    pub fn run(&mut self) {
+        while !self.halted && self.pc + 3 <= self.mem.len() {
+            let inst_bytes = self.fetch();
+            println!("BBBBBBBBBBBBBBBBBBBBB         {:08b} {:08b} {:08b}",inst_bytes[0],inst_bytes[1],inst_bytes[2]);
 
-    // pub fn run(&mut self) {
-    //     while self.pc + 3 <= self.mem.len() {
-    //         let inst_bytes = self.fetch();
-    //         let inst = self.decode(inst_bytes);
-    //         self.execute(inst);
-    //     }
-    // }
+            // let inst = self.decode(inst_bytes);
+            // self.execute(inst);
+        }
+        if self.halted {
+            println!("CPU 已 halt");
+        } else if self.pc >= self.mem.len() {
+            println!("PC 超出内存，程序自然结束");
+        }
+    }
+
+
+
 
 
 

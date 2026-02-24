@@ -90,24 +90,23 @@ pub fn run_from_tbin() ->std::io::Result<()> {
     // 创建 CPU，内存就是刚刚读到的字节
     let mut cpu = T80CPU::new(mem);
 
-    // 可选：初始化一些寄存器值（模拟 INPUT 或初始数据）
-    cpu.regs.write(0, 0b01_00_00_00);
-    cpu.regs.write(1, 0b10_01_00_00);
+    // // 可选：初始化一些寄存器值（模拟 INPUT 或初始数据）
+    // cpu.regs.write(0, 0b01_00_00_00);
+    // cpu.regs.write(1, 0b10_01_00_00);
 
-    let r1 = cpu.regs.read(1);
-    println!("{}",r1);
+    // let r1 = cpu.regs.read(1);
+    // println!("{}",r1);
 
-    println!("开始执行程序... PC 从 0 开始");
-    let mut a=cpu.fetch();
-    let mut a=cpu.fetch();
-    let mut a=cpu.fetch();
-    let mut a=cpu.fetch();
-    println!("          {:08b} {:08b} {:08b}",a[0],a[1],a[2]);
+    // println!("开始执行程序... PC 从 0 开始");
+    // let mut a=cpu.fetch();
+    // let mut a=cpu.fetch();
+    // let mut a=cpu.fetch();
+    // let mut a=cpu.fetch();
+    // 
+    // 运行直到结束（或你自己加 halted 标志）
+    cpu.run();
 
-    // // 运行直到结束（或你自己加 halted 标志）
-    // cpu.run();
-
-    // println!("执行完成");
+    println!("执行完成");
 
     // // 可选：打印最终寄存器状态
     // for i in 0..6 {
