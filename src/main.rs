@@ -1,7 +1,22 @@
-//use ternary_arithmetic::ternary_cpu::logical_alu;
+use trit_macro::trits;
+use ternary_arithmetic::ternary_cpu::logical_alu::Trit4;
 
 fn main() {
-    println!("bbbbbbbbbbbbbbbbbbbb");
+    let a = trits!("T01_0");
+    let b = trits!("---0");
+    let c = trits!("0000");
+    let d = trits!("+++0");
+
+    let code=9;
+    
+    let result1 =a.gate_core(b,code);
+    let result2 =a.gate_core(c,code);
+    let result3 =a.gate_core(d,code);
+
+
+    println!("{}",result1);
+    println!("{}",result2);
+    println!("{}",result3);
 
 
     // let rom = vec![
