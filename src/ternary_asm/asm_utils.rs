@@ -95,8 +95,7 @@ pub fn run_from_tbin() ->std::io::Result<()> {
     // // ...
 
     println!("开始执行程序... PC 从 0 开始");
-
-
+    let mut a=cpu.fetch();
     let mut a=cpu.fetch();
     println!("          {:08b} {:08b} {:08b}",a[0],a[1],a[2]);
 

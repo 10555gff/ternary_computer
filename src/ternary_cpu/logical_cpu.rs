@@ -35,6 +35,13 @@ impl T80CPU {
             halted: false,
         }
     }
+    pub fn fetch(&mut self) -> [u8; 3] {
+        let byte1 = self.mem[self.pc];
+        let byte2 = self.mem[self.pc + 1];
+        let byte3 = self.mem[self.pc + 2];
+        self.pc += 3;
+        [byte1, byte2, byte3]
+    }
 
 
     // pub fn run(&mut self) {
@@ -46,13 +53,7 @@ impl T80CPU {
     // }
 
 
-    pub fn fetch(&mut self) -> [u8; 3] {
-        let byte1 = self.mem[self.pc];
-        let byte2 = self.mem[self.pc + 1];
-        let byte3 = self.mem[self.pc + 2];
-        self.pc += 3;
-        [byte1, byte2, byte3]
-    }
+
 
     // fn fetch(&mut self) -> [u8; 3] {
     //     if self.pc + 3 > self.mem.len() {
