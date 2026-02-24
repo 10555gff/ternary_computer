@@ -1,22 +1,30 @@
-use trit_macro::trits;
 use ternary_arithmetic::ternary_cpu::logical_alu::Trit4;
+use ternary_arithmetic::ternary_cpu::logical_cpu::Register;
 
 fn main() {
-    let a = trits!("T01_0");
-    let b = trits!("---0");
-    let c = trits!("0000");
-    let d = trits!("+++0");
+    // let a = 
+    // let b = trits!("---0");
+    // let c = trits!("0000");
+    // let d = trits!("+++0");
 
-    let code=9;
+    // let code=9;
     
-    let result1 =a.gate_core(b,code);
-    let result2 =a.gate_core(c,code);
-    let result3 =a.gate_core(d,code);
+    // let result1 =a.gate_core(b,code);
+    // let result2 =a.gate_core(c,code);
+    // let result3 =a.gate_core(d,code);
 
 
-    println!("{}",result1);
-    println!("{}",result2);
-    println!("{}",result3);
+    // println!("{}",result1);
+    // println!("{}",result2);
+    // println!("{}",result3);
+
+    let mut regs = Register::new();
+    regs.write(0, Trit4(0b01_00_00_00)); // R0 = 1 0 0 0
+    regs.write(1, Trit4(0b10_01_00_00)); // R1 = T 1 0 0
+
+    let r0 = regs.read(0);
+    let r1 = regs.read(1);
+    println!("{}",r0);
 
 
     // let rom = vec![

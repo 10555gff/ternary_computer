@@ -1,3 +1,85 @@
+use crate::ternary_cpu::logical_alu::Trit4;
+
+
+#[derive(Clone, Copy)]
+pub struct Register {
+    pub regs: [Trit4; 8], // R0..R7
+}
+
+impl Register {
+    pub fn new() -> Self {
+        Self { regs: [Trit4(0); 8] }
+    }
+
+    pub fn read(&self, idx: usize) -> Trit4 {
+        self.regs[idx]
+    }
+
+    pub fn write(&mut self, idx: usize, val: Trit4) {
+        self.regs[idx] = val;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// struct ROM {
+//     data: Vec<u8>,
+// }
+
+// struct RAM {
+//     data: Vec<u8>,
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // use trit_macro::trits;
 // use ternary_arithmetic::ternary_cpu::trits::Trit4;
 
@@ -9,23 +91,9 @@
 
 
 
-// pub struct RegisterFile {
-//     pub regs: [Ternary; 8], // R0..R7
-// }
 
-// impl RegisterFile {
-//     pub fn new() -> Self {
-//         Self { regs: std::array::from_fn(|_| Ternary { digits: vec![] }) }
-//     }
 
-//     pub fn read(&self, idx: usize) -> &Ternary {
-//         &self.regs[idx]
-//     }
 
-//     pub fn write(&mut self, idx: usize, val: Ternary) {
-//         self.regs[idx] = val;
-//     }
-// }
 
 
 // pub struct PC {
@@ -201,19 +269,7 @@
 
 
 
-// // 32 trits = 8 × Trit4
-// #[derive(Clone)]
-// struct Register {
-//     trits: [Trit4; 8],
-// }
 
-// struct ROM {
-//     data: Vec<u8>,
-// }
-
-// struct RAM {
-//     data: Vec<u8>,
-// }
 
 // struct T80CPU {
 //     pc: usize,      // byte PC
