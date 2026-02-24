@@ -15,8 +15,8 @@ impl Register {
         self.regs[idx]
     }
 
-    pub fn write(&mut self, idx: usize, val: Trit4) {
-        self.regs[idx] = val;
+    pub fn write(&mut self, idx: usize, val: u8) {
+        self.regs[idx] = Trit4(val);
     }
 }
 

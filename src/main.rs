@@ -1,4 +1,3 @@
-use ternary_arithmetic::ternary_cpu::logical_alu::Trit4;
 use ternary_arithmetic::ternary_cpu::logical_cpu::Register;
 
 fn main() {
@@ -19,8 +18,8 @@ fn main() {
     // println!("{}",result3);
 
     let mut regs = Register::new();
-    regs.write(0, Trit4(0b01_00_00_00)); // R0 = 1 0 0 0
-    regs.write(1, Trit4(0b10_01_00_00)); // R1 = T 1 0 0
+    regs.write(0, 0b01_00_00_00); // R0 = 1 0 0 0
+    regs.write(1, 0b10_01_00_00); // R1 = T 1 0 0
 
     let r0 = regs.read(0);
     let r1 = regs.read(1);
