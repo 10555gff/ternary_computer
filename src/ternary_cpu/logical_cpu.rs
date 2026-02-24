@@ -23,6 +23,7 @@ pub struct T80CPU {
     pub pc: usize,
     pub mem: Vec<u8>,
     pub regs: Register,
+    pub halted:bool,
 }
 
 impl T80CPU {
@@ -31,9 +32,21 @@ impl T80CPU {
             pc: 0,
             mem,
             regs: Register::new(),
+            halted: false,
         }
     }
-    fn fetch(&mut self) -> [u8; 3] {
+
+
+    // pub fn run(&mut self) {
+    //     while self.pc + 3 <= self.mem.len() {
+    //         let inst_bytes = self.fetch();
+    //         let inst = self.decode(inst_bytes);
+    //         self.execute(inst);
+    //     }
+    // }
+
+
+    pub fn fetch(&mut self) -> [u8; 3] {
         let byte1 = self.mem[self.pc];
         let byte2 = self.mem[self.pc + 1];
         let byte3 = self.mem[self.pc + 2];
@@ -41,6 +54,68 @@ impl T80CPU {
         [byte1, byte2, byte3]
     }
 
+    // fn fetch(&mut self) -> [u8; 3] {
+    //     if self.pc + 3 > self.mem.len() {
+    //         panic!("Fetch beyond memory");
+    //     }
+    //     let bytes = [self.mem[self.pc], self.mem[self.pc + 1], self.mem[self.pc + 2]];
+    //     self.pc += 3;
+    //     bytes
+    // }
+
+// fn decode(&self, inst: [u8; 3]) -> Instruction {
+//         let opcode = inst[0];
+//         match opcode {
+//             1 => { // Copy
+//                 let src = inst[1] as usize;
+//                 let dest = inst[2] as usize;
+//                 if src > 7 || dest > 7 {
+//                     panic!("Invalid register index");
+//                 }
+//                 Instruction::Copy { src, dest }
+//             }
+//             2 => { // Condition (Le)
+//                 let src1 = (inst[1] >> 4) as usize;
+//                 let src2 = (inst[1] & 0x0F) as usize;
+//                 let offset = inst[2] as i8;
+//                 if src1 > 7 || src2 > 7 {
+//                     panic!("Invalid register index");
+//                 }
+//                 Instruction::Condition { src1, src2, offset }
+//             }
+//             _ => panic!("Unknown opcode: {}", opcode),
+//         }
+//     }
+
+// fn execute(&mut self, inst: Instruction) {
+//         match inst {
+//             Instruction::Copy { src, dest } => {
+//                 let val = self.regs.read(src);
+//                 self.regs.write(dest, val);
+//             }
+//             Instruction::Condition { src1, src2, offset } => {
+//                 let a = self.regs.read(src1);
+//                 let b = self.regs.read(src2);
+//                 if a <= b {
+//                     // Jump relative
+//                     let jump_bytes = (offset as isize) * 3;
+//                     if jump_bytes < 0 && (jump_bytes.abs() as usize) > self.pc {
+//                         panic!("Jump before start");
+//                     }
+//                     self.pc = ((self.pc as isize) + jump_bytes) as usize;
+//                 }
+//                 // Else continue
+//             }
+//         }
+//     }
+
+
+//     #[derive(Debug)]
+// enum Instruction {
+//     Copy { src: usize, dest: usize },
+//     Condition { src1: usize, src2: usize, offset: i8 }, // Relative offset in instructions
+//     // Add Immediate and Calculate if needed in future
+// }
     // fn nop(&self) {}
 
     // fn halt(&self) {

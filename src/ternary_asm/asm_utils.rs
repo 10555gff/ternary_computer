@@ -1,5 +1,6 @@
 use std::fs::File;
 use std::io::{Write, BufWriter, BufRead, BufReader};
+use crate::ternary_cpu::logical_cpu::T80CPU;
 
 pub static LINES: &[&str] = &[
     "0001T1100T01",
@@ -79,6 +80,41 @@ pub fn write_tbin() -> std::io::Result<()> {
     println!("Assemble done → prog.tbin");
     Ok(())
 }
+
+
+pub fn run_from_tbin() ->std::io::Result<()> {
+    // 读取二进制程序
+    let mem = std::fs::read("prog.tbin")?;
+
+    // 创建 CPU，内存就是刚刚读到的字节
+    let mut cpu = T80CPU::new(mem);
+
+    // // 可选：初始化一些寄存器值（模拟 INPUT 或初始数据）
+    // // cpu.regs.write(0, Trit4::new(13));
+    // // cpu.regs.write(1, Trit4::new(-4));
+    // // ...
+
+    println!("开始执行程序... PC 从 0 开始");
+
+
+    let mut a=cpu.fetch();
+    println!("          {:08b} {:08b} {:08b}",a[0],a[1],a[2]);
+
+    // // 运行直到结束（或你自己加 halted 标志）
+    // cpu.run();
+
+    // println!("执行完成");
+
+    // // 可选：打印最终寄存器状态
+    // for i in 0..6 {
+    //     println!("REG{} = {:?}", i, cpu.regs.read(i));
+    // }
+
+    Ok(())
+}
+
+
+
 
 
 pub fn read_tbin() -> std::io::Result<()> {
