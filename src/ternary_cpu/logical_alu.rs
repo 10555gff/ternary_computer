@@ -34,9 +34,10 @@ fn read_all(word: u8) -> [u8; 4] {
     ]
 }
 
-
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct Trit4(pub u8); // 包装一个 u8
+
+
 
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct TritResult {

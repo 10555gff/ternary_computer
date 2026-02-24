@@ -1,2 +1,2 @@
 pub mod logical_table;
-pub mod trits;
+pub mod logical_alu;

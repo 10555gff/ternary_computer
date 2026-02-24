@@ -1,6 +1,206 @@
 use trit_macro::trits;
 use ternary_arithmetic::ternary_cpu::trits::Trit4;
 
+#[derive(Clone)]
+pub struct Ternary {
+    pub digits: Vec<Trit>,
+}
+
+
+
+
+pub struct RegisterFile {
+    pub regs: [Ternary; 8], // R0..R7
+}
+
+impl RegisterFile {
+    pub fn new() -> Self {
+        Self { regs: std::array::from_fn(|_| Ternary { digits: vec![] }) }
+    }
+
+    pub fn read(&self, idx: usize) -> &Ternary {
+        &self.regs[idx]
+    }
+
+    pub fn write(&mut self, idx: usize, val: Ternary) {
+        self.regs[idx] = val;
+    }
+}
+
+
+pub struct PC {
+    pub value: Ternary,
+}
+
+impl PC {
+    pub fn new() -> Self {
+        Self { value: Ternary { digits: vec![] } }
+    }
+
+    pub fn inc(&mut self) {
+        // balanced ternary increment
+    }
+}
+
+
+
+pub struct ALU;
+
+impl ALU {
+    pub fn add(a: &Ternary, b: &Ternary) -> Ternary {
+        // 你已有 ternary_stack_adder
+        todo!()
+    }
+
+    pub fn sub(a: &Ternary, b: &Ternary) -> Ternary {
+        todo!()
+    }
+
+    pub fn mul(a: &Ternary, b: &Ternary) -> Ternary {
+        todo!()
+    }
+}
+
+
+
+
+
+// memory.rs
+pub struct ROM {
+    pub data: Vec<u8>,
+}
+
+pub struct RAM {
+    pub data: Vec<u8>,
+}
+
+pub struct Memory {
+    pub rom: ROM,
+    pub ram: RAM,
+}
+
+impl Memory {
+    pub fn read_byte(&self, addr: usize) -> u8 {
+        if addr < 0x4000 {
+            self.rom.data[addr]
+        } else {
+            self.ram.data[addr - 0x4000]
+        }
+    }
+
+    pub fn write_byte(&mut self, addr: usize, val: u8) {
+        if addr >= 0x4000 {
+            self.ram.data[addr - 0x4000] = val;
+        }
+    }
+}
+
+
+
+
+
+// bus.rs
+use crate::memory::Memory;
+
+pub struct Bus {
+    pub mem: Memory,
+}
+
+impl Bus {
+    pub fn read(&self, addr: usize) -> u8 {
+        self.mem.read_byte(addr)
+    }
+
+    pub fn write(&mut self, addr: usize, val: u8) {
+        self.mem.write_byte(addr, val);
+    }
+}
+
+
+
+
+
+// isa.rs
+pub enum Opcode {
+    Nop,
+    Load,
+    Add,
+    Sub,
+    Halt,
+}
+
+pub fn decode(byte: u8) -> Opcode {
+    match byte >> 4 {
+        0x0 => Opcode::Nop,
+        0x1 => Opcode::Load,
+        0x2 => Opcode::Add,
+        0x3 => Opcode::Sub,
+        0xF => Opcode::Halt,
+        _ => Opcode::Nop,
+    }
+}
+
+
+
+
+// cpu.rs
+use crate::{pc::PC, register::RegisterFile, alu::ALU, bus::Bus, isa::*};
+
+pub struct CPU {
+    pub pc: PC,
+    pub regs: RegisterFile,
+    pub alu: ALU,
+    pub bus: Bus,
+}
+
+impl CPU {
+    pub fn new(bus: Bus) -> Self {
+        Self {
+            pc: PC::new(),
+            regs: RegisterFile::new(),
+            alu: ALU,
+            bus,
+        }
+    }
+
+    fn fetch(&mut self) -> u8 {
+        let addr = self.pc.value.to_usize(); // ternary → usize
+        let byte = self.bus.read(addr);
+        self.pc.inc();
+        byte
+    }
+
+    fn execute(&mut self, opcode: Opcode, arg: u8) {
+        match opcode {
+            Opcode::Load => {
+                let imm = self.fetch();
+                self.regs.write(arg as usize, imm.into());
+            }
+            Opcode::Add => {
+                let a = self.regs.read(0).clone();
+                let b = self.regs.read(arg as usize);
+                self.regs.write(0, ALU::add(&a, b));
+            }
+            Opcode::Halt => {
+                println!("HALT");
+                std::process::exit(0);
+            }
+            _ => {}
+        }
+    }
+
+    pub fn run(&mut self) {
+        loop {
+            let byte = self.fetch();
+            let opcode = decode(byte);
+            let arg = byte & 0x0F;
+            self.execute(opcode, arg);
+        }
+    }
+}
+
+
+
 // 32 trits = 8 × Trit4
 #[derive(Clone)]
 struct Register {
@@ -122,3 +322,30 @@ fn decode_execute(&mut self, byte: u8) {
 //     let byte = cpu.fetch();
 //     cpu.decode_execute(byte);
 // }
+
+
+// main.rs
+mod ternary;
+mod pc;
+mod register;
+mod alu;
+mod memory;
+mod bus;
+mod isa;
+mod cpu;
+
+use bus::*;
+use memory::*;
+use cpu::*;
+
+fn main() {
+    let bus = Bus {
+        mem: Memory {
+            rom: ROM { data: vec![0x10,0x05,0xF0] },
+            ram: RAM { data: vec![0; 0x4000] },
+        }
+    };
+
+    let mut cpu = CPU::new(bus);
+    cpu.run();
+}
