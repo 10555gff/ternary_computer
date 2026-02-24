@@ -117,3 +117,8 @@ fn decode_execute(&mut self, byte: u8) {
 // //         read ram.read(address - 0X4000);
 // //     }
 // // }
+
+// loop {
+//     let byte = cpu.fetch();
+//     cpu.decode_execute(byte);
+// }
