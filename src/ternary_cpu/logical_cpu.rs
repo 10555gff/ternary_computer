@@ -1,7 +1,6 @@
 use crate::ternary_cpu::logical_alu::Trit4;
 
-
-#[derive(Clone, Copy)]
+#[derive(Debug,Clone, Copy)]
 pub struct Register {
     pub regs: [Trit4; 8], // R0..R7
 }
@@ -20,9 +19,87 @@ impl Register {
     }
 }
 
+pub struct T80CPU {
+    pub pc: usize,
+    pub mem: Vec<u8>,
+    pub regs: Register,
+}
+
+impl T80CPU {
+    pub fn new(mem: Vec<u8>) -> Self {
+        Self {
+            pc: 0,
+            mem,
+            regs: Register::new(),
+        }
+    }
+    fn fetch(&mut self) -> u8 {
+        let byte = self.mem[self.pc];
+        self.pc += 1;
+        byte
+    }
+
+    // fn nop(&self) {}
+
+    // fn halt(&self) {
+    //     println!("HALT");
+    //     std::process::exit(0);
+    // }
+
+    // fn load_imm(&mut self, reg: u8) {
+    //     let imm = self.fetch();
+    //     self.regs.write(reg as usize, Trit4(imm));
+    // }
+
+    // fn add(&mut self, reg: u8) {
+    //     let a = self.regs.read(0);
+    //     let b = self.regs.read(reg as usize);
+    //     self.regs.write(0, a + b);
+    // }
+
+    // pub fn decode_execute(&mut self, byte: u8) {
+    //     let (opcode, arg) = decode(byte);
+
+    //     match opcode {
+    //         Opcode::Nop => self.nop(),
+    //         Opcode::LoadImm => self.load_imm(arg),
+    //         Opcode::Add => self.add(arg),
+    //         Opcode::Halt => self.halt(),
+    //         Opcode::Unknown => println!("Unknown opcode"),
+    //     }
+    // }
+
+    // pub fn run(&mut self) {
+    //     loop {
+    //         let byte = self.fetch();
+    //         self.decode_execute(byte);
+    //     }
+    // }
+}
 
 
 
+
+
+// pub enum Opcode {
+//     Immediate,
+//     Calculate,
+//     Copy,
+//     Condition,
+// }
+
+// fn decode_execute(&mut self, byte: u8) {
+//     let opcode = byte >> 4;
+//     let arg = byte & 0x0F;
+
+//     match opcode {
+//         0x0 => self.nop(),
+//         0x1 => self.load_imm(arg),
+//         0x2 => self.add(arg),
+//         0xF => self.halt(),
+//         _ => println!("Unknown opcode {:X}", opcode),
+//     }
+// }
 
 
 
@@ -189,13 +266,7 @@ impl Register {
 
 
 // // isa.rs
-// pub enum Opcode {
-//     Nop,
-//     Load,
-//     Add,
-//     Sub,
-//     Halt,
-// }
+
 
 // pub fn decode(byte: u8) -> Opcode {
 //     match byte >> 4 {
@@ -214,12 +285,6 @@ impl Register {
 // // cpu.rs
 // use crate::{pc::PC, register::RegisterFile, alu::ALU, bus::Bus, isa::*};
 
-// pub struct CPU {
-//     pub pc: PC,
-//     pub regs: RegisterFile,
-//     pub alu: ALU,
-//     pub bus: Bus,
-// }
 
 // impl CPU {
 //     pub fn new(bus: Bus) -> Self {
@@ -271,11 +336,7 @@ impl Register {
 
 
 
-// struct T80CPU {
-//     pc: usize,      // byte PC
-//     mem: Vec<u8>,   // unified memory (ROM+RAM mapped)
-//     regs: [Register; 8], // R0..R7
-// }
+
 
 
 
@@ -332,18 +393,7 @@ impl Register {
 // }
 
 
-// fn decode_execute(&mut self, byte: u8) {
-//     let opcode = byte >> 4;
-//     let arg = byte & 0x0F;
 
-//     match opcode {
-//         0x0 => self.nop(),
-//         0x1 => self.load_imm(arg),
-//         0x2 => self.add(arg),
-//         0xF => self.halt(),
-//         _ => println!("Unknown opcode {:X}", opcode),
-//     }
-// }
 
 
 // // fn CPU(){
