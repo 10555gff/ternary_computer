@@ -3,7 +3,7 @@ use std::io::{Write, BufWriter, BufRead, BufReader};
 use crate::ternary_cpu::logical_cpu::T80CPU;
 
 pub static LINES: &[&str] = &[
-    "0100_00TT_0000",
+    "0000_0000_00TT",
     // "0100_00T0_0000",
     // "0100_00T1_0000",
     // "0100_000T_0000",

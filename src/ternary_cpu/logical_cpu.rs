@@ -88,15 +88,16 @@ impl T80CPU {
         let opcode = inst[0];
         
         match opcode {
-            0x00 => println!("A"),//Immediate,
-            0x10 => {//Copy,10
+            0x00 => {//Immediate,00
+                let val = inst[2];
+                self.regs.write(8, val);
+            },
+            0x10 => {//Copy,01
                 let src  = Self::decode_address(inst[1])  as usize;
                 let dest = Self::decode_address(inst[2])  as usize;
 
                 let val = self.regs.read(src);
                 self.regs.write(dest, val.0);
-
-                 println!("{}",val);
             },
             0x60 => println!("C"),//Calculate,
             0x40 => println!("D"),//Condition,
