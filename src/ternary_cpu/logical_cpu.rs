@@ -89,8 +89,7 @@ impl T80CPU {
         
         match opcode {
             0x00 => {//Immediate,00
-                let val = inst[2];
-                self.regs.write(8, val);
+                self.regs.write(0, inst[2]);
             },
             0x10 => {//Copy,01
                 let src  = Self::decode_address(inst[1])  as usize;
