@@ -6,7 +6,7 @@ pub static LINES: &[&str] = &[
     "0000T1100T01",
     "0100T1100T01",
     "1T00T1100T01",
-    "1100T1100T01"
+    "1000T1100T01"
 ];
 
 pub fn write_tasm() -> std::io::Result<()> {

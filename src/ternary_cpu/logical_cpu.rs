@@ -67,12 +67,6 @@ impl T80CPU {
         }
     }
 
-    // pub enum Opcode {
-//     Immediate,
-//     Calculate,
-//     Copy,
-//     Condition,
-// }
 
 // fn decode_execute(&mut self, byte: u8) {
 //     let opcode = byte >> 4;
@@ -85,9 +79,10 @@ impl T80CPU {
         let opcode = inst[0];
         
         match opcode {
-            0x00 => println!("A"),
-            0x10 => println!("B"),
-            0x60 => println!("C"),
+            0x00 => println!("A"),//Immediate,
+            0x10 => println!("B"),//Copy,
+            0x60 => println!("C"),//Calculate,
+            0x40 => println!("D"),//Condition,
             _ => println!("Unknown opcode {:X}", opcode),
         }
 
