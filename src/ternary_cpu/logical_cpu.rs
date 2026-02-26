@@ -98,7 +98,16 @@ impl T80CPU {
                 let val = self.regs.read(src);
                 self.regs.write(dest, val.0);
             },
-            0x60 => println!("C"),//Calculate,
+            0x60 =>{//Calculate,1T
+                let src  = Self::decode_address(inst[1])  as usize;
+                let code = Self::decode_address(inst[2]);
+
+                let a = self.regs.read(src);
+                let regs = self.regs.read(6);
+                let res =regs.gate_core(a,code);
+
+                self.regs.write(8, res.0);
+            },
             0x40 => println!("D"),//Condition,
             _ => println!("Unknown opcode {:X}", opcode),
         }
