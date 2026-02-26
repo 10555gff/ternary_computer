@@ -19,6 +19,14 @@ impl Register {
     }
 }
 
+// struct ROM {
+//     data: Vec<u8>,
+// }
+
+// struct RAM {
+//     data: Vec<u8>,
+// }
+
 pub struct T80CPU {
     pub pc: usize,
     pub mem: Vec<u8>,
@@ -36,6 +44,9 @@ impl T80CPU {
         }
     }
     pub fn fetch(&mut self) -> [u8; 3] {
+        if (self.pc + 3) > self.mem.len() {
+            panic!("Fetch beyond memory");
+        }
         let byte1 = self.mem[self.pc];
         let byte2 = self.mem[self.pc + 1];
         let byte3 = self.mem[self.pc + 2];
@@ -47,9 +58,7 @@ impl T80CPU {
         while !self.halted && self.pc + 3 <= self.mem.len() {
             let inst_bytes = self.fetch();
             println!("BBBBBBBBBBBBBBBBBBBBB         {:08b} {:08b} {:08b}",inst_bytes[0],inst_bytes[1],inst_bytes[2]);
-
-            // let inst = self.decode(inst_bytes);
-            // self.execute(inst);
+            self.decode_execute(inst_bytes);
         }
         if self.halted {
             println!("CPU 已 halt");
@@ -58,66 +67,72 @@ impl T80CPU {
         }
     }
 
+    // pub enum Opcode {
+//     Immediate,
+//     Calculate,
+//     Copy,
+//     Condition,
+// }
+
+// fn decode_execute(&mut self, byte: u8) {
+//     let opcode = byte >> 4;
+//     let arg = byte & 0x0F;
 
 
+// }
 
+    fn decode_execute(&self, inst: [u8; 3]) {
+        let opcode = inst[0];
+        match opcode {
+            0x00 => println!("A"),
+            0x01 => println!("B"),
+            0x09 => println!("C"),
+            0x04 => println!("D"),
+            _ => println!("Unknown opcode {:X}", opcode),
+        }
 
-
-
-    // fn fetch(&mut self) -> [u8; 3] {
-    //     if self.pc + 3 > self.mem.len() {
-    //         panic!("Fetch beyond memory");
+        // match opcode {
+        //     1 => { // Copy
+        //         let src = inst[1] as usize;
+        //         let dest = inst[2] as usize;
+        //         if src > 7 || dest > 7 {
+        //             panic!("Invalid register index");
+        //         }
+        //         Instruction::Copy { src, dest }
+        //     }
+        //     2 => { // Condition (Le)
+        //         let src1 = (inst[1] >> 4) as usize;
+        //         let src2 = (inst[1] & 0x0F) as usize;
+        //         let offset = inst[2] as i8;
+        //         if src1 > 7 || src2 > 7 {
+        //             panic!("Invalid register index");
+        //         }
+        //         Instruction::Condition { src1, src2, offset }
+        //     }
+        //     _ => panic!("Unknown opcode: {}", opcode),
+        // }
+    }
+    // fn execute(&mut self, inst: Instruction) {
+    //         match inst {
+    //             Instruction::Copy { src, dest } => {
+    //                 let val = self.regs.read(src);
+    //                 self.regs.write(dest, val);
+    //             }
+    //             Instruction::Condition { src1, src2, offset } => {
+    //                 let a = self.regs.read(src1);
+    //                 let b = self.regs.read(src2);
+    //                 if a <= b {
+    //                     // Jump relative
+    //                     let jump_bytes = (offset as isize) * 3;
+    //                     if jump_bytes < 0 && (jump_bytes.abs() as usize) > self.pc {
+    //                         panic!("Jump before start");
+    //                     }
+    //                     self.pc = ((self.pc as isize) + jump_bytes) as usize;
+    //                 }
+    //                 // Else continue
+    //             }
+    //         }
     //     }
-    //     let bytes = [self.mem[self.pc], self.mem[self.pc + 1], self.mem[self.pc + 2]];
-    //     self.pc += 3;
-    //     bytes
-    // }
-
-// fn decode(&self, inst: [u8; 3]) -> Instruction {
-//         let opcode = inst[0];
-//         match opcode {
-//             1 => { // Copy
-//                 let src = inst[1] as usize;
-//                 let dest = inst[2] as usize;
-//                 if src > 7 || dest > 7 {
-//                     panic!("Invalid register index");
-//                 }
-//                 Instruction::Copy { src, dest }
-//             }
-//             2 => { // Condition (Le)
-//                 let src1 = (inst[1] >> 4) as usize;
-//                 let src2 = (inst[1] & 0x0F) as usize;
-//                 let offset = inst[2] as i8;
-//                 if src1 > 7 || src2 > 7 {
-//                     panic!("Invalid register index");
-//                 }
-//                 Instruction::Condition { src1, src2, offset }
-//             }
-//             _ => panic!("Unknown opcode: {}", opcode),
-//         }
-//     }
-
-// fn execute(&mut self, inst: Instruction) {
-//         match inst {
-//             Instruction::Copy { src, dest } => {
-//                 let val = self.regs.read(src);
-//                 self.regs.write(dest, val);
-//             }
-//             Instruction::Condition { src1, src2, offset } => {
-//                 let a = self.regs.read(src1);
-//                 let b = self.regs.read(src2);
-//                 if a <= b {
-//                     // Jump relative
-//                     let jump_bytes = (offset as isize) * 3;
-//                     if jump_bytes < 0 && (jump_bytes.abs() as usize) > self.pc {
-//                         panic!("Jump before start");
-//                     }
-//                     self.pc = ((self.pc as isize) + jump_bytes) as usize;
-//                 }
-//                 // Else continue
-//             }
-//         }
-//     }
 
 
 //     #[derive(Debug)]
@@ -144,49 +159,13 @@ impl T80CPU {
     //     self.regs.write(0, a + b);
     // }
 
-    // pub fn decode_execute(&mut self, byte: u8) {
-    //     let (opcode, arg) = decode(byte);
 
-    //     match opcode {
-    //         Opcode::Nop => self.nop(),
-    //         Opcode::LoadImm => self.load_imm(arg),
-    //         Opcode::Add => self.add(arg),
-    //         Opcode::Halt => self.halt(),
-    //         Opcode::Unknown => println!("Unknown opcode"),
-    //     }
-    // }
-
-    // pub fn run(&mut self) {
-    //     loop {
-    //         let byte = self.fetch();
-    //         self.decode_execute(byte);
-    //     }
-    // }
 }
 
 
 
 
 
-// pub enum Opcode {
-//     Immediate,
-//     Calculate,
-//     Copy,
-//     Condition,
-// }
-
-// fn decode_execute(&mut self, byte: u8) {
-//     let opcode = byte >> 4;
-//     let arg = byte & 0x0F;
-
-//     match opcode {
-//         0x0 => self.nop(),
-//         0x1 => self.load_imm(arg),
-//         0x2 => self.add(arg),
-//         0xF => self.halt(),
-//         _ => println!("Unknown opcode {:X}", opcode),
-//     }
-// }
 
 
 
@@ -198,22 +177,6 @@ impl T80CPU {
 
 
 
-
-
-
-
-
-
-
-
-
-// struct ROM {
-//     data: Vec<u8>,
-// }
-
-// struct RAM {
-//     data: Vec<u8>,
-// }
 
 
 
