@@ -84,15 +84,19 @@ impl T80CPU {
     }
 
 
-    fn decode_execute(&self, inst: [u8; 3]) {
+    fn decode_execute(&mut self, inst: [u8; 3]) {
         let opcode = inst[0];
         
         match opcode {
             0x00 => println!("A"),//Immediate,
             0x10 => {//Copy,10
-                let src = Self::decode_address(inst[1]);
-                let dest = inst[2] as usize;
-                println!("{}",src);
+                let src  = Self::decode_address(inst[1])  as usize;
+                let dest = Self::decode_address(inst[2])  as usize;
+
+                let val = self.regs.read(src);
+                self.regs.write(dest, val.0);
+
+                 println!("{}",val);
             },
             0x60 => println!("C"),//Calculate,
             0x40 => println!("D"),//Condition,
