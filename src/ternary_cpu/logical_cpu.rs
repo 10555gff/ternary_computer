@@ -2,12 +2,12 @@ use crate::ternary_cpu::logical_alu::Trit4;
 
 #[derive(Debug,Clone, Copy)]
 pub struct Register {
-    pub regs: [Trit4; 8], // R0..R7
+    pub regs: [Trit4; 9], // R0..R8
 }
 
 impl Register {
     pub fn new() -> Self {
-        Self { regs: [Trit4(0); 8] }
+        Self { regs: [Trit4(0); 9] }
     }
 
     pub fn read(&self, idx: usize) -> Trit4 {
@@ -68,19 +68,32 @@ impl T80CPU {
     }
 
 
-// fn decode_execute(&mut self, byte: u8) {
-//     let opcode = byte >> 4;
-//     let arg = byte & 0x0F;
+    fn decode_address(byte: u8) -> u8 {
+        match byte {
+            0x0A => 0,
+            0x08 => 1,
+            0x09 => 2,
+            0x02 => 3,
+            0x00 => 4,
+            0x01 => 5,
+            0x06 => 6,
+            0x04 => 7,
+            0x05 => 8,
+            _ => panic!("invalid address byte: {:#04X}", byte),
+        }
+    }
 
-
-// }
 
     fn decode_execute(&self, inst: [u8; 3]) {
         let opcode = inst[0];
         
         match opcode {
             0x00 => println!("A"),//Immediate,
-            0x10 => println!("B"),//Copy,
+            0x10 => {//Copy,10
+                let src = Self::decode_address(inst[1]);
+                let dest = inst[2] as usize;
+                println!("{}",src);
+            },
             0x60 => println!("C"),//Calculate,
             0x40 => println!("D"),//Condition,
             _ => println!("Unknown opcode {:X}", opcode),
@@ -88,8 +101,7 @@ impl T80CPU {
 
         // match opcode {
         //     1 => { // Copy
-        //         let src = inst[1] as usize;
-        //         let dest = inst[2] as usize;
+
         //         if src > 7 || dest > 7 {
         //             panic!("Invalid register index");
         //         }

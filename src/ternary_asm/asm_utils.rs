@@ -3,10 +3,17 @@ use std::io::{Write, BufWriter, BufRead, BufReader};
 use crate::ternary_cpu::logical_cpu::T80CPU;
 
 pub static LINES: &[&str] = &[
-    "0000T1100T01",
-    "0100T1100T01",
-    "1T00T1100T01",
-    "1000T1100T01"
+    "0100_00TT_0000",
+    "0100_00T0_0000",
+    "0100_00T1_0000",
+    "0100_000T_0000",
+
+    "0100_0000_0000",
+
+    "0100_0001_0000",
+    "0100_001T_0000",
+    "0100_0010_0000",
+    "0100_0011_0000",
 ];
 
 pub fn write_tasm() -> std::io::Result<()> {
@@ -37,6 +44,7 @@ fn pack_trits(trits: &str) -> Vec<u8> {
     const SHIFT: [u8; 4] = [6, 4, 2, 0];
 
     for &c in trits.as_bytes() {
+        if c == b'_' { continue; }
         let bits = trit_index(c);
         cur_byte |= bits << SHIFT[count];// 每 byte 放 4 trits
         count += 1;
