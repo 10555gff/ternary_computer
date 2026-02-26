@@ -4,7 +4,8 @@ use crate::ternary_cpu::logical_cpu::T80CPU;
 
 pub static LINES: &[&str] = &[
     "0000_0000_00TT",
-    // "0100_00T0_0000",
+    "0100_0011_0000",
+    "0100_0011_00TT",
     // "0100_00T1_0000",
     // "0100_000T_0000",
 
@@ -116,10 +117,10 @@ pub fn run_from_tbin() ->std::io::Result<()> {
 
     println!("执行完成");
 
-    // // 可选：打印最终寄存器状态
-    // for i in 0..6 {
-    //     println!("REG{} = {:?}", i, cpu.regs.read(i));
-    // }
+    // 可选：打印最终寄存器状态
+    for i in 0..9 {
+        println!("REG{} = {}", i, cpu.regs.read(i));
+    }
 
     Ok(())
 }

@@ -327,22 +327,6 @@ impl T80CPU {
 
 
 
-// // isa.rs
-
-
-// pub fn decode(byte: u8) -> Opcode {
-//     match byte >> 4 {
-//         0x0 => Opcode::Nop,
-//         0x1 => Opcode::Load,
-//         0x2 => Opcode::Add,
-//         0x3 => Opcode::Sub,
-//         0xF => Opcode::Halt,
-//         _ => Opcode::Nop,
-//     }
-// }
-
-
-
 
 // // cpu.rs
 // use crate::{pc::PC, register::RegisterFile, alu::ALU, bus::Bus, isa::*};
