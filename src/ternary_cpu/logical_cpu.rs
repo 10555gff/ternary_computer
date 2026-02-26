@@ -83,11 +83,11 @@ impl T80CPU {
 
     fn decode_execute(&self, inst: [u8; 3]) {
         let opcode = inst[0];
+        
         match opcode {
             0x00 => println!("A"),
-            0x01 => println!("B"),
-            0x09 => println!("C"),
-            0x04 => println!("D"),
+            0x10 => println!("B"),
+            0x60 => println!("C"),
             _ => println!("Unknown opcode {:X}", opcode),
         }
 

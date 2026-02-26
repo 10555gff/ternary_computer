@@ -3,10 +3,10 @@ use std::io::{Write, BufWriter, BufRead, BufReader};
 use crate::ternary_cpu::logical_cpu::T80CPU;
 
 pub static LINES: &[&str] = &[
-    "0001T1100T01",
-    "000000000001",
-    "0000001T1111",
-    "TTTT00001111",
+    "0000T1100T01",
+    "0100T1100T01",
+    "1T00T1100T01",
+    "1100T1100T01"
 ];
 
 pub fn write_tasm() -> std::io::Result<()> {
