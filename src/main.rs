@@ -1,20 +1,23 @@
 use ternary_arithmetic::ternary_asm::asm_utils;
 
+pub static PROGRAM: &[&str] = &[
+    "0000_0000_T010",// LOAD REG0,T010
+    "0100_00TT_001T",// COPY REG0,REGS
+    "0000_0000_TTT0",// LOAD REG0,TTT0
+
+
+];
+
 fn main() -> std::io::Result<()> {
-    asm_utils::write_tasm()?;  
+    asm_utils::write_tasm(PROGRAM)?;
     asm_utils::write_tbin()?;    
     asm_utils::read_tbin()?;     
     asm_utils::run_from_tbin()?;
-     Ok(())
+    Ok(())
 }
 
 
 
-// fn main() -> std::io::Result<()> {
- 
-//     
-//     Ok(())
-// }
 
 
 
@@ -22,10 +25,6 @@ fn main() -> std::io::Result<()> {
 
 
 
-
-
-// // use ternary_arithmetic::ternary_cpu::logical_cpu::Register;
-// // use ternary_arithmetic::ternary_cpu::logical_cpu::T80CPU;
 
 // fn main() {
 //     // let a = 
@@ -66,7 +65,7 @@ fn main() -> std::io::Result<()> {
 
 
 //     // let rom = vec![
-//     //     0x10, 0x05, // LOAD R0, 5
+//     //     0x10, 0x05, 
 //     //     0x11, 0x03, // LOAD R1, 3
 //     //     0x21,       // ADD R1
 //     //     0xF0,       // HALT

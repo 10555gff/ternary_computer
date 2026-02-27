@@ -27,7 +27,7 @@ pub struct Register {
 }
 
 enum Instruction {
-    Imm { reg: usize, val: u8 },
+    Imm { reg: usize, val: Trit4 },
     Copy { src: usize, dst: usize },
     Calc { src: usize, code: u8 },
     //Branch { addr: usize },
@@ -52,8 +52,8 @@ impl Register {
         self.regs[idx]
     }
 
-    pub fn write(&mut self, idx: usize, val: u8) {
-        self.regs[idx] = Trit4(val);
+    pub fn write(&mut self, idx: usize, val: Trit4) {
+        self.regs[idx] =val;
     }
 }
 
@@ -96,7 +96,7 @@ impl T80CPU {
         match inst[0] {
             0x00 => Instruction::Imm {
                 reg: 0,
-                val: inst[2],
+                val: Trit4(inst[2]),
             },
 
             0x10 => Instruction::Copy {
@@ -125,14 +125,14 @@ impl T80CPU {
 
             Instruction::Copy { src, dst } => {
                 let val = self.regs.read(src);
-                self.regs.write(dst, val.0);
+                self.regs.write(dst, val);
             }
 
             Instruction::Calc { src, code } => {
                 let a = self.regs.read(src);
                 let base = self.regs.read(6);
                 let res = base.gate_core(a, code);
-                self.regs.write(8, res.0);
+                self.regs.write(8, res);
             }
 
             // Instruction::Branch { addr } => {
@@ -170,26 +170,3 @@ impl T80CPU {
     }
 
 }
-
-
-// #[derive(Clone)]
-// pub struct Ternary {
-//     pub digits: Vec<Trit>,
-// }
-
-// pub struct ALU;
-
-// impl ALU {
-//     pub fn add(a: &Ternary, b: &Ternary) -> Ternary {
-//         // 你已有 ternary_stack_adder
-//         todo!()
-//     }
-
-//     pub fn sub(a: &Ternary, b: &Ternary) -> Ternary {
-//         todo!()
-//     }
-
-//     pub fn mul(a: &Ternary, b: &Ternary) -> Ternary {
-//         todo!()
-//     }
-// }

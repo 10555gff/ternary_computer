@@ -2,29 +2,11 @@ use std::fs::File;
 use std::io::{Write, BufWriter, BufRead, BufReader};
 use crate::ternary_cpu::logical_cpu::T80CPU;
 
-pub static LINES: &[&str] = &[
-    "0000_0000_T010",// Input--->REG0
-    "0100_00TT_001T",// REG0-->REGS
-    "0000_0000_TTT0",// Input--->REG0
-
-    "1T00_00TT_00TT",
-    // "0100_0011_00TT",
-    // "0100_00T1_0000",
-    // "0100_000T_0000",
-
-    // "0100_0000_0000",
-
-    // "0100_0001_0000",
-    // "0100_001T_0000",
-    // "0100_0010_0000",
-    // "0100_0011_0000",
-];
-
-pub fn write_tasm() -> std::io::Result<()> {
+pub fn write_tasm(lines: &[&str]) -> std::io::Result<()> {
     let file=File::create("prog.tasm")?;
     let mut buf = BufWriter::new(file);
 
-    for l in LINES {
+    for l in lines {
         writeln!(buf, "{l}")?;
     }
     Ok(())
