@@ -116,7 +116,7 @@ pub fn run_from_tbin() ->std::io::Result<()> {
 
     // 可选：打印最终寄存器状态
     for i in 0..9 {
-        let regs= cpu.regs.read(i);
+        let regs= cpu.regs[i];
         println!("REG{} = {}", i, regs);
     }
     Ok(())
