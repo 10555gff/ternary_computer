@@ -1,4 +1,3 @@
-use core::cmp::Ordering;
 use crate::ternary_cpu::logical_alu::Trit4;
 
 const INST_SIZE: usize = 3;
@@ -147,18 +146,17 @@ impl T80CPU {
 
             Instruction::Condition { jump_type,val } => {
                 let reg3 = self.regs.read(3);
-                let cmp = reg3.cmp(&Trit4::ZERO);
 
                 //判断3号寄存器（REG3）中的数值是否满，指定的条件
                 let is_change = match jump_type {
                     0 => false,
-                    1 => cmp == Ordering::Equal,
-                    2 => cmp != Ordering::Greater,
-                    3 => cmp == Ordering::Less,
+                    1 => reg3 == Trit4::ZERO,
+                    2 => reg3 <= Trit4::ZERO,
+                    3 => reg3 <  Trit4::ZERO,
                     4 => true,
-                    5 => cmp == Ordering::Greater,
-                    6 => cmp != Ordering::Less,
-                    7 => cmp != Ordering::Equal,
+                    5 => reg3 >  Trit4::ZERO,
+                    6 => reg3 >= Trit4::ZERO,
+                    7 => reg3 != Trit4::ZERO,
                     _ => false,
                 };
 
