@@ -60,7 +60,6 @@ impl Flags {
         }
     }
 
-    // 修正：去掉多餘的 self.flags
     pub fn update_flags(&mut self, val: Trit4) {
         let cmp = val.cmp(&Trit4::ZERO);
         self.zero     = cmp == Ordering::Equal;
@@ -106,7 +105,6 @@ impl T80CPU {
         }
         val
     }
-
 
     //从 PC 取指令，并推进 PC
     pub fn fetch(&mut self) -> Option<[u8; 3]> {
@@ -170,11 +168,12 @@ impl T80CPU {
                 let b = self.regs.read(6);
                 let res = b.gate_core(a, code);
                 self.regs.write(8, res);
-                //self.flags.update_flags(res);   // ← 建議加上
             }
 
             Instruction::Condition { jump_type,val } => {
-                //let reg3 = self.regs.read(3);
+                let reg3 = self.regs.read(3);
+                self.flags.update_flags(reg3);
+
                 let should_jump = match jump_type {
                     0 => false,                             // never
                     1 => self.flags.zero,                   // z
