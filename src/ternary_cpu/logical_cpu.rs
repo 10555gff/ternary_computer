@@ -65,11 +65,10 @@ impl T80CPU {
         }
     }
     fn decode_address(byte: u8) -> u8 {
-        let val = DECODE_LUT[byte as usize];
-        if val == 0xFF {
-            panic!("invalid address byte: {:#04X}", byte);
-        }
-        val
+        DECODE_LUT
+            .get(byte as usize)
+            .copied()
+            .unwrap_or(0xFF)
     }
     fn check_condition(&self, jump_type: u8) -> bool {
         let cmp = self.regs[3].cmp(&Trit4::ZERO);
