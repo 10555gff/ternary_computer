@@ -1,3 +1,4 @@
+use core::cmp::Ordering;
 use crate::ternary_cpu::logical_alu::Trit4;
 
 const INST_SIZE: usize = 3;
@@ -35,13 +36,38 @@ enum Instruction {
     Unknown,
 }
 
+pub struct Flags {
+    pub zero: bool,
+    pub negative: bool,
+    pub positive: bool,
+}
+
 pub struct T80CPU {
     pub pc: usize,
     pub mem: Vec<u8>,
     pub regs: Register,
+    pub flags: Flags,   // ← 加这里
     pub halted: bool,
 }
 
+
+impl Flags {
+    pub fn new() -> Self {
+        Self {
+            zero: false,
+            negative: false,
+            positive: false,
+        }
+    }
+
+    // 修正：去掉多餘的 self.flags
+    pub fn update_flags(&mut self, val: Trit4) {
+        let cmp = val.cmp(&Trit4::ZERO);
+        self.zero     = cmp == Ordering::Equal;
+        self.negative = cmp == Ordering::Less;
+        self.positive = cmp == Ordering::Greater;
+    }
+}
 
 impl Register {
     pub fn new() -> Self {
@@ -68,6 +94,7 @@ impl T80CPU {
         Self {
             pc: 0,
             mem,
+            flags: Flags::new(),
             regs: Register::new(),
             halted: false,
         }
@@ -143,26 +170,24 @@ impl T80CPU {
                 let b = self.regs.read(6);
                 let res = b.gate_core(a, code);
                 self.regs.write(8, res);
+                //self.flags.update_flags(res);   // ← 建議加上
             }
 
             Instruction::Condition { jump_type,val } => {
-                let reg3 = self.regs.read(3);
-                let cmp = reg3.cmp(&Trit4::ZERO);
-
-                //判断3号寄存器（REG3）中的数值是否满，指定的条件
-                let is_change = match jump_type {
-                    0 => false,
-                    1 => cmp == Ordering::Equal,
-                    2 => cmp != Ordering::Greater,
-                    3 => cmp == Ordering::Less,
-                    4 => true,
-                    5 => cmp == Ordering::Greater,
-                    6 => cmp != Ordering::Less,
-                    7 => cmp != Ordering::Equal,
+                //let reg3 = self.regs.read(3);
+                let should_jump = match jump_type {
+                    0 => false,                             // never
+                    1 => self.flags.zero,                   // z
+                    2 => self.flags.zero || self.flags.negative,  // <= (z or n)
+                    3 => self.flags.negative,               // n
+                    4 => true,                              // always
+                    5 => self.flags.positive,               // p
+                    6 => self.flags.zero || self.flags.positive,  // >= (z or p)
+                    7 => !self.flags.zero,                  // nz
                     _ => false,
                 };
 
-                if is_change{
+                if should_jump{
                     self.pc = (val *3) as usize;   // ← 这里覆盖 PC
                 }
 
