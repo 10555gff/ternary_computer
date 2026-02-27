@@ -152,10 +152,3 @@ pub fn read_tbin() -> std::io::Result<()> {
 
     Ok(())
 }
-
-// while !halted {
-//     
-//     pc += 3;
-
-//     decode_execute(inst);
-// }

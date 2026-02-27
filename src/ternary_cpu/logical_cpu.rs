@@ -108,12 +108,16 @@ impl Register {
 //     }
 // }
 
+enum Instruction {
+    Imm { reg: usize, val: u8 },
+    Copy { src: usize, dst: usize },
+    Calc { src: usize, code: u8 },
+    //Branch { addr: usize },
+    Halt,
+    Unknown,
+}
 
 
-
-
-
-const INST_SIZE: usize = 3;
 pub struct T80CPU {
     pub pc: usize,
     pub mem: Vec<u8>,
@@ -121,6 +125,7 @@ pub struct T80CPU {
     pub halted: bool,
 }
 
+const INST_SIZE: usize = 3;
 //CPU Fetch → Decode → Execute
 impl T80CPU {
     pub fn new(mem: Vec<u8>) -> Self {
@@ -132,7 +137,7 @@ impl T80CPU {
         }
     }
     pub fn fetch(&mut self) -> Option<[u8; 3]> {
-        let end = self.pc + INST_SIZE;
+        let end = self.pc.checked_add(INST_SIZE)?;
         if end > self.mem.len() {
             return None;
         }
@@ -148,7 +153,8 @@ impl T80CPU {
         match self.fetch() {
             Some(inst) => {
                 println!("BBBBBBBBBBBBBBBBBBBBB         {:08b} {:08b} {:08b}",inst[0],inst[1],inst[2]);
-                self.decode_execute(inst);
+                let decoded = self.decode(inst);
+                self.execute(decoded);
                 true
             }
             None => false, // halt
@@ -166,8 +172,6 @@ impl T80CPU {
     }
 
 
-
-
     fn decode_address(byte: u8) -> u8 {
         match byte {
             0x0A => 0,
@@ -183,36 +187,92 @@ impl T80CPU {
         }
     }
 
-
-    fn decode_execute(&mut self, inst: [u8; 3]) {
-        let opcode = inst[0];
-        
-        match opcode {
-            0x00 => {//Immediate,00
-                self.regs.write(0, inst[2]);
+    fn decode(&self, inst: [u8; 3]) -> Instruction {
+        match inst[0] {
+            0x00 => Instruction::Imm {
+                reg: 0,
+                val: inst[2],
             },
-            0x10 => {//Copy,01
-                let src  = Self::decode_address(inst[1])  as usize;
-                let dest = Self::decode_address(inst[2])  as usize;
 
-                let val = self.regs.read(src);
-                self.regs.write(dest, val.0);
+            0x10 => Instruction::Copy {
+                src: Self::decode_address(inst[1]) as usize,
+                dst: Self::decode_address(inst[2]) as usize,
             },
-            0x60 =>{//Calculate,1T
-                let src  = Self::decode_address(inst[1])  as usize;
-                let code = Self::decode_address(inst[2]);
 
-                let a = self.regs.read(src);
-                let regs = self.regs.read(6);
-                let res =regs.gate_core(a,code);
-
-                self.regs.write(8, res.0);
+            0x60 => Instruction::Calc {
+                src: Self::decode_address(inst[1]) as usize,
+                code: Self::decode_address(inst[2]),
             },
-            0x40 => println!("D"),//Condition,
-            _ => println!("Unknown opcode {:X}", opcode),
+            
+            0xFF => Instruction::Halt,
+
+            _ => Instruction::Unknown,
         }
-
     }
+
+    fn execute(&mut self, inst: Instruction) {
+        match inst {
+
+            Instruction::Imm { reg, val } => {
+                self.regs.write(reg, val);
+            }
+
+            Instruction::Copy { src, dst } => {
+                let val = self.regs.read(src);
+                self.regs.write(dst, val.0);
+            }
+
+            Instruction::Calc { src, code } => {
+                let a = self.regs.read(src);
+                let base = self.regs.read(6);
+                let res = base.gate_core(a, code);
+                self.regs.write(8, res.0);
+            }
+
+            // Instruction::Branch { addr } => {
+            //     self.pc = addr;   // ← 这里覆盖 PC
+            // }
+
+            Instruction::Halt => {
+                self.halted = true;
+            }
+
+            Instruction::Unknown => {
+                println!("Unknown instruction");
+            }
+        }
+    }
+
+
+    // fn decode_execute(&mut self, inst: [u8; 3]) {
+    //     let opcode = inst[0];
+        
+    //     // match opcode {
+    //     //     0x00 => {//Immediate,00
+    //     //         self.regs.write(0, inst[2]);
+    //     //     },
+    //     //     0x10 => {//Copy,01
+    //     //         let src  = Self::decode_address(inst[1])  as usize;
+    //     //         let dest = Self::decode_address(inst[2])  as usize;
+
+    //     //         let val = self.regs.read(src);
+    //     //         self.regs.write(dest, val.0);
+    //     //     },
+    //     //     0x60 =>{//Calculate,1T
+    //     //         let src  = Self::decode_address(inst[1])  as usize;
+    //     //         let code = Self::decode_address(inst[2]);
+
+    //     //         let a = self.regs.read(src);
+    //     //         let regs = self.regs.read(6);
+    //     //         let res =regs.gate_core(a,code);
+
+    //     //         self.regs.write(8, res.0);
+    //     //     },
+    //     //     0x40 => println!("D"),//Condition,
+    //     //     _ => println!("Unknown opcode {:X}", opcode),
+    //     // }
+
+    // }
 
 
 
