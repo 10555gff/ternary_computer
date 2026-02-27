@@ -148,7 +148,7 @@ impl T80CPU {
             }
 
             Instruction::Unknown => {
-                println!("Unknown instruction");
+                panic!("Illegal opcode at PC={}", self.pc - 3);
             }
         }
     }
