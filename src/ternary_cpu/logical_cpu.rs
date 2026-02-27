@@ -113,7 +113,7 @@ impl Register {
 
 
 
-
+const INST_SIZE: usize = 3;
 pub struct T80CPU {
     pub pc: usize,
     pub mem: Vec<u8>,
@@ -131,29 +131,41 @@ impl T80CPU {
             halted: false,
         }
     }
-    pub fn fetch(&mut self) -> [u8; 3] {
-        if (self.pc + 3) > self.mem.len() {
-            panic!("Fetch beyond memory");
+    pub fn fetch(&mut self) -> Option<[u8; 3]> {
+        let end = self.pc + INST_SIZE;
+        if end > self.mem.len() {
+            return None;
         }
-        let byte1 = self.mem[self.pc];
-        let byte2 = self.mem[self.pc + 1];
-        let byte3 = self.mem[self.pc + 2];
-        self.pc += 3;
-        [byte1, byte2, byte3]
+        let inst = [
+            self.mem[self.pc],
+            self.mem[self.pc + 1],
+            self.mem[self.pc + 2],
+        ];
+        self.pc = end;
+        Some(inst)
+    }
+    pub fn step(&mut self) -> bool {
+        match self.fetch() {
+            Some(inst) => {
+                println!("BBBBBBBBBBBBBBBBBBBBB         {:08b} {:08b} {:08b}",inst[0],inst[1],inst[2]);
+                self.decode_execute(inst);
+                true
+            }
+            None => false, // halt
+        }
     }
 
+
     pub fn run(&mut self) {
-        while !self.halted && self.pc + 3 <= self.mem.len() {
-            let inst_bytes = self.fetch();
-            println!("BBBBBBBBBBBBBBBBBBBBB         {:08b} {:08b} {:08b}",inst_bytes[0],inst_bytes[1],inst_bytes[2]);
-            self.decode_execute(inst_bytes);
-        }
+        while !self.halted && self.step() {}
         if self.halted {
             println!("CPU 已 halt");
         } else if self.pc >= self.mem.len() {
             println!("PC 超出内存，程序自然结束");
         }
     }
+
+
 
 
     fn decode_address(byte: u8) -> u8 {

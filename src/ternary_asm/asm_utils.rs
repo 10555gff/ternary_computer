@@ -154,7 +154,7 @@ pub fn read_tbin() -> std::io::Result<()> {
 }
 
 // while !halted {
-//     let inst = &mem[pc..pc+3];
+//     
 //     pc += 3;
 
 //     decode_execute(inst);
