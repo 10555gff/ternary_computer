@@ -19,13 +19,100 @@ impl Register {
     }
 }
 
-// struct ROM {
-//     data: Vec<u8>,
+
+// #[derive(Clone)]
+// pub struct Ternary {
+//     pub digits: Vec<Trit>,
 // }
 
-// struct RAM {
-//     data: Vec<u8>,
+// pub struct ALU;
+
+// impl ALU {
+//     pub fn add(a: &Ternary, b: &Ternary) -> Ternary {
+//         // 你已有 ternary_stack_adder
+//         todo!()
+//     }
+
+//     pub fn sub(a: &Ternary, b: &Ternary) -> Ternary {
+//         todo!()
+//     }
+
+//     pub fn mul(a: &Ternary, b: &Ternary) -> Ternary {
+//         todo!()
+//     }
 // }
+
+
+// // memory.rs
+// pub struct ROM {
+//     pub data: Vec<u8>,
+// }
+
+// pub struct RAM {
+//     pub data: Vec<u8>,
+// }
+
+
+// impl ROM {
+//     fn read(&self, addr: usize) -> u8 {
+//         self.data[addr]
+//     }
+// }
+
+// impl RAM {
+//     fn read(&self, addr: usize) -> u8 {
+//         self.data[addr]
+//     }
+
+//     fn write(&mut self, addr: usize, val: u8) {
+//         self.data[addr] = val;
+//     }
+// }
+
+// pub struct Memory {
+//     pub rom: ROM,
+//     pub ram: RAM,
+// }
+
+// impl Memory {
+//     pub fn read_byte(&self, addr: usize) -> u8 {
+//         if addr < 0x4000 {
+//             self.rom.data[addr]
+//         } else {
+//             self.ram.data[addr - 0x4000]
+//         }
+//     }
+
+//     pub fn write_byte(&mut self, addr: usize, val: u8) {
+//         if addr >= 0x4000 {
+//             self.ram.data[addr - 0x4000] = val;
+//         }
+//     }
+// }
+
+
+// // bus.rs
+// use crate::memory::Memory;
+
+// pub struct Bus {
+//     pub mem: Memory,
+// }
+
+// impl Bus {
+//     pub fn read(&self, addr: usize) -> u8 {
+//         self.mem.read_byte(addr)
+//     }
+
+//     pub fn write(&mut self, addr: usize, val: u8) {
+//         self.mem.write_byte(addr, val);
+//     }
+// }
+
+
+
+
+
+
 
 pub struct T80CPU {
     pub pc: usize,
@@ -34,6 +121,7 @@ pub struct T80CPU {
     pub halted: bool,
 }
 
+//CPU Fetch → Decode → Execute
 impl T80CPU {
     pub fn new(mem: Vec<u8>) -> Self {
         Self {
@@ -112,66 +200,10 @@ impl T80CPU {
             _ => println!("Unknown opcode {:X}", opcode),
         }
 
-        // match opcode {
-        //     1 => { // Copy
-
-        //         if src > 7 || dest > 7 {
-        //             panic!("Invalid register index");
-        //         }
-        //         Instruction::Copy { src, dest }
-        //     }
-        //     2 => { // Condition (Le)
-        //         let src1 = (inst[1] >> 4) as usize;
-        //         let src2 = (inst[1] & 0x0F) as usize;
-        //         let offset = inst[2] as i8;
-        //         if src1 > 7 || src2 > 7 {
-        //             panic!("Invalid register index");
-        //         }
-        //         Instruction::Condition { src1, src2, offset }
-        //     }
-        //     _ => panic!("Unknown opcode: {}", opcode),
-        // }
     }
-    // fn execute(&mut self, inst: Instruction) {
-    //         match inst {
-    //             Instruction::Copy { src, dest } => {
-    //                 let val = self.regs.read(src);
-    //                 self.regs.write(dest, val);
-    //             }
-    //             Instruction::Condition { src1, src2, offset } => {
-    //                 let a = self.regs.read(src1);
-    //                 let b = self.regs.read(src2);
-    //                 if a <= b {
-    //                     // Jump relative
-    //                     let jump_bytes = (offset as isize) * 3;
-    //                     if jump_bytes < 0 && (jump_bytes.abs() as usize) > self.pc {
-    //                         panic!("Jump before start");
-    //                     }
-    //                     self.pc = ((self.pc as isize) + jump_bytes) as usize;
-    //                 }
-    //                 // Else continue
-    //             }
-    //         }
-    //     }
 
 
-//     #[derive(Debug)]
-// enum Instruction {
-//     Copy { src: usize, dest: usize },
-//     Condition { src1: usize, src2: usize, offset: i8 }, // Relative offset in instructions
-//     // Add Immediate and Calculate if needed in future
-// }
-    // fn nop(&self) {}
 
-    // fn halt(&self) {
-    //     println!("HALT");
-    //     std::process::exit(0);
-    // }
-
-    // fn load_imm(&mut self, reg: u8) {
-    //     let imm = self.fetch();
-    //     self.regs.write(reg as usize, Trit4(imm));
-    // }
 
     // fn add(&mut self, reg: u8) {
     //     let a = self.regs.read(0);
@@ -197,147 +229,6 @@ impl T80CPU {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// use trit_macro::trits;
-// use ternary_arithmetic::ternary_cpu::trits::Trit4;
-
-// #[derive(Clone)]
-// pub struct Ternary {
-//     pub digits: Vec<Trit>,
-// }
-
-
-
-
-
-
-
-
-
-// pub struct PC {
-//     pub value: Ternary,
-// }
-
-// impl PC {
-//     pub fn new() -> Self {
-//         Self { value: Ternary { digits: vec![] } }
-//     }
-
-//     pub fn inc(&mut self) {
-//         // balanced ternary increment
-//     }
-// }
-
-
-
-// pub struct ALU;
-
-// impl ALU {
-//     pub fn add(a: &Ternary, b: &Ternary) -> Ternary {
-//         // 你已有 ternary_stack_adder
-//         todo!()
-//     }
-
-//     pub fn sub(a: &Ternary, b: &Ternary) -> Ternary {
-//         todo!()
-//     }
-
-//     pub fn mul(a: &Ternary, b: &Ternary) -> Ternary {
-//         todo!()
-//     }
-// }
-
-
-
-
-
-// // memory.rs
-// pub struct ROM {
-//     pub data: Vec<u8>,
-// }
-
-// pub struct RAM {
-//     pub data: Vec<u8>,
-// }
-
-// pub struct Memory {
-//     pub rom: ROM,
-//     pub ram: RAM,
-// }
-
-// impl Memory {
-//     pub fn read_byte(&self, addr: usize) -> u8 {
-//         if addr < 0x4000 {
-//             self.rom.data[addr]
-//         } else {
-//             self.ram.data[addr - 0x4000]
-//         }
-//     }
-
-//     pub fn write_byte(&mut self, addr: usize, val: u8) {
-//         if addr >= 0x4000 {
-//             self.ram.data[addr - 0x4000] = val;
-//         }
-//     }
-// }
-
-
-
-
-
-// // bus.rs
-// use crate::memory::Memory;
-
-// pub struct Bus {
-//     pub mem: Memory,
-// }
-
-// impl Bus {
-//     pub fn read(&self, addr: usize) -> u8 {
-//         self.mem.read_byte(addr)
-//     }
-
-//     pub fn write(&mut self, addr: usize, val: u8) {
-//         self.mem.write_byte(addr, val);
-//     }
-// }
-
-
-
-
-
-
-// // cpu.rs
-// use crate::{pc::PC, register::RegisterFile, alu::ALU, bus::Bus, isa::*};
 
 
 // impl CPU {
@@ -388,48 +279,6 @@ impl T80CPU {
 
 
 
-
-
-
-
-
-
-// impl ROM {
-//     fn read(&self, addr: usize) -> u8 {
-//         self.data[addr]
-//     }
-// }
-
-// impl RAM {
-//     fn read(&self, addr: usize) -> u8 {
-//         self.data[addr]
-//     }
-
-//     fn write(&mut self, addr: usize, val: u8) {
-//         self.data[addr] = val;
-//     }
-// }
-
-// //CPU Fetch → Decode → Execute
-// impl T80CPU {
-//     fn fetch(&mut self) -> u8 {
-//         let byte = self.mem[self.pc];
-//         self.pc += 1;
-//         byte
-//     }
-
-//     fn nop(&self) {}
-
-//     fn halt(&self) {
-//         println!("HALT");
-//         std::process::exit(0);
-//     }
-
-//     fn load_imm(&mut self, reg_id: u8) {
-//         let imm = self.fetch();
-//         self.regs[reg_id as usize].trits[0] = Trit4(imm);
-//     }
-
 //     fn add(&mut self, reg_id: u8) {
 //         // R0 = R0 + Rn
 //         let a = self.regs[0].trits[0];
@@ -437,51 +286,16 @@ impl T80CPU {
 //         self.regs[0].trits[0] = a + b; // 你已实现 ternary Add
 //     }
 
-//     fn run(&mut self) {
-//         loop {
-//             let byte = self.fetch();
-//             self.decode_execute(byte);
-//         }
-//     }
 
-// }
+
+// const cpu=new CPU();
+// const rom=new ROM();
+// const ram=new RAM();
 
 
 
 
 
-// // fn CPU(){
-// //     let r0;
-// //     let r1;
-// //     let pc=0;
-// // }
-
-
-// // // this.run=fn(){
-// // //     while(true){
-// // //         const byte=read_byte(pc);
-// // //         decodeExecute(byte);
-// // //         pc++;
-// // //     }
-// // // }
-
-// // // const cpu=new CPU();
-// // // const rom=new ROM();
-// // // const ram=new RAM();
-
-
-// // // fn read_byte(address){
-// // //     if(address<0x4000){
-// // //         return rom.read(address);
-// // //     }else{
-// // //         read ram.read(address - 0X4000);
-// // //     }
-// // // }
-
-// // loop {
-// //     let byte = cpu.fetch();
-// //     cpu.decode_execute(byte);
-// // }
 
 
 // // main.rs

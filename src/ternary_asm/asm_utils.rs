@@ -3,9 +3,9 @@ use std::io::{Write, BufWriter, BufRead, BufReader};
 use crate::ternary_cpu::logical_cpu::T80CPU;
 
 pub static LINES: &[&str] = &[
-    "0000_0000_0011",// Input--->REG0
+    "0000_0000_T010",// Input--->REG0
     "0100_00TT_001T",// REG0-->REGS
-    "0000_0000_1T00",// Input--->REG0
+    "0000_0000_TTT0",// Input--->REG0
 
     "1T00_00TT_00TT",
     // "0100_0011_00TT",
