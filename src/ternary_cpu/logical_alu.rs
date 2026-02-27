@@ -1,6 +1,6 @@
 use std::fmt;
-use std::ops::{Shl,Shr};
-use core::ops::{Neg, Not, BitAnd, BitOr, BitXor, Add, Sub};
+use core::ops::{Shl, Shr, Neg, Not, BitAnd, BitOr, BitXor, Add, Sub};
+use core::cmp::{Ordering, PartialOrd};
 use super::logical_table::{TFULLSUM,TFULLCONS};
 
 // 定义位掩码常量，增加可读性
@@ -34,10 +34,10 @@ fn read_all(word: u8) -> [u8; 4] {
     ]
 }
 
-#[derive(Debug, Clone, Copy, PartialEq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct Trit4(pub u8); // 包装一个 u8
 
-#[derive(Debug, Clone, Copy, PartialEq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct TritResult {
     pub carry: u8,
     pub sum: Trit4,
@@ -56,6 +56,31 @@ impl Trit4 {
     pub fn toggle(&self, i:usize)->u8 { toggle_2bit(self.0,i) }
     pub fn set(&mut self,i:usize,v:u8){
         self.0 = set_2bit(self.0,i,v)
+    }
+
+    pub fn to_dec(&self) -> i32 {
+        let dec = self.get_all();
+        let mut result = 0;
+        let mut base = 1;
+
+        for i in 0..4 {
+            let raw = dec[i] as i32;
+            let digit = (raw & 1) - ((raw >> 1) & 1);
+
+            result += digit * base;
+            base *= 3;
+        }
+        result
+    }
+
+    pub fn to_sign(&self) -> Self {
+        for i in (0..4).rev() {   // 从最高位开始找
+            let dec = self.get(i);
+            if dec != 0 {
+                return Trit4(dec);
+            }
+        }
+        Trit4(0)
     }
 
     #[inline(always)]
@@ -271,3 +296,25 @@ impl Sub<Trit4> for Trit4 {
     }
 }
 
+
+impl PartialOrd for Trit4 {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        Some(self.cmp(other))
+    }
+}
+
+impl Ord for Trit4 {
+    fn cmp(&self, other: &Self) -> Ordering {
+        for i in (0..4).rev() {
+            let a = self.get(i);
+            let b = other.get(i);
+
+            if a != b {
+                let da = (a & 1) as i8 - ((a >> 1) & 1) as i8;
+                let db = (b & 1) as i8 - ((b >> 1) & 1) as i8;
+                return da.cmp(&db);
+            }
+        }
+        Ordering::Equal
+    }
+}

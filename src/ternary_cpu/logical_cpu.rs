@@ -30,7 +30,7 @@ enum Instruction {
     Imm { reg: usize, val: Trit4 },
     Copy { src: usize, dst: usize },
     Calc { src: usize, code: u8 },
-    //Branch { addr: usize },
+    Condition { jump_type: u8, val :u8 },
     Halt,
     Unknown,
 }
@@ -80,6 +80,7 @@ impl T80CPU {
         val
     }
 
+
     //从 PC 取指令，并推进 PC
     pub fn fetch(&mut self) -> Option<[u8; 3]> {
         let end = self.pc.checked_add(INST_SIZE)?;
@@ -112,6 +113,11 @@ impl T80CPU {
                 src: Self::decode_address(inst[1]) as usize,
                 code: Self::decode_address(inst[2]),
             },
+
+            0x40 => Instruction::Condition { 
+                jump_type: Self::decode_address(inst[2]),
+                val:Self::decode_address(self.regs.read(0).0),
+            },
             
             0xFF => Instruction::Halt,
 
@@ -139,9 +145,30 @@ impl T80CPU {
                 self.regs.write(8, res);
             }
 
-            // Instruction::Branch { addr } => {
-            //     self.pc = addr;   // ← 这里覆盖 PC
-            // }
+            Instruction::Condition { jump_type,val } => {
+                let reg3 = self.regs.read(3);
+                let reg3 = reg3.to_dec();
+                //let reg3=0;
+                let is_change:bool;
+
+                //判断3号寄存器（REG3）中的数值是否满，指定的条件
+                match jump_type{
+                    0=>is_change=false,
+                    1=>is_change=reg3==0,
+                    2=>is_change=reg3<=0,
+                    3=>is_change=reg3<0,
+                    4=>is_change=true,
+                    5=>is_change=reg3>0,
+                    6=>is_change=reg3>=0,
+                    7=>is_change=reg3!=0,
+
+                    _=>is_change=false,
+                }
+                if is_change{
+                    self.pc = (val *3) as usize;   // ← 这里覆盖 PC
+                }
+
+            }
 
             Instruction::Halt => {
                 self.halted = true;
@@ -149,6 +176,7 @@ impl T80CPU {
 
             Instruction::Unknown => {
                 panic!("Illegal opcode at PC={}", self.pc - 3);
+                //println!("Unknown opcode {:X}", opcode),
             }
         }
     }

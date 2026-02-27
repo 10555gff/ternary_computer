@@ -1,13 +1,13 @@
 use ternary_arithmetic::ternary_asm::asm_utils;
 
 pub static PROGRAM: &[&str] = &[
-    "0000_0000_T010",// LOAD REG0,T010
-    "0100_00TT_001T",// COPY REG0,REGS
-    "0000_0000_TTT0",// LOAD REG0,TTT0
+    "0000_0000_00T0",// LOAD REG0,T010
+    "0100_00TT_000T",// COPY REG0,REGS
+    // "0000_0000_T010",// LOAD REG0,TTT0
 
-    "1T00_00TT_00TT",// CALC REG0,REGS,code
+    // "1T00_00TT_00TT",// CALC REG0,REGS,code
 
-
+    "1000_0000_00T0",
 ];
 
 fn main() -> std::io::Result<()> {
