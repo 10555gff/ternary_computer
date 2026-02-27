@@ -105,9 +105,9 @@ pub fn run_from_tbin() ->std::io::Result<()> {
     // 创建 CPU，内存就是刚刚读到的字节
     let mut cpu = T80CPU::new(mem);
 
-    // // 可选：初始化一些寄存器值（模拟 INPUT 或初始数据）
-    // cpu.regs.write(0, 0b01_00_00_00);
-    //cpu.regs.write(1, 0b00_10_10_01);
+    // 可选：初始化一些寄存器值（模拟 INPUT 或初始数据）
+    // cpu.regs.write_u8(0, 0b01_00_00_00);
+    // cpu.regs.write_u8(1, 0b00_10_10_01);
 
     println!("开始执行程序... PC 从 0 开始");
     cpu.run();

@@ -55,6 +55,10 @@ impl Register {
     pub fn write(&mut self, idx: usize, val: Trit4) {
         self.regs[idx] =val;
     }
+
+    pub fn write_u8(&mut self, idx: usize, val: u8) {
+        self.regs[idx] =Trit4(val);
+    }
 }
 
 
@@ -130,8 +134,8 @@ impl T80CPU {
 
             Instruction::Calc { src, code } => {
                 let a = self.regs.read(src);
-                let base = self.regs.read(6);
-                let res = base.gate_core(a, code);
+                let b = self.regs.read(6);
+                let res = b.gate_core(a, code);
                 self.regs.write(8, res);
             }
 
