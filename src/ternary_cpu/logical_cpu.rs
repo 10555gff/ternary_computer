@@ -147,23 +147,20 @@ impl T80CPU {
 
             Instruction::Condition { jump_type,val } => {
                 let reg3 = self.regs.read(3);
-                let reg3 = reg3.to_dec();
-                //let reg3=0;
-                let is_change:bool;
 
                 //判断3号寄存器（REG3）中的数值是否满，指定的条件
-                match jump_type{
-                    0=>is_change=false,
-                    1=>is_change=reg3==0,
-                    2=>is_change=reg3<=0,
-                    3=>is_change=reg3<0,
-                    4=>is_change=true,
-                    5=>is_change=reg3>0,
-                    6=>is_change=reg3>=0,
-                    7=>is_change=reg3!=0,
+                let is_change = match jump_type {
+                    0 => false,
+                    1 => reg3 == Trit4::ZERO,
+                    2 => reg3 <= Trit4::ZERO,
+                    3 => reg3 <  Trit4::ZERO,
+                    4 => true,
+                    5 => reg3 >  Trit4::ZERO,
+                    6 => reg3 >= Trit4::ZERO,
+                    7 => reg3 != Trit4::ZERO,
+                    _ => false,
+                };
 
-                    _=>is_change=false,
-                }
                 if is_change{
                     self.pc = (val *3) as usize;   // ← 这里覆盖 PC
                 }
