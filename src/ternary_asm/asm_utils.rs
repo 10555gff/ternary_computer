@@ -93,45 +93,6 @@ pub fn write_tbin() -> std::io::Result<()> {
     Ok(())
 }
 
-
-pub fn run_from_tbin() ->std::io::Result<()> {
-    // 读取二进制程序
-    //把文件 prog.tbin全部内容一次性读入内存，得到一个 Vec<u8>
-    let mem = std::fs::read("prog.tbin")?;
-
-    // 创建 CPU，内存就是刚刚读到的字节
-    let mut cpu = T80CPU::new(mem);
-
-    // // 可选：初始化一些寄存器值（模拟 INPUT 或初始数据）
-    // cpu.regs.write(0, 0b01_00_00_00);
-    // cpu.regs.write(1, 0b10_01_00_00);
-
-    // let r1 = cpu.regs.read(1);
-    // println!("{}",r1);
-
-    // println!("开始执行程序... PC 从 0 开始");
-    // let mut a=cpu.fetch();
-    // let mut a=cpu.fetch();
-    // let mut a=cpu.fetch();
-    // let mut a=cpu.fetch();
-    // 
-    // 运行直到结束（或你自己加 halted 标志）
-    cpu.run();
-
-    println!("执行完成");
-
-    // 可选：打印最终寄存器状态
-    for i in 0..9 {
-        println!("REG{} = {}", i, cpu.regs.read(i));
-    }
-
-    Ok(())
-}
-
-
-
-
-
 pub fn read_tbin() -> std::io::Result<()> {
     let buf = std::fs::read("prog.tbin")?;
 
@@ -152,3 +113,30 @@ pub fn read_tbin() -> std::io::Result<()> {
 
     Ok(())
 }
+
+
+pub fn run_from_tbin() ->std::io::Result<()> {
+    // 读取二进制程序
+    //把文件 prog.tbin全部内容一次性读入内存，得到一个 Vec<u8>
+    let mem = std::fs::read("prog.tbin")?;
+
+    // 创建 CPU，内存就是刚刚读到的字节
+    let mut cpu = T80CPU::new(mem);
+
+    // // 可选：初始化一些寄存器值（模拟 INPUT 或初始数据）
+    // cpu.regs.write(0, 0b01_00_00_00);
+    //cpu.regs.write(1, 0b00_10_10_01);
+
+    println!("开始执行程序... PC 从 0 开始");
+    cpu.run();
+
+    println!("执行完成");
+
+    // 可选：打印最终寄存器状态
+    for i in 0..9 {
+        let regs= cpu.regs.read(i);
+        println!("REG{} = {}", i, regs);
+    }
+    Ok(())
+}
+

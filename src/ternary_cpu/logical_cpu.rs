@@ -76,7 +76,6 @@ impl T80CPU {
         val
     }
 
-
     //从 PC 取指令，并推进 PC
     pub fn fetch(&mut self) -> Option<[u8; 3]> {
         let end = self.pc.checked_add(INST_SIZE)?;
@@ -150,29 +149,23 @@ impl T80CPU {
         }
     }
 
-
     pub fn step(&mut self) -> bool {
         match self.fetch() {
             Some(raw) => {
-                println!("BBBBBBBBBBBBBBBBBBBBB         {:08b} {:08b} {:08b}",raw[0],raw[1],raw[2]);
                 let inst = self.decode(raw);
                 self.execute(inst);
                 true
             }
-            None => {
-                println!("程序结束"); // halt
-                false
-            }
+            None => false
         }
     }
 
 
+    //控制整个循环
     pub fn run(&mut self) {
         while !self.halted && self.step() {}
         if self.halted {
             println!("CPU 已 halt");
-        } else if self.pc >= self.mem.len() {
-            println!("PC 超出内存，程序自然结束");
         }
     }
 
