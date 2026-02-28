@@ -71,7 +71,7 @@ impl T80CPU {
             .unwrap_or(0xFF)
     }
     fn check_condition(&self, jump_type: u8) -> bool {
-        let cmp = self.regs[3].cmp(&Trit4::ZERO);
+        let cmp = self.regs[8].cmp(&Trit4::ZERO);
         match jump_type {
             0 => false,
             1 => cmp == Ordering::Equal,
@@ -149,8 +149,11 @@ impl T80CPU {
             }
 
             Instruction::Condition { jump_type,val } => {
-                if self.check_condition(jump_type) {
-                    self.pc = (val as usize) * INST_SIZE; // ← 这里覆盖 PC
+                let va=!self.check_condition(jump_type);
+                let b=(val as usize) * INST_SIZE;
+                println!("fffffffffffffffddddddddddd:{}",b);
+                if va {
+                    self.pc = b; // ← 这里覆盖 PC
                 }
             }
 
