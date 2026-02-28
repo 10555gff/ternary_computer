@@ -57,15 +57,16 @@ impl Trit4 {
     pub fn set(&mut self,i:usize,v:u8){ self.0 = set_2bit(self.0,i,v) }
 
     pub fn to_dec(self) -> i8 {
-        let x = self.0 as i8;
-
-        let d0 = (x & 1) - ((x >> 1) & 1);
-        let d1 = ((x >> 2) & 1) - ((x >> 3) & 1);
-        let d2 = ((x >> 4) & 1) - ((x >> 5) & 1);
-        let d3 = ((x >> 6) & 1) - ((x >> 7) & 1);
-
-        d0 + d1 * 3 + d2 * 9 + d3 * 27
+        let mut val = 0i8;
+        for i in 0..4 {
+            let t = self.get(i);
+            let trit = (t & 1) as i8 - ((t >> 1) & 1) as i8;
+            val += trit * 3i8.pow(i as u32);
+        }
+        val
     }
+
+
     pub fn to_sign(self) -> Self {
         let x = self.0;
 
