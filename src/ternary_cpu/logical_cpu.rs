@@ -30,7 +30,7 @@ enum Instruction {
     Imm  { val: Trit4 },
     Copy { src: usize, dst: usize },
     Calc { src: usize, ctype: u8 },
-    Condition { jump_type: u8, offset: i32},
+    Condition { jump_type: u8, offset: i8},
     Halt,
     Unknown,
 }

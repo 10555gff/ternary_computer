@@ -56,8 +56,8 @@ impl Trit4 {
     pub fn toggle(&self, i:usize)->u8 { toggle_2bit(self.0,i) }
     pub fn set(&mut self,i:usize,v:u8){ self.0 = set_2bit(self.0,i,v) }
 
-    pub fn to_dec(self) -> i32 {
-        let x = self.0 as i32;
+    pub fn to_dec(self) -> i8 {
+        let x = self.0 as i8;
 
         let d0 = (x & 1) - ((x >> 1) & 1);
         let d1 = ((x >> 2) & 1) - ((x >> 3) & 1);
