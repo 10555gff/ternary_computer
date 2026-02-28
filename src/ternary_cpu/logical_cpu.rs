@@ -29,8 +29,8 @@ pub struct Register {
 enum Instruction {
     Imm  { val: Trit4 },
     Copy { src: usize, dst: usize },
-    Calc { src: usize, code: u8 },
-    Condition { jump_type: u8, offset: Trit4 },
+    Calc { src: usize, ctype: u8 },
+    Condition { jump_type: u8, addr: Trit4},
     Halt,
     Unknown,
 }
@@ -112,14 +112,14 @@ impl T80CPU {
                 src: Self::decode_address(inst[1]) as usize,
                 dst: Self::decode_address(inst[2]) as usize,
             },
-            //计算模式，src 表示源寄存器索引，code 表示运算类型
+            //计算模式，src 表示源寄存器索引，ctype 表示运算类型
             0x60 => Instruction::Calc {
                 src: Self::decode_address(inst[1]) as usize,
-                code: Self::decode_address(inst[2]),
+                ctype: Self::decode_address(inst[2]),
             },
-            //条件跳转模式，根据 jump_type 和 reg3的值 决定是否跳转
+            //条件跳转模式，根据 jump_type 和 reg3寄存器值 决定是否跳转
             0x40 => Instruction::Condition {
-                offset:Trit4(inst[1]),
+                addr: Trit4(inst[1]),
                 jump_type: Self::decode_address(inst[2]),
             },
             //停止指令，表示 CPU 执行停止
@@ -141,21 +141,18 @@ impl T80CPU {
                 self.regs[dst]= self.regs[src];
             }
 
-            Instruction::Calc { src, code } => {
+            Instruction::Calc { src, ctype } => {
                 let a = self.regs[src];
                 let b = self.regs[0];
-                let res = b.gate_core(a, code);
+                let res = b.gate_core(a, ctype);
 
                 self.regs[src]=res;
             }
 
-            Instruction::Condition { jump_type,offset } => {
-                //执行→ 改 PC → 再执行 → 再改 PC
+            Instruction::Condition { jump_type,addr } => {
                 if self.check_condition(jump_type) {
-                    let jump_bytes = offset.to_dec() as isize * INST_SIZE as isize;
-                    self.pc = ((self.pc as isize) + jump_bytes) as usize;
-                    //println!("ffff{}",self.pc);
-                }                
+                    self.pc = addr.to_dec() as usize * INST_SIZE;
+                }
             }
 
             Instruction::Halt => {
@@ -164,7 +161,6 @@ impl T80CPU {
 
             Instruction::Unknown => {
                 panic!("Illegal opcode at PC={}", self.pc - 3);
-                //println!("Unknown opcode {:X}", opcode),
             }
         }
     }

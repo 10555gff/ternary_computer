@@ -16,16 +16,16 @@
 use ternary_arithmetic::ternary_asm::asm_utils;
 
 pub static PROGRAM: &[&str] = &[
-    "0000_0000_01T0",// LOAD REG0
+    "0000_0000_0010",// LOAD REG0
     "0100_00TT_000T",// COPY REG0,REG3
 
     "0000_0000_000T",// LOAD REG0
     "1T00_000T_001T",// CALC REG3,REG0,SUB
 
-    "0000_0000_001T",// LOAD REG0
-    "1T00_0011_001T",// CALC REG8,REG0,ADD
+    // "0000_0000_01TT",// LOAD REG0
+    // "1T00_0011_001T",// CALC REG8,REG0,ADD
 
-    "1000_0T11_0001", //COND REG3>0
+    "1000_001T_0001", //COND REG3>0
 
 
 
