@@ -27,7 +27,7 @@ pub struct Register {
 }
 
 enum Instruction {
-    Imm { reg: usize, val: Trit4 },
+    Imm  { val: Trit4 },
     Copy { src: usize, dst: usize },
     Calc { src: usize, code: u8 },
     Condition { jump_type: u8, val :u8 },
@@ -104,7 +104,6 @@ impl T80CPU {
     fn decode(&self, inst: [u8; 3]) -> Instruction {
         match inst[0] {
             0x00 => Instruction::Imm {
-                reg: 0,
                 val: Trit4(inst[2]),
             },
 
@@ -133,18 +132,17 @@ impl T80CPU {
     fn execute(&mut self, inst: Instruction) {
         match inst {
 
-            Instruction::Imm { reg, val } => {
-                self.regs[reg]=val;
+            Instruction::Imm { val } => {
+                self.regs[0]=val;
             }
 
             Instruction::Copy { src, dst } => {
-                let val = self.regs[src];
-                self.regs[dst]=val;
+                self.regs[dst]= self.regs[src];
             }
 
             Instruction::Calc { src, code } => {
                 let a = self.regs[src];
-                let b = self.regs[6];
+                let b = self.regs[7];
                 let res = b.gate_core(a, code);
 
                 self.regs[8]=res;
