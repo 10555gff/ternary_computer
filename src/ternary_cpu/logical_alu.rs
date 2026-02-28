@@ -54,33 +54,32 @@ impl Trit4 {
     pub fn get(&self, i:usize)->u8 { read_2bit(self.0,i) }
     pub fn clear(&self, i:usize)->u8 { clear_2bit(self.0,i) }
     pub fn toggle(&self, i:usize)->u8 { toggle_2bit(self.0,i) }
-    pub fn set(&mut self,i:usize,v:u8){
-        self.0 = set_2bit(self.0,i,v)
+    pub fn set(&mut self,i:usize,v:u8){ self.0 = set_2bit(self.0,i,v) }
+
+    pub fn to_dec(self) -> i32 {
+        let x = self.0 as i32;
+
+        let d0 = (x & 1) - ((x >> 1) & 1);
+        let d1 = ((x >> 2) & 1) - ((x >> 3) & 1);
+        let d2 = ((x >> 4) & 1) - ((x >> 5) & 1);
+        let d3 = ((x >> 6) & 1) - ((x >> 7) & 1);
+
+        d0 + d1 * 3 + d2 * 9 + d3 * 27
     }
+    pub fn to_sign(self) -> Self {
+        let x = self.0;
 
-    pub fn to_dec(&self) -> i32 {
-        let dec = self.get_all();
-        let mut result = 0;
-        let mut base = 1;
+        let t3 = (x >> 6) & 0x03;
+        let t2 = (x >> 4) & 0x03;
+        let t1 = (x >> 2) & 0x03;
+        let t0 = x & 0x03;
 
-        for i in 0..4 {
-            let raw = dec[i] as i32;
-            let digit = (raw & 1) - ((raw >> 1) & 1);
-
-            result += digit * base;
-            base *= 3;
-        }
-        result
-    }
-
-    pub fn to_sign(&self) -> Self {
-        for i in (0..4).rev() {   // 从最高位开始找
-            let dec = self.get(i);
-            if dec != 0 {
-                return Trit4(dec);
-            }
-        }
-        Trit4(0)
+        Trit4(
+            if t3 != 0 { t3 }
+            else if t2 != 0 { t2 }
+            else if t1 != 0 { t1 }
+            else { t0 }
+        )
     }
 
     #[inline(always)]
