@@ -87,8 +87,12 @@ impl T80CPU {
 
     //从 PC 取指令，并推进 PC
     pub fn fetch(&mut self) -> Option<[u8; 3]> {
-        let end = self.pc.checked_add(INST_SIZE)?;
-        if end > self.mem.len() {
+        // let end = self.pc.checked_add(INST_SIZE)?;
+        // if end > self.mem.len() {
+        //     return None;
+        // }
+
+        if self.pc + 3 > self.mem.len() {
             return None;
         }
         let inst = [
@@ -96,7 +100,7 @@ impl T80CPU {
             self.mem[self.pc + 1],
             self.mem[self.pc + 2],
         ];
-        self.pc = end;
+        // self.pc = end;
         Some(inst)
     }
 
@@ -149,13 +153,18 @@ impl T80CPU {
             }
 
             Instruction::Condition { jump_type,val } => {
+                // if 条件成立：
+                //     pc=目标地址
+                // else:
+                //     pc =pc + 指令长度
                 
                 if self.check_condition(jump_type) {
                     //执行→ 改 PC → 再执行 → 再改 PC
                     //PC = loop地址
                     //println!("ffff{}",val);
                     
-                    self.pc = (val as usize) * INST_SIZE;
+                    self.pc = (val as usize) * INST_SIZE; //← 这里覆盖 PC
+                    
                 }
             }
 
@@ -170,21 +179,28 @@ impl T80CPU {
         }
     }
 
-    pub fn step(&mut self) -> bool {
+    pub fn step(&mut self){
         match self.fetch() {
             Some(raw) => {
                 let inst = self.decode(raw);
+
+                self.pc +=3;// 默认前进
+
                 self.execute(inst);
-                true
+
             }
-            None => false
+            None =>{
+                self.halted=true;
+            }
         }
     }
 
 
     //控制整个循环
     pub fn run(&mut self) {
-        while !self.halted && self.step() {}
+        while !self.halted{
+            self.step();
+        }
         if self.halted {
             println!("CPU 已 halt");
         }
