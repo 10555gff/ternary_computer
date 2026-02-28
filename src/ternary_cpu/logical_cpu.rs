@@ -71,7 +71,7 @@ impl T80CPU {
             .unwrap_or(0xFF)
     }
     fn check_condition(&self, jump_type: u8) -> bool {
-        let cmp = self.regs[8].cmp(&Trit4::ZERO);
+        let cmp = self.regs[3].cmp(&Trit4::ZERO);
         match jump_type {
             0 => false,
             1 => cmp == Ordering::Equal,
@@ -142,16 +142,19 @@ impl T80CPU {
 
             Instruction::Calc { src, code } => {
                 let a = self.regs[src];
-                let b = self.regs[7];
+                let b = self.regs[0];
                 let res = b.gate_core(a, code);
 
-                self.regs[8]=res;
+                self.regs[src]=res;
             }
 
             Instruction::Condition { jump_type,val } => {
+                
                 if self.check_condition(jump_type) {
                     //执行→ 改 PC → 再执行 → 再改 PC
                     //PC = loop地址
+                    //println!("ffff{}",val);
+                    
                     self.pc = (val as usize) * INST_SIZE;
                 }
             }
