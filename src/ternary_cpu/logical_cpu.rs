@@ -85,19 +85,10 @@ impl T80CPU {
         }
     }
 
-    pub fn fetch(&mut self) -> Option<[u8; 3]> {
-        if self.pc + INST_SIZE > self.mem.len() {
-            return None;
-        }
-
-        let inst = [
-            self.mem[self.pc],
-            self.mem[self.pc + 1],
-            self.mem[self.pc + 2],
-        ];
-
+    pub fn fetch(&mut self) -> Option<[u8; INST_SIZE]> {
+        let bytes = self.mem.get(self.pc..self.pc + INST_SIZE)?;
         self.pc += INST_SIZE;
-        Some(inst)
+        Some([bytes[0], bytes[1], bytes[2]])
     }
 
     //解析 opcode → 结构化指令
@@ -164,7 +155,8 @@ impl T80CPU {
             }
 
             Instruction::Unknown => {
-                panic!("Illegal opcode at PC={}", self.pc - 3);
+                self.halted = true;
+                eprintln!("Unknown opcode at PC={}", self.pc - INST_SIZE);
             }
         }
     }
