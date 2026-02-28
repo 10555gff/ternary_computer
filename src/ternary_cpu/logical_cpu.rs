@@ -149,11 +149,10 @@ impl T80CPU {
             }
 
             Instruction::Condition { jump_type,val } => {
-                let va=!self.check_condition(jump_type);
-                let b=(val as usize) * INST_SIZE;
-                println!("fffffffffffffffddddddddddd:{}",b);
-                if va {
-                    self.pc = b; // ← 这里覆盖 PC
+                if self.check_condition(jump_type) {
+                    //执行→ 改 PC → 再执行 → 再改 PC
+                    //PC = loop地址
+                    self.pc = (val as usize) * INST_SIZE;
                 }
             }
 
