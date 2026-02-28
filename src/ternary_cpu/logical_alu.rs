@@ -101,7 +101,8 @@ impl Trit4 {
             3=>res=((and & MASK_EVEN) << 1) | ((or & MASK_ODD) >> 1),//tnand
             4=>res=((or & (or >> 1)) & MASK_EVEN) | ((and | (and << 1)) & MASK_ODD),//txor
             5=>res=((and | (and >> 1)) & MASK_EVEN) | ((or & (or << 1)) & MASK_ODD),//tnxor
-            6=>res=and,//tcons
+            6=>return self.adder(other,0).sum,
+            //6=>res=and,//tcons
             7=>res=((and >> 1) & MASK_EVEN) | ((and << 1) & MASK_ODD),//tncons
             8 => {
                 let m = (or & (or >> 1)) & MASK_EVEN;
