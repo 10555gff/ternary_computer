@@ -30,7 +30,7 @@ enum Instruction {
     Imm  { val: Trit4 },
     Copy { src: usize, dst: usize },
     Calc { src: usize, code: u8 },
-    Condition { jump_type: u8, val :u8 },
+    Condition { jump_type: u8, offset: Trit4 },
     Halt,
     Unknown,
 }
@@ -96,33 +96,33 @@ impl T80CPU {
             self.mem[self.pc + 2],
         ];
 
-        self.pc += INST_SIZE; // ← 放这里
-
+        self.pc += INST_SIZE;
         Some(inst)
     }
 
     //解析 opcode → 结构化指令
     fn decode(&self, inst: [u8; 3]) -> Instruction {
         match inst[0] {
+            //立即数模式，val 是直接加载到寄存器的 Trit4 值
             0x00 => Instruction::Imm {
                 val: Trit4(inst[2]),
             },
-
+            //复制模式，src 和 dst 分别表示源寄存器和目标寄存器的索引
             0x10 => Instruction::Copy {
                 src: Self::decode_address(inst[1]) as usize,
                 dst: Self::decode_address(inst[2]) as usize,
             },
-
+            //计算模式，src 表示源寄存器索引，code 表示运算类型
             0x60 => Instruction::Calc {
                 src: Self::decode_address(inst[1]) as usize,
                 code: Self::decode_address(inst[2]),
             },
-
+            //条件跳转模式，根据 jump_type 和 reg3的值 决定是否跳转
             0x40 => Instruction::Condition {
-                val: Self::decode_address(inst[1]),
+                offset:Trit4(inst[1]),
                 jump_type: Self::decode_address(inst[2]),
             },
-            
+            //停止指令，表示 CPU 执行停止
             0xFF => Instruction::Halt,
 
             _ => Instruction::Unknown,
@@ -149,18 +149,13 @@ impl T80CPU {
                 self.regs[src]=res;
             }
 
-            Instruction::Condition { jump_type,val } => {
-                // if 条件成立：
-                //     pc=目标地址
-                // else:
-                //     pc =pc + 指令长度
-                
+            Instruction::Condition { jump_type,offset } => {
+                //执行→ 改 PC → 再执行 → 再改 PC
                 if self.check_condition(jump_type) {
-                    //执行→ 改 PC → 再执行 → 再改 PC
-                    //PC = loop地址
-                    //println!("ffff{}",val);
-                    self.pc = val as usize * INST_SIZE;  //← 这里覆盖 PC
-                }
+                    let jump_bytes = offset.to_dec() as isize * INST_SIZE as isize;
+                    self.pc = ((self.pc as isize) + jump_bytes) as usize;
+                    //println!("ffff{}",self.pc);
+                }                
             }
 
             Instruction::Halt => {
