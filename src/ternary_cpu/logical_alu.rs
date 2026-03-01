@@ -8,6 +8,7 @@ const MASK_EVEN: u8 = 0x55; // 01010101b (c0 位)
 const MASK_ODD:  u8 = 0xAA; // 10101010b (c1 位)
 const SHIFT: [u8;4] = [0,2,4,6];
 const MASK:  [u8;4] = [0x03,0x0C,0x30,0xC0];
+const POW3:  [i8;4] = [1,3,9,27];
 const DECODE: [char;4]=['0','1','T','X'];
 
 fn set_2bit(word: u8, k: usize, value: u8) -> u8 {
@@ -61,7 +62,7 @@ impl Trit4 {
         for i in 0..4 {
             let t = self.get(i);
             let trit = (t & 1) as i8 - ((t >> 1) & 1) as i8;
-            val += trit * 3i8.pow(i as u32);
+            val += trit * POW3[i];
         }
         val
     }
@@ -114,18 +115,18 @@ impl Trit4 {
                 let m = (nor & (nor >> 1)) & MASK_EVEN;
                 res = nor & !(m | (m << 1));
             },//tnany
-            _ =>println!("undefine"),
+            _ => unreachable!("invalid gate opcode"),
         }
         Trit4(res)
     }
 
     pub fn shl_trit(self, n: usize) -> Self {
         if n >= 4 { return Trit4(0); }
-        Trit4((self.0 << (n << 1)) & 0xFF)
+        Trit4(self.0 << (n << 1))
     }
     pub fn shr_trit(self, n: usize) -> Self {
         if n >= 4 { return Trit4(0); }
-        Trit4((self.0 >> (n << 1)) & 0xFF)
+        Trit4(self.0 >> (n << 1))
     }
 
     pub fn tneg(&self) -> Self {
