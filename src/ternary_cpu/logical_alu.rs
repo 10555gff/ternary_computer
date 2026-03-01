@@ -94,7 +94,7 @@ impl Trit4 {
     #[inline(always)]
     pub fn gate_core(&self, other: Self, code:u8)-> Self{
         let (or, and) = self.or_and(other);
-        let mut res:u8=0;
+        let res;
 
         match code{
             0=>res=(or & MASK_EVEN) | (and & MASK_ODD),//tor

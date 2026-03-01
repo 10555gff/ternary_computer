@@ -27,10 +27,10 @@ pub struct Register {
 }
 
 enum Instruction {
-    Imm  { dst: usize,val: Trit4 },
+    Imm  { dst: usize, val: Trit4 },
     Copy { src: usize, dst: usize },
     Calc { src: usize, ctype: u8 },
-    Condition { jump_type: u8, offset: i8},
+    Condition { jtype: u8, offset: isize },
     Halt,
     Unknown,
 }
@@ -93,10 +93,8 @@ impl T80CPU {
 
     //解析 opcode → 结构化指令
     fn decode(&self, inst: [u8; 3]) -> Instruction {
-        //let opcode = inst[0] & 0xF0;
-        //match inst[0] & 0xF0 {  高 4 位决定指令类型  低 4 位可以作为子 opcode
         match inst[0] {
-            //立即数模式，val 是直接加载到寄存器的 Trit4 值
+            //立即数模式，val 是直接加载到目标寄存器的 Trit4 值
             0x00 => Instruction::Imm {
                 dst: Self::decode_address(inst[1]) as usize,
                 val: Trit4(inst[2]),
@@ -113,8 +111,8 @@ impl T80CPU {
             },
             //条件跳转模式，根据 jump_type 和 reg3寄存器值 决定是否跳转
             0x40 => Instruction::Condition {
-                jump_type: Self::decode_address(inst[1]),
-                offset: Trit4(inst[2]).to_dec(),
+                jtype: Self::decode_address(inst[1]),
+                offset: Trit4(inst[2]).to_dec() as isize,
             },
             //停止指令，表示 CPU 执行停止
             0xFF => Instruction::Halt,
@@ -143,17 +141,14 @@ impl T80CPU {
                 self.regs[src]=res;
             }
 
-            Instruction::Condition { jump_type,offset } => {
-                if self.check_condition(jump_type) {
-                    let jump_bytes = offset as isize * INST_SIZE as isize;
-                    let new_pc = self.pc as isize + jump_bytes;
+            Instruction::Condition { jtype,offset } => {
+                if self.check_condition(jtype) {
+                    let new_pc = (self.pc as isize) + offset * INST_SIZE as isize;
                     if new_pc >= 0 {
                         self.pc = new_pc as usize;
                     } else {
                         self.halted = true;
                     }
-                    
-                    //self.pc = ((self.pc as isize) + jump_bytes) as usize;
                 }
             }
 
