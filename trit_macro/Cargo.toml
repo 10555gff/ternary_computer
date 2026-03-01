@@ -2,6 +2,13 @@
 name = "trit_macro"
 version = "0.1.0"
 edition = "2024"
+authors = ["10555gff 1073245193@qq.com"]
+description = "A procedural macro for encoding balanced ternary literals"
+license = "MIT"
+
+repository = "https://github.com/10555gff/ternary_computer"
+homepage = "https://github.com/10555gff/ternary_computer"
+documentation = "https://docs.rs/trit_macro"
 
 [lib]
 proc-macro = true

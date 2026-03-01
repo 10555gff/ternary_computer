@@ -12,4 +12,7 @@ keywords = ["ternary", "balanced_ternary", "ternary_arithmetic", "ternary_logic"
 categories = ["mathematics"]
 
 [dependencies]
+trit_macro = "0.1.0"
+
+[patch.crates-io]
 trit_macro = { path = "./trit_macro" }
