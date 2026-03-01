@@ -2,9 +2,9 @@
 // use ternary_arithmetic::ternary_cpu::logical_alu::Trit4;
 
 // fn main() {
-//     let a = trits!("1110");
+//     let a = trits!("0-++");
 //     let b = trits!("1110");
-//     let result1=a>=b;
+//     let result1=a.to_dec();
 //     println!("{}",result1);
 // }
 
@@ -20,12 +20,12 @@ pub static PROGRAM: &[&str] = &[
     "0100_00TT_000T",// COPY REG0,REG3
 
     "0000_0000_000T",// LOAD REG0
-    "1T00_000T_001T",// CALC REG3,REG0,SUB
+    "1T00_000T_001T",// CALC REG3,SUB
 
-    "0000_0000_01TT",// LOAD REG0
-    "1T00_0011_001T",// CALC REG8,REG0,ADD
+    "0000_0000_01T0",// LOAD REG0
+    "1T00_0011_001T",// CALC REG8,ADD
 
-    "1000_0T11_0001", //COND REG3>0
+    "1000_0001_0T11", //COND REG3>0,0T11
 
 
 

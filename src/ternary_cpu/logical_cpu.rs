@@ -110,8 +110,8 @@ impl T80CPU {
             },
             //条件跳转模式，根据 jump_type 和 reg3寄存器值 决定是否跳转
             0x40 => Instruction::Condition {
-                offset: Trit4(inst[1]).to_dec(),
-                jump_type: Self::decode_address(inst[2]),
+                jump_type: Self::decode_address(inst[1]),
+                offset: Trit4(inst[2]).to_dec(),
             },
             //停止指令，表示 CPU 执行停止
             0xFF => Instruction::Halt,
@@ -144,9 +144,6 @@ impl T80CPU {
                 if self.check_condition(jump_type) {
                     let jump_bytes = offset as isize * INST_SIZE as isize;
                     self.pc = ((self.pc as isize) + jump_bytes) as usize;
-
-                    //self.pc = addr.to_dec() as usize * INST_SIZE;
-                    //println!("ffff{}",self.pc);
                 }
             }
 
