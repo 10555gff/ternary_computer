@@ -27,7 +27,7 @@ pub struct Register {
 }
 
 enum Instruction {
-    Imm  { val: Trit4 },
+    Imm  { dst: usize,val: Trit4 },
     Copy { src: usize, dst: usize },
     Calc { src: usize, ctype: u8 },
     Condition { jump_type: u8, offset: i8},
@@ -93,9 +93,11 @@ impl T80CPU {
 
     //解析 opcode → 结构化指令
     fn decode(&self, inst: [u8; 3]) -> Instruction {
+        //let opcode = inst[0] & 0xF0;
         match inst[0] {
             //立即数模式，val 是直接加载到寄存器的 Trit4 值
             0x00 => Instruction::Imm {
+                dst: Self::decode_address(inst[1]) as usize,
                 val: Trit4(inst[2]),
             },
             //复制模式，src 和 dst 分别表示源寄存器和目标寄存器的索引
@@ -124,8 +126,8 @@ impl T80CPU {
     fn execute(&mut self, inst: Instruction) {
         match inst {
 
-            Instruction::Imm { val } => {
-                self.regs[0]=val;
+            Instruction::Imm { dst, val } => {
+                self.regs[dst]=val;
             }
 
             Instruction::Copy { src, dst } => {
