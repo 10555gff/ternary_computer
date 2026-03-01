@@ -94,6 +94,7 @@ impl T80CPU {
     //解析 opcode → 结构化指令
     fn decode(&self, inst: [u8; 3]) -> Instruction {
         //let opcode = inst[0] & 0xF0;
+        //match inst[0] & 0xF0 {  高 4 位决定指令类型  低 4 位可以作为子 opcode
         match inst[0] {
             //立即数模式，val 是直接加载到寄存器的 Trit4 值
             0x00 => Instruction::Imm {
@@ -145,7 +146,14 @@ impl T80CPU {
             Instruction::Condition { jump_type,offset } => {
                 if self.check_condition(jump_type) {
                     let jump_bytes = offset as isize * INST_SIZE as isize;
-                    self.pc = ((self.pc as isize) + jump_bytes) as usize;
+                    let new_pc = self.pc as isize + jump_bytes;
+                    if new_pc >= 0 {
+                        self.pc = new_pc as usize;
+                    } else {
+                        self.halted = true;
+                    }
+                    
+                    //self.pc = ((self.pc as isize) + jump_bytes) as usize;
                 }
             }
 
