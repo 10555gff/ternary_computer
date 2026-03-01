@@ -33,7 +33,7 @@ dependencies = [
 
 [[package]]
 name = "ternary_arithmetic"
-version = "0.1.7"
+version = "0.1.8"
 dependencies = [
  "trit_macro",
 ]

@@ -1,24 +1,136 @@
-[![Rust](https://github.com/Trehinos/balanced-ternary/actions/workflows/rust.yml/badge.svg)](https://github.com/10555gff/ternary_computer)
-
 # Ternary Arithmetic
 
-A Rust library use array logic gate to arithmetic.
-a numeral system with digits `-1`, `0`, and `+1`.
+[![Rust](https://github.com/Trehinos/balanced-ternary/actions/workflows/rust.yml/badge.svg)](https://github.com/10555gff/ternary_computer)
 
-## Installation
+A high-performance **Balanced Ternary Arithmetic Library** implemented in Rust.  
 
-Add this to your `Cargo.toml`:
 
-```rust
-cargo add ternary_arithmetic
+Each `trit` is stored using **2 bits inside a `u8`**:
+
+```
+T (-1) → 10
+0      → 00
+1 (+1) → 01
 ```
 
-### Example
+A `Trit4` packs **4 trits into one `u8`**:
+
+```
+[T3 T2 T1 T0]  →  8 bits total
+```
+
+This allows:
+
+* Bitwise SIMD-style operations
+* Fast logical gate evaluation
+* Efficient arithmetic without heap allocation
+* Hardware-style gate simulation
+
+---
+
+## ✨ Features
+
+### 🧠 Balanced Ternary Logic Gates
+
+Implemented using array-based lookup tables:
+
+* `tor`
+* `tand`
+* `tnor`
+* `tnand`
+* `txor`
+* `tnxor`
+* `tany`
+* `tnany`
+* `tcons`
+* `tsum`
+* `add`
+
+All gates operate in parallel on packed trits.
+
+---
+
+### ➕ Arithmetic Support
+
+* Balanced ternary addition
+* Subtraction
+* Unary negation
+* Carry logic via full-adder tables
+* Decimal conversion (`to_dec`)
+* Sign detection (`to_sign`)
+
+Operator overloading supported:
+
+```rust
++  -  &  |  ^  <<  >>  !  -
+>  <  >= <= == !=
+```
+
+---
+
+### 🔧 Bit-level Trit Operations
+
+* `get(index)`
+* `set(index, value)`
+* `clear(index)`
+* `toggle(index)`
+* `get_all()`
+
+Predefined constants:
+
+```rust
+Trit4::NEG
+Trit4::ZERO
+Trit4::POS
+Trit4::ALL_NEG
+Trit4::ALL_POS
+```
+
+---
+
+### 🖥 Ternary CPU & Assembly Support
+
+Includes a minimal ternary CPU simulator:
+
+* Register file (REG0 ~ REG8)
+* Instruction types:
+
+  * `Imm`
+  * `Copy`
+  * `Calc`
+  * `Condition`
+* Ternary assembly compiler
+* Binary generator
+* Binary runner
+
+Supports writing `.tasm` → compiling → executing in a simulated ternary machine.
+
+---
+
+## 📦 Installation
+
+Add this to your project:
+
+```bash
+cargo add ternary_arithmetic trit_macro
+```
+
+---
+
+## 🚀 Example – Logic Gates
 
 ```rust
 use trit_macro::trits;
 use ternary_arithmetic::ternary_cpu::logical_alu::Trit4;
+
 fn main() {
+    let a = trits!("T010");
+    let b = trits!("---0");
+
+    let result = a.tor(b);
+    println!("{}", result);
+
+
     let a = trits!("T010");
     let b = trits!("---0");
     let c = trits!("0000");
@@ -35,20 +147,22 @@ fn main() {
     println!("{}",result2);
     println!("{}",result3);
 }
-
-
 ```
+
+---
+
+## 🚀 Example – Raw Bit Representation
 
 ```rust
 use ternary_arithmetic::ternary_cpu::logical_alu::Trit4;
+
 fn main() {
     //T-->10  0-->00  1-->01
     let a:Trit4 = Trit4(0b10000100);
     let b:Trit4 = Trit4(0b10000100);
 
+    // a.tor(b) a.tand(b) a.tnor(b) a.tnand(b) a.xor(b) a.nxor(b) a.cons(b) a.ncons(b) a.tany(b) a.nany(b) a.tsum(b) a.add(b,0)
     let result1 = a.gate_core(b,0);
-    // a.tor(b) a.tand(b) a.tnor(b) a.tnand(b) a.xor(b) a.nxor(b) 
-    // a.cons(b) a.ncons(b) a.tany(b) a.nany(b) a.tsum(b) a.add(b,0)
     let result2 = a.tor(b);
     let result3 = a.tneg();
 
@@ -75,15 +189,26 @@ fn main() {
     let x =a.toggle(3);
     println!("{:08b}",x);
 
-    //Trit4::ALL_POS、Trit4::ALL_NEG
     println!("{}",Trit4::NEG);
     println!("{}",Trit4::ZERO);
     println!("{}",Trit4::POS);
-    //---------------------------------------------------------------------------//
+    println!("{}",Trit4::ALL_POS);
+    println!("{}",Trit4::ALL_NEG);
 
+}
+```
+
+---
+
+## 🚀 Example – Arithmetic
+
+```rust
+use ternary_arithmetic::ternary_cpu::logical_alu::Trit4;
+
+fn main() {
     let a:Trit4 = Trit4(0b00000001);
     let b:Trit4 = Trit4(0b00000001);
-    
+
     println!("a value:{}",a);
     println!("b value:{}",b);
 
@@ -114,11 +239,12 @@ fn main() {
 
     let c =a.to_dec();  println!("{}",c);
     let c =b.to_sign();  println!("{}",c);
-
 }
-
-
 ```
+
+---
+
+## 🚀 Example – CPU Assembly
 
 ```rust
 use ternary_arithmetic::ternary_asm::asm_utils;
@@ -194,6 +320,26 @@ fn main() -> std::io::Result<()> {
 
 ```
 
-## License
+---
+
+## 🧩 Design Philosophy
+
+This project aims to:
+
+* Simulate hardware-level ternary logic
+* Provide a clean arithmetic abstraction
+* Enable ternary computer experimentation
+* Explore non-binary computing models
+
+All core logic is implemented using:
+
+* Lookup tables
+* Bit masks
+* Branchless operations
+* Pure `u8` arithmetic
+
+---
+
+## 📜 License
 
 This project is licensed under the MIT License.
