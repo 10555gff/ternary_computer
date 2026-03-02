@@ -6,24 +6,27 @@ use super::logical_table::{TFULLSUM,TFULLCONS};
 // 定义位掩码常量，增加可读性
 const MASK_EVEN: u8 = 0x55; // 01010101b (c0 位)
 const MASK_ODD:  u8 = 0xAA; // 10101010b (c1 位)
-const SHIFT: [u8;4] = [0,2,4,6];
-const MASK:  [u8;4] = [0x03,0x0C,0x30,0xC0];
 const POW3:  [i8;4] = [1,3,9,27];
 const DECODE: [char;4]=['0','1','T','X'];
 
-fn set_2bit(word: u8, k: usize, value: u8) -> u8 {
-    let shift = k << 1;
+fn set_2bit(word: u8, n: usize, value: u8) -> u8 {
+    let shift = n << 1;
     let mask = 0x03 << shift;
     (word & !mask) | ((value & 0x03) << shift)
 }
-fn read_2bit(word:u8,k:usize)->u8{
-    (word & MASK[k]) >> SHIFT[k]
+fn read_2bit(word: u8, n: usize) -> u8 {
+    (word >> (n << 1)) & 0x03
 }
-fn clear_2bit(word: u8, k: usize) -> u8 {
-    word & !MASK[k]
+fn clear_2bit(word: u8, n: usize) -> u8 {
+    word & !(0x03 << (n << 1))
 }
-fn toggle_2bit(word: u8, k: usize) -> u8 {
-    word ^ MASK[k]
+fn toggle_2bit(word: u8, n: usize) -> u8 {
+    word ^ (0x03 << (n << 1))
+}
+fn swap_2bit(word: u8, n: usize) -> u8 {
+    let shift = n << 1;
+    let p = word >> shift;
+    word ^ (((p ^ (p >>1)) & 1)*3 << shift)
 }
 
 fn read_all(word: u8) -> [u8; 4] {
@@ -51,11 +54,13 @@ impl Trit4 {
     pub const ALL_POS: Self = Trit4(0x55);
     pub const ALL_NEG: Self = Trit4(0xAA);
 
+    pub fn get(&self, n:usize)->u8 { read_2bit(self.0,n) }
     pub fn get_all(&self)->[u8; 4] { read_all(self.0) }
-    pub fn get(&self, i:usize)->u8 { read_2bit(self.0,i) }
-    pub fn clear(&self, i:usize)->u8 { clear_2bit(self.0,i) }
-    pub fn toggle(&self, i:usize)->u8 { toggle_2bit(self.0,i) }
-    pub fn set(&mut self,i:usize,v:u8){ self.0 = set_2bit(self.0,i,v) }
+    pub fn clear(&self, n:usize)->u8 { clear_2bit(self.0,n) }
+    pub fn toggle(&self, n:usize)->u8 { toggle_2bit(self.0,n) }
+    pub fn swap(&self, n:usize)->u8 { swap_2bit(self.0,n) }
+    pub fn set(&mut self,n:usize,v:u8){ self.0 = set_2bit(self.0,n,v) }
+    
 
     pub fn to_dec(self) -> i8 {
         let mut val = 0i8;
