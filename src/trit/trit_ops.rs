@@ -1,7 +1,7 @@
-pub trait TritOps {
-    type Ttype: Copy;
-    fn get(&self, n: usize) -> Self::Ttype;
-    fn set(&mut self, n: usize, val: Self::Ttype);
+pub trait TritOps: Copy {
+    type Output: Copy;
+    fn get(&self, n: usize) -> Self::Output;
+    fn set(&mut self, n: usize, val: Self::Output);
 }
 
 
