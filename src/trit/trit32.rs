@@ -34,6 +34,6 @@ impl fmt::Display for Trit32 {
         let t6 = fmt(val[6]);
         let t7 = fmt(val[7]);
 
-        write!(f, "Trit32[{},{},{},{},{},{},{},{}]",t7,t6,t5,t4,t3,t2,t1,t0)
+        write!(f, "Trit32[{}{}_{}{}_{}{}_{}{}]",t7,t6,t5,t4,t3,t2,t1,t0)
     }
 }

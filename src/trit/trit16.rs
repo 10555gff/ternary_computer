@@ -29,6 +29,6 @@ impl fmt::Display for Trit16 {
         let t2 = fmt(val[2]);
         let t3 = fmt(val[3]);
 
-        write!(f, "Trit16[{},{},{},{}]",t3,t2,t1,t0)
+        write!(f, "Trit16[{}{}_{}{}]",t3,t2,t1,t0)
     }
 }
