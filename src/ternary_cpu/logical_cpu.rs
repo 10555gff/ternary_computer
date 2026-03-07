@@ -1,5 +1,5 @@
 use std::cmp::Ordering;
-use crate::ternary_cpu::trit4::Trit4;
+use crate::trit::Trit4;
 
 const INST_SIZE: usize = 3;
 const DECODE_LUT: [u8; 16] = [
