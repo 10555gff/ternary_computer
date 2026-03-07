@@ -1,3 +1,5 @@
+use std::fmt;
+use super::bit_utils::*;
 // use super::trit_ops::TritOps;
 
 #[derive(Clone, Copy, Debug)]
@@ -18,3 +20,15 @@ pub struct Trit16(pub u32);
 //     }
 
 // }
+
+impl fmt::Display for Trit16 {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        let val=self.0.to_le_bytes();
+        let t0 = fmt(val[0]);
+        let t1 = fmt(val[1]);
+        let t2 = fmt(val[2]);
+        let t3 = fmt(val[3]);
+
+        write!(f, "Trit16[{},{},{},{}]",t3,t2,t1,t0)
+    }
+}

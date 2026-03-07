@@ -1,5 +1,13 @@
 const DECODE: [char;4]=['0','1','T','X'];
 
+pub fn fmt(word: u8) -> String {
+    let t0 = DECODE[(word & 0x03) as usize];
+    let t1 = DECODE[((word >> 2) & 0x03) as usize];
+    let t2 = DECODE[((word >> 4) & 0x03) as usize];
+    let t3 = DECODE[((word >> 6) & 0x03) as usize];
+
+    format!("{},{},{},{}", t3, t2, t1, t0)
+}
 
 pub fn set_u8(word: u8, n: usize, value: u8) -> u8 {
     let shift = n << 1;

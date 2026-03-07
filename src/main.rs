@@ -1,14 +1,21 @@
 use trit_macro::trits;
-use ternary_arithmetic::trit::{Trit4,Trit8};
+use ternary_arithmetic::trit::{Trit4,Trit8,Trit16,Trit32};
 
 fn main() {
 
     let a = trits!("T010");
-    let b = trits!("T010_0000");
+    let b = trits!("T010_TTTT_1111_TT0T_T010_1001_0011_TTTT");
 
-    println!("{:?}", a);
-    println!("{:?}", b);
+    println!("{}", a);
+    println!("{}", b);
+    // let my_word: u8 = 0b11011000; // 二进制表示：11(3), 01(1), 10(2), 00(0)
+    
+    // // 调用函数
+    // let result = bit_utils::fmt(my_word);
+    // println!("输入字节: {:08b}", my_word);
+    // println!("解码结果: {}", result);
 }
+
 
 
 
