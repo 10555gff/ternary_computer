@@ -1,124 +1,124 @@
-use std::fs::File;
-use std::io::{Write, BufWriter, BufRead, BufReader};
-use crate::ternary_cpu::logical_cpu::T80CPU;
+// use std::fs::File;
+// use std::io::{Write, BufWriter, BufRead, BufReader};
+// use crate::ternary_cpu::logical_cpu::T80CPU;
 
-pub fn write_tasm(lines: &[&str]) -> std::io::Result<()> {
-    let file=File::create("prog.tasm")?;
-    let mut buf = BufWriter::new(file);
+// pub fn write_tasm(lines: &[&str]) -> std::io::Result<()> {
+//     let file=File::create("prog.tasm")?;
+//     let mut buf = BufWriter::new(file);
 
-    for l in lines {
-        writeln!(buf, "{l}")?;
-    }
-    Ok(())
-}
+//     for l in lines {
+//         writeln!(buf, "{l}")?;
+//     }
+//     Ok(())
+// }
 
-/// 把单个 trit 转 2-bit
-fn trit_index(c: u8) -> u8 {
-    match c {
-        b'T' => 0b10, // -1
-        b'0' => 0b00, // 0
-        b'1' => 0b01, // +1
-        _ => unreachable!(),
-    }
-}
+// /// 把单个 trit 转 2-bit
+// fn trit_index(c: u8) -> u8 {
+//     match c {
+//         b'T' => 0b10, // -1
+//         b'0' => 0b00, // 0
+//         b'1' => 0b01, // +1
+//         _ => unreachable!(),
+//     }
+// }
 
-/// 把一条 trit 指令转成字节流
-fn pack_trits(trits: &str) -> Vec<u8> {
-    let mut bytes = Vec::new();
-    let mut cur_byte = 0u8;
-    let mut count = 0;
-    const SHIFT: [u8; 4] = [6, 4, 2, 0];
+// /// 把一条 trit 指令转成字节流
+// fn pack_trits(trits: &str) -> Vec<u8> {
+//     let mut bytes = Vec::new();
+//     let mut cur_byte = 0u8;
+//     let mut count = 0;
+//     const SHIFT: [u8; 4] = [6, 4, 2, 0];
 
-    for &c in trits.as_bytes() {
-        if c == b'_' { continue; }
-        let bits = trit_index(c);
-        cur_byte |= bits << SHIFT[count];// 每 byte 放 4 trits
-        count += 1;
+//     for &c in trits.as_bytes() {
+//         if c == b'_' { continue; }
+//         let bits = trit_index(c);
+//         cur_byte |= bits << SHIFT[count];// 每 byte 放 4 trits
+//         count += 1;
 
-        if count == 4 {
-            bytes.push(cur_byte);
-            cur_byte = 0;
-            count = 0;
-        }
-    }
+//         if count == 4 {
+//             bytes.push(cur_byte);
+//             cur_byte = 0;
+//             count = 0;
+//         }
+//     }
 
-    if count != 0 {
-        bytes.push(cur_byte);
-    }
+//     if count != 0 {
+//         bytes.push(cur_byte);
+//     }
 
-    bytes
-}
-
-
-pub fn write_tbin() -> std::io::Result<()> {
-    // 打开 .tasm 文件
-    let reader = BufReader::new(File::open("prog.tasm")?);
-
-    // 输出 .tbin 文件
-    let out_file = File::create("prog.tbin")?;
-    let mut buf = BufWriter::new(out_file);
-
-    for line in reader.lines() {
-        let line = line?;
-        let line = line.trim();
-
-        // 忽略空行和注释
-        if line.is_empty() || line.starts_with('#') {
-            continue;
-        }
-
-        let packed = pack_trits(line);
-        buf.write_all(&packed)?;
-    }
-
-    println!("Assemble done → prog.tbin");
-    Ok(())
-}
-
-pub fn read_tbin() -> std::io::Result<()> {
-    let buf = std::fs::read("prog.tbin")?;
-
-    let mut pc = 0;
-    let inst_size = 3; // 12 trits = 3 bytes
-
-    while pc + inst_size <= buf.len() {
-        let inst = &buf[pc..pc+3];
-
-        println!(
-            "PC={} INST={:08b} {:08b} {:08b}",
-            pc,
-            inst[0], inst[1], inst[2]
-        );
-
-        pc += inst_size; // next instruction
-    }
-
-    Ok(())
-}
+//     bytes
+// }
 
 
-pub fn run_from_tbin() ->std::io::Result<()> {
-    // 读取二进制程序
-    //把文件 prog.tbin全部内容一次性读入内存，得到一个 Vec<u8>
-    let mem = std::fs::read("prog.tbin")?;
+// pub fn write_tbin() -> std::io::Result<()> {
+//     // 打开 .tasm 文件
+//     let reader = BufReader::new(File::open("prog.tasm")?);
 
-    // 创建 CPU，内存就是刚刚读到的字节
-    let mut cpu = T80CPU::new(mem);
+//     // 输出 .tbin 文件
+//     let out_file = File::create("prog.tbin")?;
+//     let mut buf = BufWriter::new(out_file);
 
-    // 可选：初始化一些寄存器值（模拟 INPUT 或初始数据）
-    // cpu.regs.write_u8(0, 0b01_00_00_00);
-    // cpu.regs.write_u8(1, 0b00_10_10_01);
+//     for line in reader.lines() {
+//         let line = line?;
+//         let line = line.trim();
 
-    println!("开始执行程序... PC 从 0 开始");
-    cpu.run();
+//         // 忽略空行和注释
+//         if line.is_empty() || line.starts_with('#') {
+//             continue;
+//         }
 
-    println!("执行完成");
+//         let packed = pack_trits(line);
+//         buf.write_all(&packed)?;
+//     }
 
-    // 可选：打印最终寄存器状态
-    for i in 0..9 {
-        let regs= cpu.regs[i];
-        println!("REG{} = {}", i, regs);
-    }
-    Ok(())
-}
+//     println!("Assemble done → prog.tbin");
+//     Ok(())
+// }
+
+// pub fn read_tbin() -> std::io::Result<()> {
+//     let buf = std::fs::read("prog.tbin")?;
+
+//     let mut pc = 0;
+//     let inst_size = 3; // 12 trits = 3 bytes
+
+//     while pc + inst_size <= buf.len() {
+//         let inst = &buf[pc..pc+3];
+
+//         println!(
+//             "PC={} INST={:08b} {:08b} {:08b}",
+//             pc,
+//             inst[0], inst[1], inst[2]
+//         );
+
+//         pc += inst_size; // next instruction
+//     }
+
+//     Ok(())
+// }
+
+
+// pub fn run_from_tbin() ->std::io::Result<()> {
+//     // 读取二进制程序
+//     //把文件 prog.tbin全部内容一次性读入内存，得到一个 Vec<u8>
+//     let mem = std::fs::read("prog.tbin")?;
+
+//     // 创建 CPU，内存就是刚刚读到的字节
+//     let mut cpu = T80CPU::new(mem);
+
+//     // 可选：初始化一些寄存器值（模拟 INPUT 或初始数据）
+//     // cpu.regs.write_u8(0, 0b01_00_00_00);
+//     // cpu.regs.write_u8(1, 0b00_10_10_01);
+
+//     println!("开始执行程序... PC 从 0 开始");
+//     cpu.run();
+
+//     println!("执行完成");
+
+//     // 可选：打印最终寄存器状态
+//     for i in 0..9 {
+//         let regs= cpu.regs[i];
+//         println!("REG{} = {}", i, regs);
+//     }
+//     Ok(())
+// }
 

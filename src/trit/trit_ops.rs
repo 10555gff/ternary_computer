@@ -1,6 +1,10 @@
-// pub trait TritOps {
-//     fn get(self, n: usize) -> u8;
-//     fn set(&mut self, n: usize, val: u8);
+pub trait TritOps {
+    type Ttype: Copy;
+    fn get(&self, n: usize) -> Self::Ttype;
+    fn set(&mut self, n: usize, val: Self::Ttype);
+}
 
+
+// fn print_first<T: TritOps>(x: T) {
+//     println!("{}", x.get(0));
 // }
-
