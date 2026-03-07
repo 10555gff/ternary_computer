@@ -1,11 +1,8 @@
 # Ternary Arithmetic
 
-[![Rust](https://github.com/Trehinos/balanced-ternary/actions/workflows/rust.yml/badge.svg)](https://github.com/10555gff/ternary_computer)
+**高性能平衡三进制（Balanced Ternary）算术库 + 三进制 CPU 模拟器**，纯 Rust 实现。
 
-A high-performance **Balanced Ternary Arithmetic Library** implemented in Rust.  
-
-
-Each `trit` is stored using **2 bits inside a `u8`**:
+每个 **trit**（三进制位）用 **2 bit** 存储在 `u8` 中：
 
 ```
 T (-1) → 10
@@ -13,111 +10,44 @@ T (-1) → 10
 1 (+1) → 01
 ```
 
-A `Trit4` packs **4 trits into one `u8`**:
+`Trit4` 把 **4 个 trit** 打包进 **1 个 u8**，实现硬件级 SIMD 风格运算，无堆分配，极致性能。
 
-```
-[T3 T2 T1 T0]  →  8 bits total
-```
+## ✨ 核心特性
 
-This allows:
+### 🧠 平衡三进制逻辑门（并行位运算）
+- `tor` / `tand` / `tnor` / `tnand`
+- `txor` / `tnxor`
+- `tany` / `tnany`
+- `tcons` / `tncons`
+- `tsum`（三值求和门）
+- `add` / `sub`（带进位全加器，使用预计算查找表）
 
-* Bitwise SIMD-style operations
-* Fast logical gate evaluation
-* Efficient arithmetic without heap allocation
-* Hardware-style gate simulation
+全部通过 `gate_core(code)` 统一调用（`code` 0~9）。
 
----
+### ➕ 算术与工具函数
+- 完整加法器 + 减法（`+` `-` 运算符重载）
+- 取反（`!` / `-`）
+- 十进制转换 `to_dec()`
+- 符号提取 `to_sign()`
+- 比较运算（`Ord` 实现，支持 `> < >= <= == !=`）
+- 移位运算（`<<` `>>`）
+- 位级操作：`get()`、`set()`、`clear()`、`toggle()`、`get_all()`
 
-## ✨ Features
+### 🖥 Ternary CPU 模拟器（T80）
+- **9 个寄存器**（R0 为累加器，R3 为条件码寄存器）
+- **固定 3 字节指令**（24 bit）
+- 支持：立即数加载、寄存器复制、Calc 计算、条件跳转、Halt
+- 完整汇编工具链（`.tasm` → `.tbin` 编译 + 执行）
 
-### 🧠 Balanced Ternary Logic Gates
-
-Implemented using array-based lookup tables:
-
-* `tor`
-* `tand`
-* `tnor`
-* `tnand`
-* `txor`
-* `tnxor`
-* `tany`
-* `tnany`
-* `tcons`
-* `tsum`
-* `add`
-
-All gates operate in parallel on packed trits.
-
----
-
-### ➕ Arithmetic Support
-
-* Balanced ternary addition
-* Subtraction
-* Unary negation
-* Carry logic via full-adder tables
-* Decimal conversion (`to_dec`)
-* Sign detection (`to_sign`)
-
-Operator overloading supported:
-
-```rust
-+  -  &  |  ^  <<  >>  !  -
->  <  >= <= == !=
-```
-
----
-
-### 🔧 Bit-level Trit Operations
-
-* `get(index)`
-* `set(index, value)`
-* `clear(index)`
-* `toggle(index)`
-* `get_all()`
-
-Predefined constants:
-
-```rust
-Trit4::NEG
-Trit4::ZERO
-Trit4::POS
-Trit4::ALL_NEG
-Trit4::ALL_POS
-```
-
----
-
-### 🖥 Ternary CPU & Assembly Support
-
-Includes a minimal ternary CPU simulator:
-
-* Register file (REG0 ~ REG8)
-* Instruction types:
-
-  * `Imm`
-  * `Copy`
-  * `Calc`
-  * `Condition`
-* Ternary assembly compiler
-* Binary generator
-* Binary runner
-
-Supports writing `.tasm` → compiling → executing in a simulated ternary machine.
-
----
-
-## 📦 Installation
-
-Add this to your project:
+## 📦 安装
 
 ```bash
 cargo add ternary_arithmetic trit_macro
 ```
 
----
+## 🚀 使用示例
 
-## 🚀 Example – Logic Gates
+### 1. 逻辑门与 gate_core（推荐写法）
 
 ```rust
 use trit_macro::trits;
@@ -125,221 +55,72 @@ use ternary_arithmetic::ternary_cpu::logical_alu::Trit4;
 
 fn main() {
     let a = trits!("T010");
-    let b = trits!("---0");
+    let b = trits!("---0");   // 等价于 TTT0
 
-    let result = a.tor(b);
-    println!("{}", result);
+    println!("a | b = {}", a.tor(b));
+    println!("a & b = {}", a.tand(b));
 
-
-    let a = trits!("T010");
-    let b = trits!("---0");
-    let c = trits!("0000");
-    let d = trits!("+++0");
-    //CTYPE: [0]tor [1]tand [2]tnor [3]tnand [4]txor [5]tnxor [6]add [7]tcons [8]tany [9]tnany
-    let ctype=0;
-    
-    let result1 =a.gate_core(b,ctype);
-    let result2 =a.gate_core(c,ctype);
-    let result3 =a.gate_core(d,ctype);
-
-
-    println!("{}",result1);
-    println!("{}",result2);
-    println!("{}",result3);
+    // 使用统一入口（最灵活）
+    let result = a.gate_core(b, 0); // 0=tor
+    println!("gate_core(0) = {}", result);
 }
 ```
 
----
-
-## 🚀 Example – Raw Bit Representation
+### 2. 算术运算与运算符重载
 
 ```rust
 use ternary_arithmetic::ternary_cpu::logical_alu::Trit4;
 
-fn main() {
-    //T-->10  0-->00  1-->01
-    let a:Trit4 = Trit4(0b10000100);
-    let b:Trit4 = Trit4(0b10000100);
+let a = Trit4(0b00000001);  // 1
+let b = Trit4(0b00000010);  // -1（T）
 
-    // a.tor(b) a.tand(b) a.tnor(b) a.tnand(b) a.xor(b) a.nxor(b) a.cons(b) a.ncons(b) a.tany(b) a.nany(b) a.tsum(b) a.add(b,0)
-    let result1 = a.gate_core(b,0);
-    let result2 = a.tor(b);
-    let result3 = a.tneg();
-
-    println!("{}",result1);
-    println!("{}",result2);
-    println!("{}",result3);
-    //---------------------------------------------------------------------------//
-
-    let x=a.get(3);//0~3
-    println!("{:08b}",x);
-
-    let x=a.get_all();
-    println!("{:08b}",x[3]);
-
-    let mut a:Trit4 = Trit4(0b10000100);
-    a.set(0,0b01);//index[0~3],val
-    println!("{:08b}",a.0);
-    
-    let a:Trit4 = Trit4(0b10000100);
-    let x =a.clear(1);
-    println!("{:08b}",x);
-
-    let a:Trit4 = Trit4(0b10000100);
-    let x =a.toggle(3);
-    println!("{:08b}",x);
-
-    println!("{}",Trit4::NEG);
-    println!("{}",Trit4::ZERO);
-    println!("{}",Trit4::POS);
-    println!("{}",Trit4::ALL_POS);
-    println!("{}",Trit4::ALL_NEG);
-
-}
+println!("{} + {} = {}", a, b, (a + b).sum);
+println!("{} - {} = {}", a, b, (a - b).sum);
+println!("a.to_dec() = {}", a.to_dec());
 ```
 
----
-
-## 🚀 Example – Arithmetic
-
-```rust
-use ternary_arithmetic::ternary_cpu::logical_alu::Trit4;
-
-fn main() {
-    let a:Trit4 = Trit4(0b00000001);
-    let b:Trit4 = Trit4(0b00000001);
-
-    println!("a value:{}",a);
-    println!("b value:{}",b);
-
-    let c =a + b; println!("{}",c);
-    let c =a - b; println!("{}",c);
-
-    let c =a & b; println!("{}",c);
-    let c =a | b; println!("{}",c);
-    let c =a ^ b; println!("{}",c);
-
-    let c =a > b; println!("{}",c);
-    let c =a < b; println!("{}",c);
-    let c =a == b; println!("{}",c);
-
-    let c =a >= b; println!("{}",c);
-    let c =a <= b; println!("{}",c);
-    let c =a != b; println!("{}",c);
-
-    let c =a<<1;  println!("{}",c);
-    let c =b>>1;  println!("{}",c);
-
-    let c =-b;  println!("{}",c);
-    let c =!b;  println!("{}",c);
-    //---------------------------------------------------------------------------//
-
-    let a:Trit4 = Trit4(0b00100100);
-    let b:Trit4 = Trit4(0b00001001);
-
-    let c =a.to_dec();  println!("{}",c);
-    let c =b.to_sign();  println!("{}",c);
-}
-```
-
----
-
-## 🚀 Example – CPU Assembly
+### 3. Ternary CPU 汇编运行
 
 ```rust
 use ternary_arithmetic::ternary_asm::asm_utils;
-/*  
-    [1 bytes, 2 bytes, 3 bytes]
-    Opcode: Imm[00]、Copy[01]、Calc[1T]、Condition[10]
-    Imm Load REG0= 3bytes value.
-    Copy Src= 2bytes value and dest=3bytes value.
-    Calc Src= 2bytes value and calcType=3bytes value, REGS[src]=REG0 ctype REGS[src].
-    Condition jump_type = 2bytes value and offset= 3bytes value,REG3 value and jump_type Decide to jump,then new_pc=pc + offset.
 
-    REGS: REG0[TT]、REG1[T0]、REG2[T1]、REG3[0T]、REG4[00]、REG5[01]、REG6[1T]、REG7[10]、REG8[11]
-    CalType: tor[TT]、tand[T0]、tnor[T1]、tnand[0T]、txor[00]、tnxor[01]、add[1T]、tany[10]、tnany[11]
-*/
-
-//TOR Calc
-pub static PROGRAM0: &[&str] = &[
-    "0000_0000_TTT0",// LOAD REG0
-    "0100_00TT_00T0",// COPY REG0,REG1
-
-    "0000_0000_0000",// LOAD REG0
-    "0100_00TT_00T1",// COPY REG0,REG2
-
-    "0000_0000_1110",// LOAD REG0
-    "0100_00TT_000T",// COPY REG0,REG3
-
-    "0000_0000_T010",// LOAD REG0
-
-    "1T00_00T0_00TT",// CALC REG1,calctype
-    "1T00_00T1_00TT",// CALC REG2,calctype
-    "1T00_000T_00TT",// CALC REG3,calctype
-
-    // "1T00_00T0_00T0",// CALC REG1,calctype
-    // "1T00_00T1_00T0",// CALC REG2,calctype
-    // "1T00_000T_00T0",// CALC REG3,calctype
-];
-pub static PROGRAM1: &[&str] = &[
-    //cout=3
-    "0000_0000_0010",// LOAD REG0
-    "0100_00TT_000T",// COPY REG0,REG3
-
-    //cout-1,until cout=0.
-    "0000_0000_000T",// LOAD REG0
-    "1T00_000T_001T",// CALC REG3,SUB
-
-    "1000_0001_00T0", //COND REG3>0,0T11
-];
-//While Add Calc
-pub static PROGRAM2: &[&str] = &[
-    //cout=3
-    "0000_0000_0010",// LOAD REG0
-    "0100_00TT_000T",// COPY REG0,REG3
-
-    //cout-1,until cout=0.
-    "0000_0000_000T",// LOAD REG0
-    "1T00_000T_001T",// CALC REG3,SUB
-
-    //5+5+5=15
-    "0000_0000_01TT",// LOAD REG0
-    "1T00_0011_001T",// CALC REG8,ADD
-
-    "1000_0001_0T11", //COND REG3>0,0T11
+static PROGRAM: &[&str] = &[
+    "0000_0000_0001",   // Imm: R0 ← 1
+    "0100_0000_0001",   // Copy: R1 ← R0
+    "0000_0000_001T",   // Imm: R0 ← -1
+    "1T00_0001_001T",   // Calc: R1 ← R1 + R0（加法）
+    "1000_0001_0001",   // Condition: 如果 R3 > 0 则跳转
+    "1111_1111_1111",   // Halt
 ];
 
 fn main() -> std::io::Result<()> {
-    asm_utils::write_tasm(PROGRAM2)?;
-    asm_utils::write_tbin()?;    
-    asm_utils::read_tbin()?;     
+    asm_utils::write_tasm(PROGRAM)?;
+    asm_utils::write_tbin()?;
     asm_utils::run_from_tbin()?;
     Ok(())
 }
-
-
 ```
 
----
+## 📋 T80 CPU 指令集参考表（最重要）
 
-## 🧩 Design Philosophy
+| Opcode | 指令类型     | Byte2          | Byte3              | 功能说明 |
+|--------|--------------|----------------|--------------------|----------|
+| `0x00` | **Imm**      | -              | 立即数 (u8)       | R0 ← 立即数 |
+| `0x10` | **Copy**     | src 索引       | dst 索引           | R[dst] ← R[src] |
+| `0x60` | **Calc**     | src 索引       | ctype (0~9)        | R[src] ← R0 `gate_core` R[src] |
+| `0x40` | **Condition**| jump_type (0~7)| offset (i8)        | 根据 R3 判断跳转 |
+| `0xFF` | **Halt**     | -              | -                  | 程序停止 |
 
-This project aims to:
+**Calc ctype 对应表**（0~9）：
+0=tor、1=tand、2=tnor、3=tnand、4=txor、5=tnxor、**6=加法**、7=tncons、8=tany、9=tnany
 
-* Simulate hardware-level ternary logic
-* Provide a clean arithmetic abstraction
-* Enable ternary computer experimentation
-* Explore non-binary computing models
+## 🧩 设计哲学
 
-All core logic is implemented using:
-
-* Lookup tables
-* Bit masks
-* Branchless operations
-* Pure `u8` arithmetic
-
----
+- 完全模拟**硬件级三值逻辑门**与全加器
+- 全部使用**查找表 + 位掩码 + 无分支**运算
+- 为教学、实验、探索“非二进制计算机”而生
+- 零依赖、高性能、无 unsafe
 
 ## 📜 License
 
-This project is licensed under the MIT License.
+MIT License

@@ -39,7 +39,7 @@ fn read_all(word: u8) -> [u8; 4] {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub struct Trit4(pub u8); // 包装一个 u8
+pub struct Trit4(u8);
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct TritResult {
@@ -54,6 +54,7 @@ impl Trit4 {
     pub const ALL_POS: Self = Trit4(0x55);
     pub const ALL_NEG: Self = Trit4(0xAA);
 
+    pub const fn new(v: u8) -> Self { Trit4(v & 0xFF) }
     pub fn get(&self, n:usize)->u8 { read_2bit(self.0,n) }
     pub fn get_all(&self)->[u8; 4] { read_all(self.0) }
     pub fn clear(&self, n:usize)->u8 { clear_2bit(self.0,n) }
