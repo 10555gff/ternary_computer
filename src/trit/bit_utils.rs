@@ -1,3 +1,6 @@
+const DECODE: [char;4]=['0','1','T','X'];
+
+
 pub fn set_u8(word: u8, n: usize, value: u8) -> u8 {
     let shift = n << 1;
     let mask = 0x03 << shift;

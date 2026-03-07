@@ -5,3 +5,6 @@ pub mod trit32;
 pub mod trit_ops;
 pub mod bit_utils;
 
+pub use trit4::Trit4;
+pub use trit8::Trit8;
+pub use trit_ops::TritOps;

@@ -1,13 +1,7 @@
 // use super::trit_ops::TritOps;
 
-// #[derive(Clone, Copy, Debug)]
-// pub struct Trit16(u32);
-
-// impl Trit16 {
-//     pub fn new(v: u32) -> Self {
-//         Trit16(v)
-//     }
-// }
+#[derive(Clone, Copy, Debug)]
+pub struct Trit16(pub u32);
 
 // impl TritOps for Trit16 {
 

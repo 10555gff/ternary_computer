@@ -2,13 +2,8 @@ use super::trit_ops::TritOps;
 use super::bit_utils::*;
 
 #[derive(Clone, Copy, Debug)]
-pub struct Trit4(u8);
+pub struct Trit4(pub u8);
 
-impl Trit4 {
-    pub const fn new(v: u8) -> Self {
-        Trit4(v)
-    }
-}
 
 impl TritOps for Trit4 {
     type Output = u8;
