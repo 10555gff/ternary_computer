@@ -3,7 +3,7 @@ use ternary_arithmetic::trit::{Trit4,Trit8,Trit16,Trit32};
 
 fn main() {
 
-    let mut t = trits!("T010");
+    let mut t = trits!("T010_TTTT");
     //let b = trits!("T010_TTTT_1111_TT0T_T010_1001_0011_TTTT");
 
     // t.set(2, 1);
@@ -20,7 +20,7 @@ fn main() {
 
     
     println!("{}", t);
-    println!("{}", Trit4(t.clear(3)));
+    println!("{}", Trit8(t.tneg(4)));
 
 
     // println!("{}", b);
