@@ -20,7 +20,7 @@ fn main() {
 
     
     println!("{}", t);
-    println!("{}", Trit8(t.tneg(4)));
+    println!("{}", Trit8(t.tneg(7)));
 
 
     // println!("{}", b);
