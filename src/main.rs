@@ -7,7 +7,7 @@ fn main() {
     //let b = trits!("T010_TTTT_1111_TT0T_T010_1001_0011_TTTT");
 
     // t.set(2, 1);
-    // t.set(1, 3);
+    t.set(1, 3);
 
     // println!("{}", t.get(0));
     // println!("{}", t.get(1));

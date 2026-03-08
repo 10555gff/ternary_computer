@@ -1,5 +1,5 @@
+const NEG:  [u8;4] = [0x00,0x03,0x03,0x03];
 const DECODE: [char;4]=['0','1','T','X'];
-const NEG:  [u8;3] = [0x00,0x03,0x03];
 
 pub fn fmt(word: u8) -> String {
     let t0 = DECODE[(word & 0x03) as usize];
