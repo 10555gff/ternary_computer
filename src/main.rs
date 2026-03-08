@@ -4,7 +4,7 @@ use ternary_arithmetic::trit::{Trit4,Trit8,Trit16,Trit32};
 fn main() {
 
     let mut t = trits!("T010_TTTT");
-    //let b = trits!("T010_TTTT_1111_TT0T_T010_1001_0011_TTTT");
+    let mut b = trits!("T010_TTTT_1111_TT0T_T010_1001_0011_TTTT");
 
     // t.set(2, 1);
     t.set(1, 3);
@@ -22,8 +22,10 @@ fn main() {
     println!("{}", t);
     println!("{}", Trit8(t.tneg(7)));
 
+    b.set(31, 3);
 
-    // println!("{}", b);
+    println!("{}", b);
+     println!("{}", b.get(0));
     // let my_word: u8 = 0b11011000; // 二进制表示：11(3), 01(1), 10(2), 00(0)
     
     // // 调用函数

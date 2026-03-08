@@ -50,7 +50,7 @@ macro_rules! impl_trit_ops_for {
 }
 impl_trit_ops_for!(u8);
 impl_trit_ops_for!(u16);
-// impl_trit_ops_for!(u32);
-// impl_trit_ops_for!(u64);
+impl_trit_ops_for!(u32);
+impl_trit_ops_for!(u64);
 
 

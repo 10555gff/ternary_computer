@@ -1,26 +1,17 @@
 use std::fmt;
 use super::bit_utils::*;
-// use super::trit_ops::TritOps;
 
 #[derive(Clone, Copy, Debug)]
 pub struct Trit32(pub u64);
 
+impl Trit32 {
+    pub fn get(&self, n:usize) ->u8 { TritOps::read_2bit(self.0,n) }
+    pub fn clear(&self, n:usize) ->u64 { TritOps::clear_2bit(self.0,n) }
+    pub fn toggle(&self, n:usize)->u64 { TritOps::toggle_2bit(self.0,n) }
+    pub fn tneg(&self, n:usize)  ->u64 { TritOps::swap_2bit(self.0,n) }
+    pub fn set(&mut self,n:usize,v:u8){ self.0 =TritOps::set_2bit(self.0,n,v) }
 
-// impl TritOps for Trit32 {
-
-//     fn get(&self, n: usize) -> u8 {
-//         ((self.0 >> (n * 2)) & 0b11) as u8
-//     }
-
-//     fn set(&mut self, n: usize, val: u8) {
-
-//         let shift = n * 2;
-//         let mask = 0b11 << shift;
-
-//         self.0 =0;
-//     }
-
-// }
+}
 
 impl fmt::Display for Trit32 {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
