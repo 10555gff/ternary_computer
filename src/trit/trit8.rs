@@ -6,8 +6,8 @@ pub struct Trit8(pub u16);
 
 impl Trit8 {
     pub fn get(&self, n:usize)->u8 { TritOps::read_2bit(self.0,n) }
+    pub fn set(&mut self,n:usize,v:u8){ self.0 =TritOps::set_2bit(self.0,n,v) }
 
-    //pub fn set(&mut self,n:usize,v:u8){ self.0 = set_2bit_u16(self.0,n,v) }
 }
 
 

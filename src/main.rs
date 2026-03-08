@@ -6,10 +6,10 @@ fn main() {
     let mut t = trits!("T010_TTTT");
     //let b = trits!("T010_TTTT_1111_TT0T_T010_1001_0011_TTTT");
 
-    // t.set(0, 0);
-    // t.set(7, 3);
+    t.set(0, 0);
+    t.set(7, 3);
 
-    println!("{}", t.get(7));
+    println!("{}", t.get(0));
 // println!("{}", t.get(1));
 // println!("{}", t.get(2));
 // println!("{}", t.get(3));
