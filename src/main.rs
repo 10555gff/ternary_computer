@@ -3,20 +3,26 @@ use ternary_arithmetic::trit::{Trit4,Trit8,Trit16,Trit32};
 
 fn main() {
 
-    let mut t = trits!("T010_TTTT");
+    let mut t = trits!("T010");
     //let b = trits!("T010_TTTT_1111_TT0T_T010_1001_0011_TTTT");
 
-    t.set(0, 0);
-    t.set(7, 3);
+    // t.set(2, 1);
+    // t.set(1, 3);
 
-    println!("{}", t.get(0));
-// println!("{}", t.get(1));
-// println!("{}", t.get(2));
-// println!("{}", t.get(3));
-// println!("{}", t.get(4));
-// println!("{}", t.get(5));
-// println!("{}", t.get(6));
+    // println!("{}", t.get(0));
+    // println!("{}", t.get(1));
+    // println!("{}", t.get(2));
+    // println!("{}", t.get(3));
+    // println!("{}", t.get(4));
+    // println!("{}", t.get(5));
+    // println!("{}", t.get(6));
+    // println!("{}", t.get(7));
+
+    
     println!("{}", t);
+    println!("{}", Trit4(t.clear(3)));
+
+
     // println!("{}", b);
     // let my_word: u8 = 0b11011000; // 二进制表示：11(3), 01(1), 10(2), 00(0)
     
