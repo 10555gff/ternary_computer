@@ -1,4 +1,3 @@
-const NEG:  [u8;4] = [0x00,0x03,0x03,0x03];
 const DECODE: [char;4]=['0','1','T','X'];
 
 pub fn fmt(word: u8) -> String {
@@ -34,17 +33,17 @@ macro_rules! impl_trit_ops_for {
             }
             fn swap_2bit(word: $t, n: usize) -> $t {
                 let shift = n << 1;
-                let n = (word >> shift) & 0x03;
-                let mask = (NEG[n as usize] as $t) << shift;
-
-                word ^ mask 
+                let val = word >> shift;
+                let mask = (((val ^ (val >> 1)) & 1) * 3) as $t;
+                word ^ (mask << shift)
             }
+
             fn set_2bit(word: $t, n: usize, value: u8) -> $t {
                 let shift = n << 1;
                 let mask = (0x03 as $t) << shift;
                 (word & !mask) | (((value & 0x03) as $t) << shift)
             }
-            
+
         }
     };
 }
