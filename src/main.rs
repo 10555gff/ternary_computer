@@ -2,12 +2,22 @@ use trit_macro::trits;
 use ternary_arithmetic::trit::{Trit4,Trit8,Trit16,Trit32};
 
 fn main() {
+    let t0 = trits!("T010");
+    let t1 = trits!("T010_TTTT");
+    let t2 = trits!("T010_TTTT_1100_TTTT");
+    let t3 = trits!("T010_TTTT_1100_TTTT_11TT_1111_0000_1111");
 
-    let mut t = trits!("T010_TTTT");
-    let mut b = trits!("T010_TTTT_1111_TT0T_T010_1001_0011_TTTT");
 
+    println!("{}", t0);
+    println!("{}", t1);
+    println!("{}", t2);
+    println!("{}", t3);
+
+
+
+    
     // t.set(2, 1);
-    t.set(1, 3);
+    // t.set(1, 3);
 
     // println!("{}", t.get(0));
     // println!("{}", t.get(1));
@@ -19,13 +29,13 @@ fn main() {
     // println!("{}", t.get(7));
 
     
-    println!("{}", t);
-    println!("{}", Trit8(t.tneg(1)));
 
-    b.set(31, 3);
+    // println!("{}", Trit8(t.tneg(1)));
 
-    println!("{}", b);
-     println!("{}", b.get(0));
+    // b.set(31, 3);
+
+    // println!("{}", b);
+    //  println!("{}", b.get(0));
     // let my_word: u8 = 0b11011000; // 二进制表示：11(3), 01(1), 10(2), 00(0)
     
     // // 调用函数

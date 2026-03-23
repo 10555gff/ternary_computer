@@ -14,7 +14,6 @@ pub trait TritOps{
     fn toggle_2bit(word: Self, n: usize) -> Self;
     fn swap_2bit(word: Self, n: usize) -> Self;
     fn set_2bit(word: Self, n: usize, value: u8) -> Self;
-
 }
 
 macro_rules! impl_trit_ops_for {
