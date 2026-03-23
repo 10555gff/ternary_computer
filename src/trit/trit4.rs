@@ -1,5 +1,6 @@
 use std::fmt;
 use super::bit_utils::*;
+use core::ops::{Shl, Shr};
 
 #[derive(Clone, Copy, Debug)]
 pub struct Trit4(pub u8);
@@ -22,5 +23,23 @@ impl fmt::Display for Trit4 {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         let val=fmt(self.0);
         write!(f, "Trit4[{}]", val)
+    }
+}
+
+impl Shl<usize> for Trit4 {
+    type Output = Self;
+
+    fn shl(self, rhs: usize) -> Self {
+        if rhs >= 4 { return Trit4::ZERO; }
+        Trit4(self.0 << (rhs << 1))
+    }
+}
+
+impl Shr<usize> for Trit4 {
+    type Output = Self;
+
+    fn shr(self, rhs: usize) -> Self {
+        if rhs >= 4 { return Trit4::ZERO; }
+        Trit4(self.0 >> (rhs << 1))
     }
 }

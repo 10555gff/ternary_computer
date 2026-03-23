@@ -2,15 +2,12 @@ use trit_macro::trits;
 use ternary_arithmetic::trit::{Trit4,Trit8,Trit16,Trit32};
 
 fn main() {
-    let mut t0 = trits!("0000");
-    let t =trits!("T101");
+    let a = trits!("T010_TTTT_1100_TTTT_11TT_1111_0000_1111");
+    let b = a << 2;  // 左移 2 个 trit
+    let c = a >> 3;  // 右移 3 个 trit
 
-    for i in 0..4 {
-        let v = t.get(i);
-        t0.set(i,v);
-    }
-
-    println!("{}",t0);
+    println!("{}", b);
+    println!("{}", c);
 
 
 
