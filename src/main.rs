@@ -2,22 +2,22 @@ use trit_macro::trits;
 use ternary_arithmetic::trit::{Trit4,Trit8,Trit16,Trit32};
 
 fn main() {
-    let t0 = trits!("T010");
-    let t1 = trits!("T010_TTTT");
-    let t2 = trits!("T010_TTTT_1100_TTTT");
-    let t3 = trits!("T010_TTTT_1100_TTTT_11TT_1111_0000_1111");
+    let mut t0 = trits!("0000");
+    let t =trits!("T101");
+
+    for i in 0..4 {
+        let v = t.get(i);
+        t0.set(i,v);
+    }
+
+    println!("{}",t0);
 
 
-    println!("{}", t0);
-    println!("{}", t1);
-    println!("{}", t2);
-    println!("{}", t3);
 
+    //let t = trits!("T010_TTTT");
+    // let t2 = trits!("T010_TTTT_1100_TTTT");
+    // let t3 = trits!("T010_TTTT_1100_TTTT_11TT_1111_0000_1111");
 
-
-    
-    // t.set(2, 1);
-    // t.set(1, 3);
 
     // println!("{}", t.get(0));
     // println!("{}", t.get(1));
