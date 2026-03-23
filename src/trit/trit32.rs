@@ -5,6 +5,12 @@ use super::bit_utils::*;
 pub struct Trit32(pub u64);
 
 impl Trit32 {
+    pub const ZERO: Self = Trit32(0x0000_0000_0000_0000);
+    pub const POS:  Self = Trit32(0x0000_0000_0000_0001);
+    pub const NEG:  Self = Trit32(0x0000_0000_0000_0002);
+    pub const ALL_POS: Self = Trit32(0x5555_5555_5555_5555);
+    pub const ALL_NEG: Self = Trit32(0xAAAA_AAAA_AAAA_AAAA);
+
     pub fn get(&self, n:usize) ->u8 { TritOps::read_2bit(self.0,n) }
     pub fn clear(&self, n:usize) ->u64 { TritOps::clear_2bit(self.0,n) }
     pub fn toggle(&self, n:usize)->u64 { TritOps::toggle_2bit(self.0,n) }

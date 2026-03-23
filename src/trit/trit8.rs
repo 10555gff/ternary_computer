@@ -5,6 +5,12 @@ use super::bit_utils::*;
 pub struct Trit8(pub u16);
 
 impl Trit8 {
+    pub const ZERO: Self = Trit8(0x0000);
+    pub const POS:  Self = Trit8(0x0001);
+    pub const NEG:  Self = Trit8(0x0002);
+    pub const ALL_POS: Self = Trit8(0x5555);
+    pub const ALL_NEG: Self = Trit8(0xAAAA);
+
     pub fn get(&self, n:usize) ->u8 { TritOps::read_2bit(self.0,n) }
     pub fn clear(&self, n:usize) ->u16 { TritOps::clear_2bit(self.0,n) }
     pub fn toggle(&self, n:usize)->u16 { TritOps::toggle_2bit(self.0,n) }
@@ -12,8 +18,6 @@ impl Trit8 {
     pub fn set(&mut self,n:usize,v:u8){ self.0 =TritOps::set_2bit(self.0,n,v) }
 
 }
-
-
 
 impl fmt::Display for Trit8 {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
