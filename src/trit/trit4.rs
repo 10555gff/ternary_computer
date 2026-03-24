@@ -1,6 +1,6 @@
 use std::fmt;
 use super::bit_utils::*;
-use core::ops::{Shl, Shr};
+use core::ops::{Shl, Shr, Neg, Not};
 
 #[derive(Clone, Copy, Debug)]
 pub struct Trit4(pub u8);
@@ -15,8 +15,15 @@ impl Trit4 {
     pub fn get(&self, n:usize) ->u8 { TritOps::read_2bit(self.0,n) }
     pub fn clear(&self, n:usize) ->u8 { TritOps::clear_2bit(self.0,n) }
     pub fn toggle(&self, n:usize) ->u8 { TritOps::toggle_2bit(self.0,n) }
-    pub fn tneg(&self, n:usize) ->u8 { TritOps::swap_2bit(self.0,n) }
+    pub fn swap(&self, n:usize) ->u8 { TritOps::swap_2bit(self.0,n) }
     pub fn set(&mut self,n:usize,v:u8){ self.0=TritOps::set_2bit(self.0,n,v) }
+
+    pub fn tneg(self) -> Self {
+        let val = self.0;
+        let res=((val & 0xAA) >> 1) | ((val & 0x55) << 1);
+        Trit4(res)
+    }
+
 }
 
 impl fmt::Display for Trit4 {
@@ -41,5 +48,18 @@ impl Shr<usize> for Trit4 {
     fn shr(self, rhs: usize) -> Self {
         if rhs >= 4 { return Trit4::ZERO; }
         Trit4(self.0 >> (rhs << 1))
+    }
+}
+
+impl Neg for Trit4 {
+    type Output = Trit4;
+    fn neg(self) -> Self::Output {
+        self.tneg()
+    }
+}
+impl Not for Trit4 {
+    type Output = Trit4;
+    fn not(self) -> Self::Output {
+        self.tneg()
     }
 }

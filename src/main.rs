@@ -3,8 +3,9 @@ use ternary_arithmetic::trit::{Trit4,Trit8,Trit16,Trit32};
 
 fn main() {
     let a = trits!("T010_TTTT_1100_TTTT_11TT_1111_0000_1111");
-    let b = a << 2;  // 左移 2 个 trit
-    let c = a >> 3;  // 右移 3 个 trit
+    let b = -a;
+    let c = !a;
+
 
     println!("{}", b);
     println!("{}", c);

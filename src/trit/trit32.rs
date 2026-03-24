@@ -1,6 +1,6 @@
 use std::fmt;
 use super::bit_utils::*;
-use core::ops::{Shl, Shr};
+use core::ops::{Shl, Shr, Neg, Not};
 
 #[derive(Clone, Copy, Debug)]
 pub struct Trit32(pub u64);
@@ -15,9 +15,15 @@ impl Trit32 {
     pub fn get(&self, n:usize) ->u8 { TritOps::read_2bit(self.0,n) }
     pub fn clear(&self, n:usize) ->u64 { TritOps::clear_2bit(self.0,n) }
     pub fn toggle(&self, n:usize)->u64 { TritOps::toggle_2bit(self.0,n) }
-    pub fn tneg(&self, n:usize)  ->u64 { TritOps::swap_2bit(self.0,n) }
+    pub fn swap(&self, n:usize)  ->u64 { TritOps::swap_2bit(self.0,n) }
     pub fn set(&mut self,n:usize,v:u8){ self.0 =TritOps::set_2bit(self.0,n,v) }
 
+    pub fn tneg(self) -> Self {
+        let val = self.0;
+        let res = ((val & 0xAAAA_AAAA_AAAA_AAAA) >> 1)
+                | ((val & 0x5555_5555_5555_5555) << 1);
+        Trit32(res)
+    }
 }
 
 impl fmt::Display for Trit32 {
@@ -51,5 +57,19 @@ impl Shr<usize> for Trit32 {
     fn shr(self, rhs: usize) -> Self {
         if rhs >= 32 { return Trit32::ZERO; }
         Trit32(self.0 >> (rhs * 2))
+    }
+}
+
+impl Neg for Trit32 {
+    type Output = Trit32;
+    fn neg(self) -> Self::Output {
+        self.tneg()
+    }
+}
+
+impl Not for Trit32 {
+    type Output = Trit32;
+    fn not(self) -> Self::Output {
+        self.tneg()
     }
 }
