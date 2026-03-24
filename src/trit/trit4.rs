@@ -23,6 +23,9 @@ impl Trit4 {
         let res=((val & 0xAA) >> 1) | ((val & 0x55) << 1);
         Trit4(res)
     }
+    pub fn tcons(self, other: Self) -> Self {
+        Trit4(self.0 & other.0)
+    }
     pub fn tor(self, other: Self) -> Self {
         let (a, b) = (self.0, other.0);
         let res=((a & b) & 0xAA) | ((a | b) & 0x55);

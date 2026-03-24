@@ -24,14 +24,15 @@ impl Trit32 {
                 | ((val & 0x5555_5555_5555_5555) << 1);
         Trit32(res)
     }
-
+    pub fn tcons(self, other: Self) -> Self {
+        Trit32(self.0 & other.0)
+    }
     pub fn tor(self, other: Self) -> Self {
         let (a, b) = (self.0, other.0);
         let res = ((a & b) & 0xAAAA_AAAA_AAAA_AAAA)
                 | ((a | b) & 0x5555_5555_5555_5555);
         Trit32(res)
     }
-
     pub fn tand(self, other: Self) -> Self {
         let (a, b) = (self.0, other.0);
         let res = ((a | b) & 0xAAAA_AAAA_AAAA_AAAA)

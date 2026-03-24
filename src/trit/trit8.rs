@@ -23,13 +23,14 @@ impl Trit8 {
         let res = ((val & 0xAAAA) >> 1) | ((val & 0x5555) << 1);
         Trit8(res)
     }
-
+    pub fn tcons(self, other: Self) -> Self {
+        Trit8(self.0 & other.0)
+    }
     pub fn tor(self, other: Self) -> Self {
         let (a, b) = (self.0, other.0);
         let res = ((a & b) & 0xAAAA) | ((a | b) & 0x5555);
         Trit8(res)
     }
-
     pub fn tand(self, other: Self) -> Self {
         let (a, b) = (self.0, other.0);
         let res = ((a | b) & 0xAAAA) | ((a & b) & 0x5555);

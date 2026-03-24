@@ -23,13 +23,14 @@ impl Trit16 {
         let res = ((val & 0xAAAA_AAAA) >> 1) | ((val & 0x5555_5555) << 1);
         Trit16(res)
     }
-
+    pub fn tcons(self, other: Self) -> Self {
+        Trit16(self.0 & other.0)
+    }
     pub fn tor(self, other: Self) -> Self {
         let (a, b) = (self.0, other.0);
         let res = ((a & b) & 0xAAAA_AAAA) | ((a | b) & 0x5555_5555);
         Trit16(res)
     }
-
     pub fn tand(self, other: Self) -> Self {
         let (a, b) = (self.0, other.0);
         let res = ((a | b) & 0xAAAA_AAAA) | ((a & b) & 0x5555_5555);
