@@ -1,6 +1,6 @@
 use std::fmt;
 use super::bit_utils::*;
-use core::ops::{Shl, Shr, Neg, Not};
+use core::ops::{Shl, Shr, Neg, Not, BitAnd, BitOr};
 
 #[derive(Clone, Copy, Debug)]
 pub struct Trit16(pub u32);
@@ -23,6 +23,19 @@ impl Trit16 {
         let res = ((val & 0xAAAA_AAAA) >> 1) | ((val & 0x5555_5555) << 1);
         Trit16(res)
     }
+
+    pub fn tor(self, other: Self) -> Self {
+        let (a, b) = (self.0, other.0);
+        let res = ((a & b) & 0xAAAA_AAAA) | ((a | b) & 0x5555_5555);
+        Trit16(res)
+    }
+
+    pub fn tand(self, other: Self) -> Self {
+        let (a, b) = (self.0, other.0);
+        let res = ((a | b) & 0xAAAA_AAAA) | ((a & b) & 0x5555_5555);
+        Trit16(res)
+    }
+
 }
 
 impl fmt::Display for Trit16 {
@@ -66,5 +79,21 @@ impl Not for Trit16 {
     type Output = Trit16;
     fn not(self) -> Self::Output {
         self.tneg()
+    }
+}
+
+impl BitAnd<Trit16> for Trit16 {
+    type Output = Trit16;
+
+    fn bitand(self, rhs: Trit16) -> Self::Output {
+        self.tand(rhs)
+    }
+}
+
+impl BitOr<Trit16> for Trit16 {
+    type Output = Trit16;
+
+    fn bitor(self, rhs: Trit16) -> Self::Output {
+        self.tor(rhs)
     }
 }

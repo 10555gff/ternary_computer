@@ -1,6 +1,6 @@
 use std::fmt;
 use super::bit_utils::*;
-use core::ops::{Shl, Shr, Neg, Not};
+use core::ops::{Shl, Shr, Neg, Not, BitAnd, BitOr};
 
 #[derive(Clone, Copy, Debug)]
 pub struct Trit4(pub u8);
@@ -21,6 +21,16 @@ impl Trit4 {
     pub fn tneg(self) -> Self {
         let val = self.0;
         let res=((val & 0xAA) >> 1) | ((val & 0x55) << 1);
+        Trit4(res)
+    }
+    pub fn tor(self, other: Self) -> Self {
+        let (a, b) = (self.0, other.0);
+        let res=((a & b) & 0xAA) | ((a | b) & 0x55);
+        Trit4(res)
+    }
+    pub fn tand(self, other: Self) -> Self {
+        let (a, b) = (self.0, other.0);
+        let res=((a | b) & 0xAA) | ((a & b) & 0x55);
         Trit4(res)
     }
 
@@ -61,5 +71,19 @@ impl Not for Trit4 {
     type Output = Trit4;
     fn not(self) -> Self::Output {
         self.tneg()
+    }
+}
+impl BitAnd<Trit4> for Trit4 {
+    type Output = Trit4;
+
+    fn bitand(self, rhs: Trit4) -> Self::Output {
+        self.tand(rhs)
+    }
+}
+impl BitOr<Trit4> for Trit4 {
+    type Output = Trit4;
+
+    fn bitor(self, rhs: Trit4) -> Self::Output {
+        self.tor(rhs)
     }
 }
