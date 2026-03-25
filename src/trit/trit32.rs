@@ -39,6 +39,20 @@ impl Trit32 {
                 | ((a & b) & 0x5555_5555_5555_5555);
         Trit32(res)
     }
+    pub fn txor(self, other: Self) -> Self {
+        let or  = self.0 | other.0;
+        let and = self.0 & other.0;
+        let res=((and | (and << 1)) & 0xAAAA_AAAA_AAAA_AAAA) 
+              | ((or & (or >> 1)) & 0x5555_5555_5555_5555);
+        Trit32(res)
+    }
+    pub fn tnxor(self, other: Self) -> Self {
+        let or  = self.0 | other.0;
+        let and = self.0 & other.0;
+        let res=((or & (or << 1)) & 0xAAAA_AAAA_AAAA_AAAA) 
+              | ((and | (and >> 1)) & 0x5555_5555_5555_5555);
+        Trit32(res)
+    }
 
 }
 

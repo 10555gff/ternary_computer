@@ -36,7 +36,19 @@ impl Trit8 {
         let res = ((a | b) & 0xAAAA) | ((a & b) & 0x5555);
         Trit8(res)
     }
-
+    pub fn txor(self, other: Self) -> Self {
+        let or  = self.0 | other.0;
+        let and = self.0 & other.0;
+        let res=((and | (and << 1)) & 0xAAAA) | ((or & (or >> 1)) & 0x5555);
+        Trit8(res)
+    }
+    pub fn tnxor(self, other: Self) -> Self {
+        let or  = self.0 | other.0;
+        let and = self.0 & other.0;
+        let res=((or & (or << 1)) & 0xAAAA) | ((and | (and >> 1)) & 0x5555);
+        Trit8(res)
+    }
+    
 }
 
 impl fmt::Display for Trit8 {

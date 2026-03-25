@@ -36,7 +36,19 @@ impl Trit4 {
         let res=((a | b) & 0xAA) | ((a & b) & 0x55);
         Trit4(res)
     }
-
+    pub fn txor(self, other: Self) -> Self {
+        let or  = self.0 | other.0;
+        let and = self.0 & other.0;
+        let res=((and | (and << 1)) & 0xAA) | ((or & (or >> 1)) & 0x55);
+        Trit4(res)
+    }
+    pub fn tnxor(self, other: Self) -> Self {
+        let or  = self.0 | other.0;
+        let and = self.0 & other.0;
+        let res=((or & (or << 1)) & 0xAA) | ((and | (and >> 1)) & 0x55);
+        Trit4(res)
+    }
+    
 }
 
 impl fmt::Display for Trit4 {
