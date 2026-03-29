@@ -1,6 +1,6 @@
 use std::fmt;
 use super::bit_utils::*;
-use core::ops::{Shl, Shr, Neg, Not, BitAnd, BitOr};
+use core::ops::{Shl, Shr, Neg, Not, BitAnd, BitOr, BitXor};
 
 #[derive(Clone, Copy, Debug)]
 pub struct Trit16(pub u32);
@@ -108,5 +108,13 @@ impl BitOr<Trit16> for Trit16 {
 
     fn bitor(self, rhs: Trit16) -> Self::Output {
         self.tor(rhs)
+    }
+}
+
+impl BitXor<Trit16> for Trit16 {
+    type Output = Trit16;
+
+    fn bitxor(self, rhs: Trit16) -> Self::Output {
+        self.txor(rhs)
     }
 }
