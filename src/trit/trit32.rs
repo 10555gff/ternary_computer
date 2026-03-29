@@ -33,10 +33,24 @@ impl Trit32 {
                 | ((a | b) & 0x5555_5555_5555_5555);
         Trit32(res)
     }
+    pub fn tnor(self, other: Self) -> Self {
+        let or  = self.0 | other.0;
+        let and = self.0 & other.0;
+        let res=((and & 0xAAAA_AAAA_AAAA_AAAA) >> 1) 
+                   | ((or & 0x5555_5555_5555_5555) << 1);
+        Trit32(res)
+    }
     pub fn tand(self, other: Self) -> Self {
         let (a, b) = (self.0, other.0);
         let res = ((a | b) & 0xAAAA_AAAA_AAAA_AAAA)
                 | ((a & b) & 0x5555_5555_5555_5555);
+        Trit32(res)
+    }
+    pub fn tnand(self, other: Self) -> Self {
+        let or  = self.0 | other.0;
+        let and = self.0 & other.0;
+        let res=((or & 0xAAAA_AAAA_AAAA_AAAA) >> 1) 
+                   | ((and & 0x5555_5555_5555_5555) << 1);
         Trit32(res)
     }
     pub fn txor(self, other: Self) -> Self {

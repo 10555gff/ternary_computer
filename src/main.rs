@@ -22,9 +22,9 @@ fn main() {
     // let c = trits!("0000");
     // let d = trits!("+++0");
 
-    let result1 =a ^ b;
-    let result2 =a ^ c;
-    let result3 =a ^ d;
+    let result1 =a.tnor(b);
+    let result2 =a.tnor(c);
+    let result3 =a.tnor(d);
 
     println!("{}",result1);
     println!("{}",result2);
