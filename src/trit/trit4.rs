@@ -68,6 +68,18 @@ impl Trit4 {
     pub fn tmax3(self, b: Self, c: Self) -> Self {
         self.tor(b).tor(c)
     }
+    pub fn gate_core(self, other: Self, code: u8) -> Self {
+        match code {
+            0 => self.tcons(other), // CONS
+            1 => self.tand(other),  // MIN
+            2 => self.tor(other),   // MAX
+            3 => self.txor(other),  // XOR
+            4 => self.tnand(other), // NAND
+            5 => self.tnor(other),  // NOR
+            6 => self.tnxor(other), // NXOR
+            _ => unsafe { core::hint::unreachable_unchecked() }
+        }
+    }
     
 }
 

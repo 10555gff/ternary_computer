@@ -22,9 +22,11 @@ fn main() {
     // let c = trits!("0000");
     // let d = trits!("+++0");
 
-    let result1 =a.tnor(b);
-    let result2 =a.tnor(c);
-    let result3 =a.tnor(d);
+    let code:u8 =1;
+
+    let result1 =a.gate_core(b,code);
+    let result2 =a.gate_core(c,code);
+    let result3 =a.gate_core(d,code);
 
     println!("{}",result1);
     println!("{}",result2);
