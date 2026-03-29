@@ -60,6 +60,13 @@ impl Trit16 {
         let res=((or & (or << 1)) & 0xAAAA_AAAA) | ((and | (and >> 1)) & 0x5555_5555);
         Trit16(res)
     }
+    pub fn tmin3(self, b: Self, c: Self) -> Self {
+        self.tand(b).tand(c)
+    }
+    pub fn tmax3(self, b: Self, c: Self) -> Self {
+        self.tor(b).tor(c)
+    }
+    
     
 }
 

@@ -67,6 +67,13 @@ impl Trit32 {
               | ((and | (and >> 1)) & 0x5555_5555_5555_5555);
         Trit32(res)
     }
+    pub fn tmin3(self, b: Self, c: Self) -> Self {
+        self.tand(b).tand(c)
+    }
+    pub fn tmax3(self, b: Self, c: Self) -> Self {
+        self.tor(b).tor(c)
+    }
+    
 
 }
 
