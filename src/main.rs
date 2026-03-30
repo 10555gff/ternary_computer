@@ -2,9 +2,32 @@ use trit_macro::trits;
 use ternary_arithmetic::trit::{Trit4,Trit8,Trit16,Trit32};
 
 fn main() {
+    let a = trits!("TTTT");
+    let b = trits!("TTTT");
+    let result1 =a.adder(b,2);
+    println!("{}_{}",result1.1,result1.0);    
+
+    let a = trits!("0111");
+    let b = trits!("0111");
+    let result1 =a.adder(b,0);
+    println!("{}_{}",result1.1,result1.0); 
+
+    let a = trits!("0111");
+    let b = trits!("0T00");
+    let result1 =a.adder(b,1);
+    println!("{}_{}",result1.1,result1.0); 
+
+    let a = trits!("1111_1111");
+    let b = trits!("1000_0000");
+    let result1 =a.adder(b,0);
+    println!("{}_{}",result1.1,result1.0); 
+
+
+
+
     let a = trits!("1111");
     let b = trits!("0001");
-    let result1 =a.adder(b,1);
+    let result1 =a.adder(b,0);
     println!("{}_{}",result1.1,result1.0);    
 
     let a = trits!("1111_1111");
