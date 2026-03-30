@@ -2,35 +2,15 @@ use trit_macro::trits;
 use ternary_arithmetic::trit::{Trit4,Trit8,Trit16,Trit32};
 
 fn main() {
-    let a = trits!("T010_T010_T010_T010_T010_T010_T010_T010");
-    let b = trits!("---0_---0_---0_---0_---0_---0_---0_---0");
-    let c = trits!("0000_0000_0000_0000_0000_0000_0000_0000");
-    let d = trits!("+++0_+++0_+++0_+++0_+++0_+++0_+++0_+++0");
+    let a = trits!("1111");
+    let b = trits!("0001");
+    let result1 =a.adder(b,0);
+    println!("{}_{}",result1.1,result1.0);    
 
-    // let a = trits!("T010_T010_T010_T010");
-    // let b = trits!("---0_---0_---0_---0");
-    // let c = trits!("0000_0000_0000_0000");
-    // let d = trits!("+++0_+++0_+++0_+++0");
-
-    // let a = trits!("T010_T010");
-    // let b = trits!("---0_---0");
-    // let c = trits!("0000_0000");
-    // let d = trits!("+++0_+++0");
-
-    // let a = trits!("T010");
-    // let b = trits!("---0");
-    // let c = trits!("0000");
-    // let d = trits!("+++0");
-
-    let code:u8 =1;
-
-    let result1 =a.gate_core(b,code);
-    let result2 =a.gate_core(c,code);
-    let result3 =a.gate_core(d,code);
-
-    println!("{}",result1);
-    println!("{}",result2);
-    println!("{}",result3);
+    let a = trits!("1111_1111");
+    let b = trits!("0000_0001");
+    let result1 =a.adder(b,1);
+    println!("{}_{}",result1.1,result1.0);    
 
 
     //let t = trits!("T010_TTTT");

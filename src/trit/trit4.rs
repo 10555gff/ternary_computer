@@ -60,6 +60,10 @@ impl Trit4 {
         let res=((or & (or << 1)) & 0xAA) | ((and | (and >> 1)) & 0x55);
         Trit4(res)
     }
+    pub fn adder(self, other: Self, carry: u8) -> (Self, u8) {
+        let (s, c) = TritOps::adder(self.0, other.0, carry);
+        (Trit4(s), c)
+    }
     //tmin3(a,b,c) = min(min(a,b), c)
     pub fn tmin3(self, b: Self, c: Self) -> Self {
         self.tand(b).tand(c)
