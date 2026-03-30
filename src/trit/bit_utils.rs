@@ -81,15 +81,21 @@ macro_rules! impl_trit_ops_for {
 
             fn adder(word: $t, other: $t, mut carry: u8) -> ($t, u8) {
                 let mut sum: $t = 0;
+                let mut a_word = word;
+                let mut b_word = other;
                 let width = core::mem::size_of::<$t>() * 4;
 
                 for i in 0..width {
                     let shift = i << 1;
-                    let a = ((word >> shift) & 0x03) as usize;
-                    let b = ((other >> shift) & 0x03) as usize;
+                    let a = (a_word & 0x03) as usize;
+                    let b = (b_word & 0x03) as usize;
+
                     let sum_i = TFULLSUM[a][b][carry as usize] as $t;
                     carry = TFULLCONS[a][b][carry as usize];
                     sum |= sum_i << shift;
+
+                    a_word >>= 2;
+                    b_word >>= 2;
                 }
                 (sum, carry)
             }

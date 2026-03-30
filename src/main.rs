@@ -4,14 +4,25 @@ use ternary_arithmetic::trit::{Trit4,Trit8,Trit16,Trit32};
 fn main() {
     let a = trits!("1111");
     let b = trits!("0001");
-    let result1 =a.adder(b,0);
+    let result1 =a.adder(b,1);
     println!("{}_{}",result1.1,result1.0);    
 
     let a = trits!("1111_1111");
     let b = trits!("0000_0001");
-    let result1 =a.adder(b,1);
+    let result1 =a.adder(b,0);
     println!("{}_{}",result1.1,result1.0);    
 
+
+    let a = trits!("1111_1111_1111_1111");
+    let b = trits!("0000_000_0000_0001");
+    let result1 =a.adder(b,0);
+    println!("{}_{}",result1.1,result1.0);    
+
+
+    let a = trits!("1111_1111_1111_1111_1111_1111_1111_1111");
+    let b = trits!("0000_000_0000_0000_0000_000_0000_0001");
+    let result1 =a.adder(b,0);
+    println!("{}_{}",result1.1,result1.0);   
 
     //let t = trits!("T010_TTTT");
     // let t2 = trits!("T010_TTTT_1100_TTTT");
