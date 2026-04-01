@@ -37,18 +37,11 @@ const TFULLCONS: [[[u8; 3]; 3]; 3] = [
 
 #[inline(always)]
 fn carry_1trit(a: u8, b: u8, c: u8) -> u8 {
-    let p = (a & 1) + (b & 1) + (c & 1);           // 正数位个数 (0~3)
-    let n = ((a >> 1) & 1) + ((b >> 1) & 1) + ((c >> 1) & 1); // 负数位个数 (0~3)
-
+    let p = (a & 1) + (b & 1) + (c & 1);
+    let n = ((a >> 1) & 1) + ((b >> 1) & 1) + ((c >> 1) & 1);
     let s = p as i8 - n as i8;
 
-    if s >= 2 {
-        1
-    } else if s <= -2 {
-        2   // 代表 -1
-    } else {
-        0
-    }
+    ((s >= 2) as u8) | (((s <= -2) as u8) << 1)
 }
 
 pub fn fmt(word: u8) -> String {
@@ -58,22 +51,6 @@ pub fn fmt(word: u8) -> String {
     let t3 = DECODE[((word >> 6) & 0x03) as usize];
     format!("{}{}{}{}", t3, t2, t1, t0)
 }
-pub fn aaa(){
-    println!("hhh");
-    for a in 0..3 {
-        for b in 0..3 {
-            for c in 0..3 {
-                let old = TFULLCONS[a][b][c];
-                let new = carry_1trit(a as u8, b as u8, c as u8);
-                assert_eq!(old, new);
-            }
-        }
-    }
-}
-
-
-
-
 
 pub trait TritOps: Sized {
     fn read_2bit(word: Self, n: usize) -> u8;
