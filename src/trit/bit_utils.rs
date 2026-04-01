@@ -80,6 +80,7 @@ macro_rules! impl_trit_ops_for {
                 let mask = (0x03 as $t) << shift;
                 (word & !mask) | (((value & 0x03) as $t) << shift)
             }
+            
             fn tcons3(mut word: $t,mut word2: $t, mut carry: u8) -> ($t, u8) {
                 let mut res: $t = 0;
                 let mut shift = 0;
@@ -100,21 +101,24 @@ macro_rules! impl_trit_ops_for {
                 (res, carry)
             }
 
-            fn adder(mut word: $t,mut word2: $t, mut carry: u8) -> ($t, u8) {
+            fn adder(word: $t, other: $t, mut carry: u8) -> ($t, u8) {
                 let mut sum: $t = 0;
-                let mut shift = 0;
                 let width = core::mem::size_of::<$t>() * 4;
 
+                let mut a_word = word;
+                let mut b_word = other;
+                let mut shift = 0;
+
                 for _ in 0..width {
-                    let a = (word & 0x03) as usize;
-                    let b = (word2 & 0x03) as usize;
+                    let a = (a_word & 0x03) as usize;
+                    let b = (b_word & 0x03) as usize;
 
                     let sum_i = TFULLSUM[a][b][carry as usize] as $t;
                     carry = TFULLCONS[a][b][carry as usize];
                     sum |= sum_i << shift;
 
-                    word >>= 2;
-                    word2 >>= 2;
+                    a_word >>= 2;
+                    b_word >>= 2;
                     shift += 2;
                 }
                 (sum, carry)

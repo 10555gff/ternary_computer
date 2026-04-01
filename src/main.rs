@@ -21,8 +21,8 @@ fn main() {
     // let b = trits!("----");
     let c:u8 =0;
 
-    let result = a.adder(b,c);
-    println!("Result0:{}{}",result.1,result.0);
+    // let result = a.adder(b,c);
+    // println!("Result0:{}{}",result.1,result.0);
 
     let result1 = a.parall_adder(b,c);
     println!("Result1:{}{}",result1.1,result1.0);
