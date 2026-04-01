@@ -70,6 +70,12 @@ impl Trit4 {
         let res = nor ^ (((nor & (nor >> 1)) & 0x55) * 3);
         Trit4(res)
     }
+    pub fn tsum(self, other: Self) -> Self {
+        let or  = self.0 | other.0;
+        let and = self.0 & other.0;
+        let res = or ^ and ^ (((and & 0x55) << 1) | ((and & 0xAA) >> 1));
+        Trit4(res ^ (((res & (res >> 1)) & 0x55) * 3))
+    }
     pub fn adder(self, other: Self, carry: u8) -> (Self, u8) {
         let (s, c) = TritOps::adder(self.0, other.0, carry);
         (Trit4(s), c)
