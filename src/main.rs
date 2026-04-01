@@ -2,13 +2,13 @@ use trit_macro::trits;
 use ternary_arithmetic::trit::{Trit4,Trit8,Trit16,Trit32};
 
 fn main() {
-    // let a = trits!("T010_T010_T010_T010_T010_T010_T010_T010");
-    // let b = trits!("---0_---0_---0_---0_---0_---0_---0_---0");
+    let a = trits!("T010_T010_T010_T010_T010_T010_T010_T010");
+    let b = trits!("---0_---0_---0_---0_---0_---0_---0_---0");
     // let c = trits!("0000_0000_0000_0000_0000_0000_0000_0000");
     // let d = trits!("+++0_+++0_+++0_+++0_+++0_+++0_+++0_+++0");
 
-    let a = trits!("T010_T010_T010_T010");
-    let b = trits!("---0_---0_---0_---0");
+    // let a = trits!("T010_T010_T010_T010");
+    // let b = trits!("---0_---0_---0_---0");
     // let c = trits!("0000_0000_0000_0000");
     // let d = trits!("+++0_+++0_+++0_+++0");
 
@@ -21,8 +21,8 @@ fn main() {
     // let b = trits!("----");
     let c:u8 =0;
 
-    // let result = a.adder(b,c);
-    // println!("Result0:{}{}",result.1,result.0);
+    let result = a.adder(b,c);
+    println!("Result0:{}{}",result.1,result.0);
 
     let result1 = a.parall_adder(b,c);
     println!("Result1:{}{}",result1.1,result1.0);

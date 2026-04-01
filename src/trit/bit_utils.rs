@@ -35,15 +35,6 @@ const TFULLCONS: [[[u8; 3]; 3]; 3] = [
     ],
 ];
 
-#[inline(always)]
-fn carry_1trit(a: u8, b: u8, c: u8) -> u8 {
-    let p = (a & 1) + (b & 1) + (c & 1);
-    let n = ((a >> 1) & 1) + ((b >> 1) & 1) + ((c >> 1) & 1);
-    let s = p as i8 - n as i8;
-
-    ((s >= 2) as u8) | (((s <= -2) as u8) << 1)
-}
-
 pub fn fmt(word: u8) -> String {
     let t0 = DECODE[(word & 0x03) as usize];
     let t1 = DECODE[((word >> 2) & 0x03) as usize];
@@ -58,8 +49,8 @@ pub trait TritOps: Sized {
     fn toggle_2bit(word: Self, n: usize) -> Self;
     fn swap_2bit(word: Self, n: usize) -> Self;
     fn set_2bit(word: Self, n: usize, value: u8) -> Self;
-    fn adder(word: Self, other: Self, carry: u8) -> (Self, u8);
     fn tcons3(word: Self, other: Self, carry: u8) -> (Self, u8);
+    fn adder(word: Self, other: Self, carry: u8) -> (Self, u8);
 }
 
 macro_rules! impl_trit_ops_for {
@@ -88,18 +79,18 @@ macro_rules! impl_trit_ops_for {
                 let mask = (0x03 as $t) << shift;
                 (word & !mask) | (((value & 0x03) as $t) << shift)
             }
-            
+
             fn tcons3(mut word: $t, mut word2: $t, mut carry: u8) -> ($t, u8) {
                 let mut res: $t = 0;
                 let mut pos: $t = 1;
                 let width = core::mem::size_of::<$t>() * 4;
 
                 for _ in 0..width {
-                    let a = (word & 0x03) as u8;
-                    let b = (word2 & 0x03) as u8;
+                    let a = (word & 0x03) as usize;
+                    let b = (word2 & 0x03) as usize;
 
                     res |= (carry as $t) * pos;
-                    carry = carry_1trit(a, b, carry);
+                    carry = TFULLCONS[a][b][carry as usize];
 
                     word >>= 2;
                     word2 >>= 2;
