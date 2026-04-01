@@ -71,9 +71,8 @@ impl Trit8 {
         Trit8(res)
     }
     pub fn tsum(self, other: Self) -> Self {
-        let or  = self.0 | other.0;
         let and = self.0 & other.0;
-        let res = or ^ and ^ (((and & 0x5555) << 1) | ((and & 0xAAAA) >> 1));
+        let res = self.0 ^ other.0 ^ (((and & 0x5555) << 1) | ((and & 0xAAAA) >> 1));
         Trit8(res ^ (((res & (res >> 1)) & 0x5555) * 3))
     }
     pub fn adder(self, other: Self, carry: u8) -> (Self, u8) {
