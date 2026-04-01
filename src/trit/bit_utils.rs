@@ -35,6 +35,22 @@ const TFULLCONS: [[[u8; 3]; 3]; 3] = [
     ],
 ];
 
+#[inline(always)]
+fn carry_1trit(a: u8, b: u8, c: u8) -> u8 {
+    let p = (a & 1) + (b & 1) + (c & 1);           // 正数位个数 (0~3)
+    let n = ((a >> 1) & 1) + ((b >> 1) & 1) + ((c >> 1) & 1); // 负数位个数 (0~3)
+
+    let s = p as i8 - n as i8;
+
+    if s >= 2 {
+        1
+    } else if s <= -2 {
+        2   // 代表 -1
+    } else {
+        0
+    }
+}
+
 pub fn fmt(word: u8) -> String {
     let t0 = DECODE[(word & 0x03) as usize];
     let t1 = DECODE[((word >> 2) & 0x03) as usize];
@@ -42,6 +58,21 @@ pub fn fmt(word: u8) -> String {
     let t3 = DECODE[((word >> 6) & 0x03) as usize];
     format!("{}{}{}{}", t3, t2, t1, t0)
 }
+pub fn aaa(){
+    println!("hhh");
+    for a in 0..3 {
+        for b in 0..3 {
+            for c in 0..3 {
+                let old = TFULLCONS[a][b][c];
+                let new = carry_1trit(a as u8, b as u8, c as u8);
+                assert_eq!(old, new);
+            }
+        }
+    }
+}
+
+
+
 
 
 pub trait TritOps: Sized {
@@ -81,26 +112,25 @@ macro_rules! impl_trit_ops_for {
                 (word & !mask) | (((value & 0x03) as $t) << shift)
             }
             
-            fn tcons3(mut word: $t,mut word2: $t, mut carry: u8) -> ($t, u8) {
+            fn tcons3(mut word: $t, mut word2: $t, mut carry: u8) -> ($t, u8) {
                 let mut res: $t = 0;
-                let mut shift = 0;
+                let mut pos: $t = 1;
                 let width = core::mem::size_of::<$t>() * 4;
 
                 for _ in 0..width {
-                    let a = (word & 0x03) as usize;
-                    let b = (word2 & 0x03) as usize;
+                    let a = (word & 0x03) as u8;
+                    let b = (word2 & 0x03) as u8;
 
-                    res |= (carry as $t) << shift;
-                    carry = TFULLCONS[a][b][carry as usize];
+                    res |= (carry as $t) * pos;
+                    carry = carry_1trit(a, b, carry);
 
                     word >>= 2;
                     word2 >>= 2;
-                    shift += 2;
+                    pos <<= 2;
                 }
 
                 (res, carry)
             }
-
             fn adder(word: $t, other: $t, mut carry: u8) -> ($t, u8) {
                 let mut sum: $t = 0;
                 let width = core::mem::size_of::<$t>() * 4;

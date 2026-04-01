@@ -89,6 +89,7 @@ impl Trit4 {
         (Trit4(s), c)
     }
     pub fn parall_adder(self, other: Self, carry: u8) -> (Self, u8) {
+
         let (prc, c) = TritOps::tcons3(self.0, other.0, carry);
 
         let first_sum = self.tsum(other);
