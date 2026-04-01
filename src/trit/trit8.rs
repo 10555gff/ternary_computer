@@ -37,6 +37,10 @@ impl Trit8 {
         let res=((and & 0xAAAA) >> 1) | ((or & 0x5555) << 1);
         Trit8(res)
     }
+    pub fn tmax3(self, b: Self, c: Self) -> Self {
+        self.tor(b).tor(c)
+    }
+
     pub fn tand(self, other: Self) -> Self {
         let (a, b) = (self.0, other.0);
         let res = ((a | b) & 0xAAAA) | ((a & b) & 0x5555);
@@ -48,6 +52,10 @@ impl Trit8 {
         let res=((or & 0xAAAA) >> 1) | ((and & 0x5555) << 1);
         Trit8(res)
     }
+    pub fn tmin3(self, b: Self, c: Self) -> Self {
+        self.tand(b).tand(c)
+    }
+
     pub fn txor(self, other: Self) -> Self {
         let or  = self.0 | other.0;
         let and = self.0 & other.0;
@@ -79,12 +87,14 @@ impl Trit8 {
         let (s, c) = TritOps::adder(self.0, other.0, carry);
         (Trit8(s), c)
     }
-    pub fn tmin3(self, b: Self, c: Self) -> Self {
-        self.tand(b).tand(c)
+    pub fn parall_adder(self, other: Self, carry: u8) -> (Self, u8) {
+        let (prc, c) = TritOps::tcons3(self.0, other.0, carry);
+
+        let first_sum = self.tsum(other);
+        let second_sum = first_sum.tsum(Self(prc));
+        (second_sum, c)
     }
-    pub fn tmax3(self, b: Self, c: Self) -> Self {
-        self.tor(b).tor(c)
-    }
+
     pub fn gate_core(self, other: Self, code: u8) -> Self {
         match code {
             0 => self.tcons(other), // CONS

@@ -88,9 +88,12 @@ impl Trit4 {
         let (s, c) = TritOps::adder(self.0, other.0, carry);
         (Trit4(s), c)
     }
-    pub fn adder2(self, other: Self, carry: u8) -> (Self, u8) {
-        let (s, c) = parall_adder(self.0, other.0, carry);
-        (Trit4(s), c)
+    pub fn parall_adder(self, other: Self, carry: u8) -> (Self, u8) {
+        let (prc, c) = TritOps::tcons3(self.0, other.0, carry);
+
+        let first_sum = self.tsum(other);
+        let second_sum = first_sum.tsum(Self(prc));
+        (second_sum, c)
     }
     
     pub fn gate_core(self, other: Self, code: u8) -> Self {
