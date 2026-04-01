@@ -19,12 +19,22 @@ fn main() {
 
     let a = trits!("0001");
     let b = trits!("1111");
+    let c:u8 =0;
+
+    let result = a.adder(b,c);
+    println!("Result0:{}{}",result.1,result.0);
+
+    let result1 = a.parallAdder1(b,c);
+    println!("Result1:{}{}",result1.1,result1.0);
+
+    let result2 = a.parallAdder2(b,c);
+    println!("Result2:{}{}",result2.1,result2.0);
 
 
 
-    let result1 =a.preAdder(b,0);
+//    let result1 =a.preAdder(b,1);
 
-    // println!("{}",result1);
+    // 
     // println!("{}", t.get(0));
     // println!("{}", t.get(1));
     // println!("{}", t.get(2));

@@ -46,6 +46,10 @@ impl Trit4 {
         let res=((and & 0xAA) >> 1) | ((or & 0x55) << 1);
         Trit4(res)
     }
+    pub fn tmax3(self, b: Self, c: Self) -> Self {
+        self.tor(b).tor(c)
+    }
+
     pub fn tand(self, other: Self) -> Self {
         let (a, b) = (self.0, other.0);
         let res=((a | b) & 0xAA) | ((a & b) & 0x55);
@@ -57,6 +61,10 @@ impl Trit4 {
         let res=((or & 0xAA) >> 1) | ((and & 0x55) << 1);
         Trit4(res)
     }
+    pub fn tmin3(self, b: Self, c: Self) -> Self {
+        self.tand(b).tand(c)
+    }
+
     pub fn txor(self, other: Self) -> Self {
         let or  = self.0 | other.0;
         let and = self.0 & other.0;
@@ -84,18 +92,7 @@ impl Trit4 {
         let res = self.0 ^ other.0 ^ (((and & 0x55) << 1) | ((and & 0xAA) >> 1));
         Trit4(res ^ (((res & (res >> 1)) & 0x55) * 3))
     }
-    pub fn adder(self, other: Self, carry: u8) -> (Self, u8) {
-        let (s, c) = TritOps::adder(self.0, other.0, carry);
-        (Trit4(s), c)
-    }
-    //tmin3(a,b,c) = min(min(a,b), c)
-    pub fn tmin3(self, b: Self, c: Self) -> Self {
-        self.tand(b).tand(c)
-    }
-    //tmax3(a,b,c) = max(max(a,b), c)
-    pub fn tmax3(self, b: Self, c: Self) -> Self {
-        self.tor(b).tor(c)
-    }
+    //提前算出全部进位
     pub fn tcons3(self, word2: Self, c0:u8) -> (Self, u8) {
         let a=Self::read_all(self.0);
         let b=Self::read_all(word2.0);
@@ -111,7 +108,6 @@ impl Trit4 {
         let res =c0 |((c1 & 0x03) << 2) |((c2 & 0x03) << 4) |((c3 & 0x03) << 6);
         (Trit4(res), c4)
     }
-
     //根据PreCarry直接生成SUM结果
     pub fn tsum3(self, word2: Self, preCarry: Self) -> Self{
         let a=Self::read_all(self.0);
@@ -123,38 +119,31 @@ impl Trit4 {
         let s3 = tfullsum(c[2], a[2], b[2]);
         let s4 = tfullsum(c[3], a[3], b[3]);
 
-        println!("{}{}{}{}",s4,s3,s2,s1);
+        //println!("{}{}{}{}",s4,s3,s2,s1);
         let res =(s1 & 0x03) | ((s2 & 0x03) << 2) | ((s3 & 0x03) << 4) |((s4 & 0x03) << 6);
         Trit4(res)
     }
+    pub fn adder(self, other: Self, carry: u8) -> (Self, u8) {
+        let (s, c) = TritOps::adder(self.0, other.0, carry);
+        (Trit4(s), c)
+    }
 
-
-
-
-
-
-
-
-
-    pub fn preAdder(self, other: Self, carry: u8) {
-        let (preCarry, carry)=self.tcons3(other,carry);
-        println!("preCarry:{}",preCarry);
-
+    pub fn parallAdder1(self, other: Self, carry: u8) -> (Self, u8) {
+        let (preCarry, c)=self.tcons3(other,carry);
         let fullSum=self.tsum3(other,preCarry);
-        println!("Fin:{}{}",carry, fullSum);
-
-
-
-
+        (fullSum, c)
+    }
+    pub fn parallAdder2(self, other: Self, carry: u8) -> (Self, u8) {
+        let (preCarry, c)=self.tcons3(other,carry);
+        // println!("preCarry:{}",preCarry);
 
         let firstLayoutSum = self.tsum(other);
-        println!("halfSum: {}",firstLayoutSum);
+        // println!("halfSum: {}",firstLayoutSum);
         let secondLayoutSum=firstLayoutSum.tsum(preCarry);
-        println!("Fin2:{}{}",carry,secondLayoutSum);
 
-    //     //let (s, c) = TritOps::adder(self.0, other.0, carry);
-    //     (Trit4(s), c)
+        (secondLayoutSum, c)
     }
+    
     pub fn gate_core(self, other: Self, code: u8) -> Self {
         match code {
             0 => self.tcons(other), // CONS
