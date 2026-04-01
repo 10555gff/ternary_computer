@@ -17,20 +17,14 @@ fn main() {
     // let c = trits!("0000_0000");
     // let d = trits!("+++0_+++0");
 
-    let a = trits!("T010");
-    let b = trits!("---0");
-    let c = trits!("0000");
-    let d = trits!("+++0");
+    let a = trits!("000-");
+    let b = trits!("000-");
 
 
 
-    let result1 =a.tsum(b);
-    let result2 =a.tsum(c);
-    let result3 =a.tsum(d);
+    let result1 =a.preAdder(b,2);
 
-    println!("{}",result1);
-    println!("{}",result2);
-    println!("{}",result3);
+    // println!("{}",result1);
     // println!("{}", t.get(0));
     // println!("{}", t.get(1));
     // println!("{}", t.get(2));

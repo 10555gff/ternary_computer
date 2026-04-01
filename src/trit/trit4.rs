@@ -17,6 +17,15 @@ impl Trit4 {
     pub fn toggle(&self, n:usize) ->u8 { TritOps::toggle_2bit(self.0,n) }
     pub fn swap(&self, n:usize) ->u8 { TritOps::swap_2bit(self.0,n) }
     pub fn set(&mut self,n:usize,v:u8){ self.0=TritOps::set_2bit(self.0,n,v) }
+    fn read_all(word: u8) -> [u8; 4] {
+        [
+            word & 0x03,
+            (word >> 2) & 0x03,
+            (word >> 4) & 0x03,
+            (word >> 6) & 0x03,
+        ]
+    }
+
 
     pub fn tneg(self) -> Self {
         let val = self.0;
@@ -86,6 +95,87 @@ impl Trit4 {
     //tmax3(a,b,c) = max(max(a,b), c)
     pub fn tmax3(self, b: Self, c: Self) -> Self {
         self.tor(b).tor(c)
+    }
+    pub fn tcons3(self, word2: Self, carry:u8) -> Self{
+        let a=Self::read_all(self.0);
+        let b=Self::read_all(word2.0);
+
+        println!("{}{}{}",carry,a[0],b[0]);
+
+        let c1 = tfullcons(carry, a[0], b[0]);
+        let c2 = tfullcons(   c1, a[1], b[1]);
+        let c3 = tfullcons(   c2, a[2], b[2]);
+        let c4 = tfullcons(   c3, a[3], b[3]);
+
+
+
+        println!("{}{}{}{}",c4,c3,c2,c1);
+
+
+        let res =carry |((c1 & 0x03) << 2) |((c2 & 0x03) << 4) |((c3 & 0x03) << 6);
+
+
+        Trit4(res)
+    }
+
+
+    // pub fn tsum3(self, word2: Self,mut carry:u8) -> Self{
+    //     let a=Self::read_all(self.0);
+    //     let b=Self::read_all(word2.0);
+
+
+
+    //     let c1 = tfullcons(preCarry, a[0], b[0]);
+    //     let c2 = tfullcons(c1, a[1], b[1]);
+    //     let c3 = tfullcons(c2, a[2], b[2]);
+    //     let c4 = tfullcons(c3, a[3], b[3]);
+
+
+
+    //     //println!("{}{}{}{}",c4,c3,c2,c1);
+
+    //     let res =(c1 & 0x03) | ((c2 & 0x03) << 2) |((c3 & 0x03) << 4) |((c4 & 0x03) << 6);
+
+
+    //     Trit4(res)
+    // }
+
+
+
+
+
+
+
+
+
+    pub fn preAdder(self, other: Self, carry: u8) {
+        let preCarry=self.tcons3(other,carry);
+        println!("preCarry:{}",preCarry);
+
+
+
+        let halfSum = self.tsum(other);
+        println!("halfSum: {}",halfSum);
+
+        
+
+
+
+
+        let fullSum=halfSum.tsum(preCarry);
+
+
+        println!("{}",fullSum);
+
+
+
+    //     let preCarry=tcons3(self,other,carry);
+    //     let halfSum = tsum(self,other);
+
+
+
+    //     //let (s, c) = TritOps::adder(self.0, other.0, carry);
+    //     (Trit4(s), c)
     }
     pub fn gate_core(self, other: Self, code: u8) -> Self {
         match code {

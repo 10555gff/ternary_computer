@@ -42,7 +42,14 @@ pub fn fmt(word: u8) -> String {
     let t3 = DECODE[((word >> 6) & 0x03) as usize];
     format!("{}{}{}{}", t3, t2, t1, t0)
 }
-
+pub fn tfullsum(word: u8, word2: u8, word3: u8) -> u8 {
+    let res=TFULLSUM[word as usize][word2 as usize][word3 as usize];
+    res
+}
+pub fn tfullcons(word: u8, word2: u8, word3: u8) -> u8 {
+    let res=TFULLCONS[word as usize][word2 as usize][word3 as usize];
+    res
+}
 pub trait TritOps: Sized {
     fn read_2bit(word: Self, n: usize) -> u8;
     fn clear_2bit(word: Self, n: usize) -> Self;
