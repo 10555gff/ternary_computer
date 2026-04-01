@@ -17,12 +17,12 @@ fn main() {
     // let c = trits!("0000_0000");
     // let d = trits!("+++0_+++0");
 
-    let a = trits!("000-");
-    let b = trits!("000-");
+    let a = trits!("0001");
+    let b = trits!("1111");
 
 
 
-    let result1 =a.preAdder(b,2);
+    let result1 =a.preAdder(b,0);
 
     // println!("{}",result1);
     // println!("{}", t.get(0));

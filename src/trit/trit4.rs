@@ -96,49 +96,37 @@ impl Trit4 {
     pub fn tmax3(self, b: Self, c: Self) -> Self {
         self.tor(b).tor(c)
     }
-    pub fn tcons3(self, word2: Self, carry:u8) -> Self{
+    pub fn tcons3(self, word2: Self, c0:u8) -> (Self, u8) {
         let a=Self::read_all(self.0);
         let b=Self::read_all(word2.0);
 
-        println!("{}{}{}",carry,a[0],b[0]);
+        let c1 = tfullcons(c0, a[0], b[0]);
+        let c2 = tfullcons(c1, a[1], b[1]);
+        let c3 = tfullcons(c2, a[2], b[2]);
+        let c4 = tfullcons(c3, a[3], b[3]);
 
-        let c1 = tfullcons(carry, a[0], b[0]);
-        let c2 = tfullcons(   c1, a[1], b[1]);
-        let c3 = tfullcons(   c2, a[2], b[2]);
-        let c4 = tfullcons(   c3, a[3], b[3]);
+        // println!("{}{}{}{}",c4,c3,c2,c1);
+        // println!("c4:{}",c4);
 
-
-
-        println!("{}{}{}{}",c4,c3,c2,c1);
-
-
-        let res =carry |((c1 & 0x03) << 2) |((c2 & 0x03) << 4) |((c3 & 0x03) << 6);
-
-
-        Trit4(res)
+        let res =c0 |((c1 & 0x03) << 2) |((c2 & 0x03) << 4) |((c3 & 0x03) << 6);
+        (Trit4(res), c4)
     }
 
+    //根据PreCarry直接生成SUM结果
+    pub fn tsum3(self, word2: Self, preCarry: Self) -> Self{
+        let a=Self::read_all(self.0);
+        let b=Self::read_all(word2.0);
+        let c=Self::read_all(preCarry.0);
 
-    // pub fn tsum3(self, word2: Self,mut carry:u8) -> Self{
-    //     let a=Self::read_all(self.0);
-    //     let b=Self::read_all(word2.0);
+        let s1 = tfullsum(c[0], a[0], b[0]);
+        let s2 = tfullsum(c[1], a[1], b[1]);
+        let s3 = tfullsum(c[2], a[2], b[2]);
+        let s4 = tfullsum(c[3], a[3], b[3]);
 
-
-
-    //     let c1 = tfullcons(preCarry, a[0], b[0]);
-    //     let c2 = tfullcons(c1, a[1], b[1]);
-    //     let c3 = tfullcons(c2, a[2], b[2]);
-    //     let c4 = tfullcons(c3, a[3], b[3]);
-
-
-
-    //     //println!("{}{}{}{}",c4,c3,c2,c1);
-
-    //     let res =(c1 & 0x03) | ((c2 & 0x03) << 2) |((c3 & 0x03) << 4) |((c4 & 0x03) << 6);
-
-
-    //     Trit4(res)
-    // }
+        println!("{}{}{}{}",s4,s3,s2,s1);
+        let res =(s1 & 0x03) | ((s2 & 0x03) << 2) | ((s3 & 0x03) << 4) |((s4 & 0x03) << 6);
+        Trit4(res)
+    }
 
 
 
@@ -149,30 +137,20 @@ impl Trit4 {
 
 
     pub fn preAdder(self, other: Self, carry: u8) {
-        let preCarry=self.tcons3(other,carry);
+        let (preCarry, carry)=self.tcons3(other,carry);
         println!("preCarry:{}",preCarry);
 
-
-
-        let halfSum = self.tsum(other);
-        println!("halfSum: {}",halfSum);
-
-        
+        let fullSum=self.tsum3(other,preCarry);
+        println!("Fin:{}{}",carry, fullSum);
 
 
 
 
-        let fullSum=halfSum.tsum(preCarry);
 
-
-        println!("{}",fullSum);
-
-
-
-    //     let preCarry=tcons3(self,other,carry);
-    //     let halfSum = tsum(self,other);
-
-
+        let firstLayoutSum = self.tsum(other);
+        println!("halfSum: {}",firstLayoutSum);
+        let secondLayoutSum=firstLayoutSum.tsum(preCarry);
+        println!("Fin2:{}{}",carry,secondLayoutSum);
 
     //     //let (s, c) = TritOps::adder(self.0, other.0, carry);
     //     (Trit4(s), c)
