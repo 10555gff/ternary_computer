@@ -82,21 +82,20 @@ macro_rules! impl_trit_ops_for {
 
             fn tcons3(mut word: $t, mut word2: $t, mut carry: u8) -> ($t, u8) {
                 let mut res: $t = 0;
-                let mut pos: $t = 1;
+                let mut shift = 0;
                 let width = core::mem::size_of::<$t>() * 4;
 
                 for _ in 0..width {
                     let a = (word & 0x03) as usize;
                     let b = (word2 & 0x03) as usize;
 
-                    res |= (carry as $t) * pos;
+                    res |= (carry as $t) << shift;
                     carry = TFULLCONS[a][b][carry as usize];
 
                     word >>= 2;
                     word2 >>= 2;
-                    pos <<= 2;
+                    shift += 2;
                 }
-
                 (res, carry)
             }
             fn adder(word: $t, other: $t, mut carry: u8) -> ($t, u8) {
