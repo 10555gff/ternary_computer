@@ -60,6 +60,16 @@ impl Trit16 {
         let res=((or & (or << 1)) & 0xAAAA_AAAA) | ((and | (and >> 1)) & 0x5555_5555);
         Trit16(res)
     }
+    pub fn tany(self, other: Self) -> Self {
+        let or= self.0 | other.0;
+        let res = or ^ (((or & (or >> 1)) & 0x5555_5555) * 3);
+        Trit16(res)
+    }
+    pub fn tnany(self, other: Self) -> Self {
+        let nor= !(self.0 | other.0);
+        let res = nor ^ (((nor & (nor >> 1)) & 0x5555_5555) * 3);
+        Trit16(res)
+    }
     pub fn adder(self, other: Self, carry: u8) -> (Self, u8) {
         let (s, c) = TritOps::adder(self.0, other.0, carry);
         (Trit16(s), c)

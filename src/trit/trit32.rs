@@ -67,6 +67,16 @@ impl Trit32 {
               | ((and | (and >> 1)) & 0x5555_5555_5555_5555);
         Trit32(res)
     }
+    pub fn tany(self, other: Self) -> Self {
+        let or= self.0 | other.0;
+        let res = or ^ (((or & (or >> 1)) & 0x5555_5555_5555_5555) * 3);
+        Trit32(res)
+    }
+    pub fn tnany(self, other: Self) -> Self {
+        let nor= !(self.0 | other.0);
+        let res = nor ^ (((nor & (nor >> 1)) & 0x5555_5555_5555_5555) * 3);
+        Trit32(res)
+    }
     pub fn adder(self, other: Self, carry: u8) -> (Self, u8) {
         let (s, c) = TritOps::adder(self.0, other.0, carry);
         (Trit32(s), c)

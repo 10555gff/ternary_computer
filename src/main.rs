@@ -2,56 +2,35 @@ use trit_macro::trits;
 use ternary_arithmetic::trit::{Trit4,Trit8,Trit16,Trit32};
 
 fn main() {
-    let a = trits!("TTTT");
-    let b = trits!("TTTT");
-    let result1 =a.adder(b,2);
-    println!("{}_{}",result1.1,result1.0);    
+    // let a = trits!("T010_T010_T010_T010_T010_T010_T010_T010");
+    // let b = trits!("---0_---0_---0_---0_---0_---0_---0_---0");
+    // let c = trits!("0000_0000_0000_0000_0000_0000_0000_0000");
+    // let d = trits!("+++0_+++0_+++0_+++0_+++0_+++0_+++0_+++0");
 
-    let a = trits!("0111");
-    let b = trits!("0111");
-    let result1 =a.adder(b,0);
-    println!("{}_{}",result1.1,result1.0); 
+    let a = trits!("T010_T010_T010_T010");
+    let b = trits!("---0_---0_---0_---0");
+    let c = trits!("0000_0000_0000_0000");
+    let d = trits!("+++0_+++0_+++0_+++0");
 
-    let a = trits!("0111");
-    let b = trits!("0T00");
-    let result1 =a.adder(b,1);
-    println!("{}_{}",result1.1,result1.0); 
+    // let a = trits!("T010_T010");
+    // let b = trits!("---0_---0");
+    // let c = trits!("0000_0000");
+    // let d = trits!("+++0_+++0");
 
-    let a = trits!("1111_1111");
-    let b = trits!("1000_0000");
-    let result1 =a.adder(b,0);
-    println!("{}_{}",result1.1,result1.0); 
-
-
+    // let a = trits!("T010");
+    // let b = trits!("---0");
+    // let c = trits!("0000");
+    // let d = trits!("+++0");
 
 
-    let a = trits!("1111");
-    let b = trits!("0001");
-    let result1 =a.adder(b,0);
-    println!("{}_{}",result1.1,result1.0);    
 
-    let a = trits!("1111_1111");
-    let b = trits!("0000_0001");
-    let result1 =a.adder(b,0);
-    println!("{}_{}",result1.1,result1.0);    
+    let result1 =a.tnany(b);
+    let result2 =a.tnany(c);
+    let result3 =a.tnany(d);
 
-
-    let a = trits!("1111_1111_1111_1111");
-    let b = trits!("0000_000_0000_0001");
-    let result1 =a.adder(b,0);
-    println!("{}_{}",result1.1,result1.0);    
-
-
-    let a = trits!("1111_1111_1111_1111_1111_1111_1111_1111");
-    let b = trits!("0000_000_0000_0000_0000_000_0000_0001");
-    let result1 =a.adder(b,0);
-    println!("{}_{}",result1.1,result1.0);   
-
-    //let t = trits!("T010_TTTT");
-    // let t2 = trits!("T010_TTTT_1100_TTTT");
-    // let t3 = trits!("T010_TTTT_1100_TTTT_11TT_1111_0000_1111");
-
-
+    println!("{}",result1);
+    println!("{}",result2);
+    println!("{}",result3);
     // println!("{}", t.get(0));
     // println!("{}", t.get(1));
     // println!("{}", t.get(2));
