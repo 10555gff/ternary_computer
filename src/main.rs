@@ -24,13 +24,8 @@ fn main() {
     let result = a.adder(b,c);
     println!("Result0:{}{}",result.1,result.0);
 
-    let result1 = a.parall_adder1(b,c);
+    let result1 = a.adder2(b,c);
     println!("Result1:{}{}",result1.1,result1.0);
-
-    let result2 = a.parall_adder2(b,c);
-    println!("Result2:{}{}",result2.1,result2.0);
-
-
 
 //    let result1 =a.preAdder(b,1);
 
