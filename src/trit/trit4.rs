@@ -103,16 +103,14 @@ impl Trit4 {
         let c4 = tfullcons(c3, a[3], b[3]);
 
         // println!("{}{}{}{}",c4,c3,c2,c1);
-        // println!("c4:{}",c4);
-
-        let res =c0 |((c1 & 0x03) << 2) |((c2 & 0x03) << 4) |((c3 & 0x03) << 6);
+        let res =c0 | (c1 << 2) | (c2 << 4) | (c3 << 6);
         (Trit4(res), c4)
     }
     //根据PreCarry直接生成SUM结果
-    pub fn tsum3(self, word2: Self, preCarry: Self) -> Self{
+    pub fn tsum3(self, word2: Self, pre_carry: Self) -> Self{
         let a=Self::read_all(self.0);
         let b=Self::read_all(word2.0);
-        let c=Self::read_all(preCarry.0);
+        let c=Self::read_all(pre_carry.0);
 
         let s1 = tfullsum(c[0], a[0], b[0]);
         let s2 = tfullsum(c[1], a[1], b[1]);
@@ -120,28 +118,24 @@ impl Trit4 {
         let s4 = tfullsum(c[3], a[3], b[3]);
 
         //println!("{}{}{}{}",s4,s3,s2,s1);
-        let res =(s1 & 0x03) | ((s2 & 0x03) << 2) | ((s3 & 0x03) << 4) |((s4 & 0x03) << 6);
+        let res =s1 | (s2 << 2) | (s3 << 4) | (s4 << 6);
         Trit4(res)
     }
     pub fn adder(self, other: Self, carry: u8) -> (Self, u8) {
         let (s, c) = TritOps::adder(self.0, other.0, carry);
         (Trit4(s), c)
     }
-
-    pub fn parallAdder1(self, other: Self, carry: u8) -> (Self, u8) {
-        let (preCarry, c)=self.tcons3(other,carry);
-        let fullSum=self.tsum3(other,preCarry);
-        (fullSum, c)
+    pub fn parall_adder1(self, other: Self, carry: u8) -> (Self, u8) {
+        let (pre_carry, c) = self.tcons3(other,carry);
+        let full_sum = self.tsum3(other,pre_carry);
+        (full_sum , c)
     }
-    pub fn parallAdder2(self, other: Self, carry: u8) -> (Self, u8) {
-        let (preCarry, c)=self.tcons3(other,carry);
-        // println!("preCarry:{}",preCarry);
+    pub fn parall_adder2(self, other: Self, carry: u8) -> (Self, u8) {
+        let (pre_carry, c) = self.tcons3(other,carry);
 
-        let firstLayoutSum = self.tsum(other);
-        // println!("halfSum: {}",firstLayoutSum);
-        let secondLayoutSum=firstLayoutSum.tsum(preCarry);
-
-        (secondLayoutSum, c)
+        let first_sum = self.tsum(other);
+        let second_sum = first_sum.tsum(pre_carry);
+        (second_sum, c)
     }
     
     pub fn gate_core(self, other: Self, code: u8) -> Self {

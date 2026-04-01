@@ -17,17 +17,17 @@ fn main() {
     // let c = trits!("0000_0000");
     // let d = trits!("+++0_+++0");
 
-    let a = trits!("0001");
-    let b = trits!("1111");
-    let c:u8 =0;
+    let a = trits!("----");
+    let b = trits!("----");
+    let c:u8 =2;
 
     let result = a.adder(b,c);
     println!("Result0:{}{}",result.1,result.0);
 
-    let result1 = a.parallAdder1(b,c);
+    let result1 = a.parall_adder1(b,c);
     println!("Result1:{}{}",result1.1,result1.0);
 
-    let result2 = a.parallAdder2(b,c);
+    let result2 = a.parall_adder2(b,c);
     println!("Result2:{}{}",result2.1,result2.0);
 
 
