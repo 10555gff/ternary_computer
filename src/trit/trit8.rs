@@ -25,9 +25,6 @@ impl Trit8 {
         let res = ((val & MASK_ODD) >> 1) | ((val & MASK_EVEN) << 1);
         Trit8(res)
     }
-    pub fn tcons(self, other: Self) -> Self {
-        Trit8(self.0 & other.0)
-    }
     pub fn tor(self, other: Self) -> Self {
         let (a, b) = (self.0, other.0);
         let res = ((a & b) & MASK_ODD) | ((a | b) & MASK_EVEN);
@@ -42,7 +39,6 @@ impl Trit8 {
     pub fn tmax3(self, b: Self, c: Self) -> Self {
         self.tor(b).tor(c)
     }
-
     pub fn tand(self, other: Self) -> Self {
         let (a, b) = (self.0, other.0);
         let res = ((a | b) & MASK_ODD) | ((a & b) & MASK_EVEN);
@@ -57,7 +53,6 @@ impl Trit8 {
     pub fn tmin3(self, b: Self, c: Self) -> Self {
         self.tand(b).tand(c)
     }
-
     pub fn txor(self, other: Self) -> Self {
         let or  = self.0 | other.0;
         let and = self.0 & other.0;
@@ -68,6 +63,14 @@ impl Trit8 {
         let or  = self.0 | other.0;
         let and = self.0 & other.0;
         let res=((or & (or << 1)) & MASK_ODD) | ((and | (and >> 1)) & MASK_EVEN);
+        Trit8(res)
+    }
+    pub fn tcons(self, other: Self) -> Self {
+        Trit8(self.0 & other.0)
+    }
+    pub fn tncons(self, other: Self) -> Self {
+        let and = self.0 & other.0;
+        let res = ((and << 1) & MASK_ODD) | ((and >> 1) & MASK_EVEN);
         Trit8(res)
     }
     pub fn tany(self, other: Self) -> Self {
