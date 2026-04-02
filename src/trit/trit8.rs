@@ -1,11 +1,17 @@
 use std::fmt;
 use super::bit_utils::*;
-use core::ops::{Shl, Shr, Neg, Not, BitAnd, BitOr, BitXor};
+use core::ops::{Shl, Shr, Neg, Not, BitAnd, BitOr, BitXor, Add, Sub};
 
 #[derive(Clone, Copy, Debug)]
 pub struct Trit8(pub u16);
 const MASK_EVEN: u16 = 0x5555;
 const MASK_ODD:  u16 = 0xAAAA;
+
+#[derive(Clone, Copy, Debug)]
+pub struct TritResult {
+    pub carry: u8,
+    pub sum: Trit8,
+}
 
 impl Trit8 {
     pub const ZERO: Self = Trit8(0x0000);
@@ -126,6 +132,12 @@ impl fmt::Display for Trit8 {
         write!(f, "Trit8[{}{}]", be,le)
     }
 }
+impl fmt::Display for TritResult {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "carry: {}, sum: {}", self.carry, self.sum)
+    }
+}
+
 impl Shl<usize> for Trit8 {
     type Output = Self;
 
@@ -179,5 +191,14 @@ impl BitXor<Trit8> for Trit8 {
 
     fn bitxor(self, rhs: Trit8) -> Self::Output {
         self.txor(rhs)
+    }
+}
+
+impl Add<Trit8> for Trit8 {
+    type Output = TritResult;
+
+    fn add(self, rhs: Trit8) -> Self::Output {
+        let (s, carry) = TritOps::adder(self.0, rhs.0, 0);
+        TritResult { carry, sum: Trit8(s) }
     }
 }

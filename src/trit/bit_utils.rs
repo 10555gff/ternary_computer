@@ -49,8 +49,8 @@ pub trait TritOps: Sized {
     fn toggle_2bit(word: Self, n: usize) -> Self;
     fn swap_2bit(word: Self, n: usize) -> Self;
     fn set_2bit(word: Self, n: usize, value: u8) -> Self;
-    fn tcons3(word: Self, other: Self, carry: u8) -> (Self, u8);
     fn adder(word: Self, other: Self, carry: u8) -> (Self, u8);
+    fn tcons3(word: Self, word2: Self, carry: u8) -> (Self, u8);
 }
 
 macro_rules! impl_trit_ops_for {
@@ -128,5 +128,4 @@ impl_trit_ops_for!(u8);
 impl_trit_ops_for!(u16);
 impl_trit_ops_for!(u32);
 impl_trit_ops_for!(u64);
-
 
