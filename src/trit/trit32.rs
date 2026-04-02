@@ -4,6 +4,8 @@ use core::ops::{Shl, Shr, Neg, Not, BitAnd, BitOr, BitXor};
 
 #[derive(Clone, Copy, Debug)]
 pub struct Trit32(pub u64);
+const MASK_EVEN: u64 = 0x5555_5555_5555_5555;
+const MASK_ODD:  u64 = 0xAAAA_AAAA_AAAA_AAAA;
 
 impl Trit32 {
     pub const ZERO: Self = Trit32(0x0000_0000_0000_0000);
@@ -20,8 +22,7 @@ impl Trit32 {
 
     pub fn tneg(self) -> Self {
         let val = self.0;
-        let res = ((val & 0xAAAA_AAAA_AAAA_AAAA) >> 1)
-                | ((val & 0x5555_5555_5555_5555) << 1);
+        let res = ((val & MASK_ODD) >> 1) | ((val & MASK_EVEN) << 1);
         Trit32(res)
     }
     pub fn tcons(self, other: Self) -> Self {
@@ -29,15 +30,13 @@ impl Trit32 {
     }
     pub fn tor(self, other: Self) -> Self {
         let (a, b) = (self.0, other.0);
-        let res = ((a & b) & 0xAAAA_AAAA_AAAA_AAAA)
-                | ((a | b) & 0x5555_5555_5555_5555);
+        let res = ((a & b) & MASK_ODD) | ((a | b) & MASK_EVEN);
         Trit32(res)
     }
     pub fn tnor(self, other: Self) -> Self {
         let or  = self.0 | other.0;
         let and = self.0 & other.0;
-        let res=((and & 0xAAAA_AAAA_AAAA_AAAA) >> 1) 
-                   | ((or & 0x5555_5555_5555_5555) << 1);
+        let res=((and & MASK_ODD) >> 1) | ((or & MASK_EVEN) << 1);
         Trit32(res)
     }
     pub fn tmax3(self, b: Self, c: Self) -> Self {
@@ -46,15 +45,13 @@ impl Trit32 {
 
     pub fn tand(self, other: Self) -> Self {
         let (a, b) = (self.0, other.0);
-        let res = ((a | b) & 0xAAAA_AAAA_AAAA_AAAA)
-                | ((a & b) & 0x5555_5555_5555_5555);
+        let res = ((a | b) & MASK_ODD) | ((a & b) & MASK_EVEN);
         Trit32(res)
     }
     pub fn tnand(self, other: Self) -> Self {
         let or  = self.0 | other.0;
         let and = self.0 & other.0;
-        let res=((or & 0xAAAA_AAAA_AAAA_AAAA) >> 1) 
-                   | ((and & 0x5555_5555_5555_5555) << 1);
+        let res=((or & MASK_ODD) >> 1) | ((and & MASK_EVEN) << 1);
         Trit32(res)
     }
     pub fn tmin3(self, b: Self, c: Self) -> Self {
@@ -64,31 +61,29 @@ impl Trit32 {
     pub fn txor(self, other: Self) -> Self {
         let or  = self.0 | other.0;
         let and = self.0 & other.0;
-        let res=((and | (and << 1)) & 0xAAAA_AAAA_AAAA_AAAA) 
-              | ((or & (or >> 1)) & 0x5555_5555_5555_5555);
+        let res=((and | (and << 1)) & MASK_ODD) | ((or & (or >> 1)) & MASK_EVEN);
         Trit32(res)
     }
     pub fn tnxor(self, other: Self) -> Self {
         let or  = self.0 | other.0;
         let and = self.0 & other.0;
-        let res=((or & (or << 1)) & 0xAAAA_AAAA_AAAA_AAAA) 
-              | ((and | (and >> 1)) & 0x5555_5555_5555_5555);
+        let res=((or & (or << 1)) & MASK_ODD) | ((and | (and >> 1)) & MASK_EVEN);
         Trit32(res)
     }
     pub fn tany(self, other: Self) -> Self {
         let or= self.0 | other.0;
-        let res = or ^ (((or & (or >> 1)) & 0x5555_5555_5555_5555) * 3);
+        let res = or ^ (((or & (or >> 1)) & MASK_EVEN) * 3);
         Trit32(res)
     }
     pub fn tnany(self, other: Self) -> Self {
         let nor= !(self.0 | other.0);
-        let res = nor ^ (((nor & (nor >> 1)) & 0x5555_5555_5555_5555) * 3);
+        let res = nor ^ (((nor & (nor >> 1)) & MASK_EVEN) * 3);
         Trit32(res)
     }
     pub fn tsum(self, other: Self) -> Self {
         let and = self.0 & other.0;
-        let res = self.0 ^ other.0 ^ (((and & 0x5555_5555_5555_5555) << 1) | ((and & 0xAAAA_AAAA_AAAA_AAAA) >> 1));
-        Trit32(res ^ (((res & (res >> 1)) & 0x5555_5555_5555_5555) * 3))
+        let res = self.0 ^ other.0 ^ (((and & MASK_ODD) >> 1) | ((and & MASK_EVEN) << 1));
+        Trit32(res ^ (((res & (res >> 1)) & MASK_EVEN) * 3))
     }
     pub fn adder(self, other: Self, carry: u8) -> (Self, u8) {
         let (s, c) = TritOps::adder(self.0, other.0, carry);
