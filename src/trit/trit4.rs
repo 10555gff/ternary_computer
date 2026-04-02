@@ -1,7 +1,7 @@
 use std::fmt;
 use crate::trit::Trit8;
 use super::bit_utils::*;
-use core::ops::{Shl, Shr, Neg, Not, BitAnd, BitOr, BitXor, Add, Sub};
+use core::ops::{Shl, Shr, Neg, Not, BitAnd, BitOr, BitXor, Add, Sub, Mul};
 use core::cmp::{Ordering, PartialOrd};
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -227,6 +227,14 @@ impl Sub<Trit4> for Trit4 {
         let other = -rhs;
         let (s, carry) = TritOps::adder(self.0, other.0, 0);
         TritResult { carry, sum: Trit4(s) }
+    }
+}
+
+impl Mul<Trit4> for Trit4 {
+    type Output = Trit8;
+
+    fn mul(self, rhs: Trit4) -> Self::Output {
+        self.mul(rhs)
     }
 }
 

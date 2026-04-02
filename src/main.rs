@@ -20,7 +20,7 @@ fn main() {
     // let a = trits!("1101");
     // let b = trits!("1011");
 
-    let result = a.mul(b);
+    let result = a * b;
     println!("fff:{}",result);
 
 }
