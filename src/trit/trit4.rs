@@ -103,13 +103,16 @@ impl Trit4 {
     
     pub fn gate_core(self, other: Self, code: u8) -> Self {
         match code {
-            0 => self.tcons(other), // CONS
-            1 => self.tand(other),  // MIN
-            2 => self.tor(other),   // MAX
-            3 => self.txor(other),  // XOR
-            4 => self.tnand(other), // NAND
-            5 => self.tnor(other),  // NOR
-            6 => self.tnxor(other), // NXOR
+            0 => self.tand(other),  // MIN
+            1 => self.tor(other),   // MAX
+            2 => self.txor(other),  // XOR
+            3 => self.tnand(other), // NAND
+            4 => self.tnor(other),  // NOR
+            5 => self.tnxor(other), // NXOR
+            6 => self.tcons(other), // CONS
+            7 => self.tncons(other),// NCONS
+            8 => self.tany(other),  // ANY
+            9 => self.tsum(other),  // SUM
             _ => unsafe { core::hint::unreachable_unchecked() }
         }
     }
