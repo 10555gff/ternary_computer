@@ -69,4 +69,40 @@ mod tests {
         assert_eq!(format!("{}", t0), "Trit32[T010TTTT_1100TTTT_11TT1111_00001111]");
     }
 
+    #[test]
+    fn test_cmp_exhaustive_valid() {
+        for a0 in 0..3 {
+            for a1 in 0..3 {
+                for a2 in 0..3 {
+                    for a3 in 0..3 {
+                        let x = (a3 << 6) | (a2 << 4) | (a1 << 2) | a0;
+                        let a = Trit4(x);
+
+                        for b0 in 0..3 {
+                            for b1 in 0..3 {
+                                for b2 in 0..3 {
+                                    for b3 in 0..3 {
+                                        let y = (b3 << 6) | (b2 << 4) | (b1 << 2) | b0;
+                                        let b = Trit4(y);
+
+                                        let ord1 = a.cmp(&b);
+                                        let ord2 = b.cmp(&a);
+
+                                        // 反对称性
+                                        assert_eq!(ord1, ord2.reverse());
+
+                                        // 自反性
+                                        if x == y {
+                                            assert_eq!(ord1, std::cmp::Ordering::Equal);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
 }

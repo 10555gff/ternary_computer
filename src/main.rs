@@ -16,8 +16,8 @@ fn main() {
     // let c = trits!("0000_0000_0000_0000");
     // let d = trits!("+++0_+++0_+++0_+++0");
 
-    let a = trits!("T010_T010");
-    let b = trits!("1010_T010");
+    let a = trits!("1010_T010");
+    let b = trits!("0010_T010");
     // let c = trits!("0000_0000");
     // let d = trits!("+++0_+++0");
 
