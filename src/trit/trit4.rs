@@ -1,4 +1,6 @@
 use std::fmt;
+use crate::trit::Trit8;
+
 use super::bit_utils::*;
 use core::ops::{Shl, Shr, Neg, Not, BitAnd, BitOr, BitXor, Add, Sub};
 use core::cmp::{Ordering, PartialOrd};
@@ -106,6 +108,40 @@ impl Trit4 {
         let first_sum = self.tsum(other);
         let second_sum = first_sum.tsum(Self(prc));
         (second_sum, c)
+    }
+
+    pub fn mul(self, other: Self){
+        let mut pos_part=Trit8(self.0 as u16);
+        let mut neg_part=-pos_part;
+
+        let mut part_product=Trit8::ZERO;
+
+        // println!("{}",pos_part);
+        // pos_part=pos_part<<1;
+        // println!("{}",pos_part);
+
+        // pos_part=pos_part<<1;
+        // println!("{}",pos_part);
+
+
+        for i in 0..4 {
+            let b = other.get(i);
+            if b==1 {
+                let res = part_product + pos_part;
+                part_product= res.sum;
+
+                println!("ppp:{} i:{}",pos_part,i);
+            }else if b==2{
+                let res = part_product + neg_part;
+                part_product= res.sum;
+
+                println!("vv:{} i:{}",neg_part,i);
+            }
+            pos_part = pos_part<<1;
+            neg_part = neg_part<<1;
+        }
+        println!("rr:{}",part_product);
+
     }
     
     pub fn gate_core(self, other: Self, code: u8) -> Self {
