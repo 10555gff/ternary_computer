@@ -1,6 +1,5 @@
 use std::fmt;
 use crate::trit::Trit8;
-
 use super::bit_utils::*;
 use core::ops::{Shl, Shr, Neg, Not, BitAnd, BitOr, BitXor, Add, Sub};
 use core::cmp::{Ordering, PartialOrd};
@@ -116,20 +115,16 @@ impl Trit4 {
         let mut part_product=Trit8::ZERO;
 
         for i in 0..4 {
-            match other.get(i) {
-                1 => {
-                    part_product = (part_product + pos_part).sum;
-                    println!("ppp:{} i:{}",pos_part,i);
-                }
-                2 => {
-                    part_product = (part_product + neg_part).sum;
-                    println!("vv:{} i:{}",neg_part,i);
-                }
-                _ => {}
+            let n = other.get(i);
+            if n == 1 {
+                part_product = (part_product + pos_part).sum;
+            } else if n == 2 {
+                part_product = (part_product + neg_part).sum;
             }
             pos_part = pos_part<<1;
             neg_part = neg_part<<1;
         }
+
         part_product
     }
     
