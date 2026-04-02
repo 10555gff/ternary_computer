@@ -35,6 +35,11 @@ const TFULLCONS: [[[u8; 3]; 3]; 3] = [
     ],
 ];
 
+#[inline]
+pub fn val(x: u8) -> i8 {
+    [0, 1, -1][x as usize]
+}
+
 pub fn fmt(word: u8) -> String {
     let t0 = DECODE[(word & 0x03) as usize];
     let t1 = DECODE[((word >> 2) & 0x03) as usize];

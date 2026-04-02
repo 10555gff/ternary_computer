@@ -1,32 +1,48 @@
 use trit_macro::trits;
 use ternary_arithmetic::trit::{Trit4,Trit8,Trit16,Trit32};
-use ternary_arithmetic::ternary_cpu::asm_utils;
+
+// const ORDER: [i8; 3] = [0, 1, -1];
+// const ORDER2: [u8; 3] = [1, 2, 0];
 
 
-pub static PROGRAM0: &[&str] = &[
-    "0000_0000_TTT0",// LOAD REG0
-    "0100_00TT_00T0",// COPY REG0,REG1
+fn main() {
+    // let a = trits!("T010_T010_T010_T010_T010_T010_T010_T010");
+    // let b = trits!("---0_---0_---0_---0_---0_---0_---0_---0");
+    // let c = trits!("0000_0000_0000_0000_0000_0000_0000_0000");
+    // let d = trits!("+++0_+++0_+++0_+++0_+++0_+++0_+++0_+++0");
 
-    "0000_0000_0000",// LOAD REG0
-    "0100_00TT_00T1",// COPY REG0,REG2
+    // let a = trits!("T010_T010_T010_T010");
+    // let b = trits!("---0_---0_---0_---0");
+    // let c = trits!("0000_0000_0000_0000");
+    // let d = trits!("+++0_+++0_+++0_+++0");
 
-    "0000_0000_1110",// LOAD REG0
-    "0100_00TT_000T",// COPY REG0,REG3
+    let a = trits!("T010_T010");
+    let b = trits!("1010_T010");
+    // let c = trits!("0000_0000");
+    // let d = trits!("+++0_+++0");
 
-    "0000_0000_T010",// LOAD REG0
+    // let t1 = trits!("++-0");
+    // let t2 = trits!("++--");
+    let ord = a.cmp(&b);
+    println!("{:?}",ord);
+    // let c:u8 =2;
 
-    "1T00_00T0_00TT",// CALC REG1,calctype
-    "1T00_00T1_00TT",// CALC REG2,calctype
-    "1T00_000T_00TT",// CALC REG3,calctype
+    // let result = a.adder(b,c);
+    // println!("Result0:{}{}",result.1,result.0);
+    
 
-    // "1T00_00T0_00T0",// CALC REG1,calctype
-    // "1T00_00T1_00T0",// CALC REG2,calctype
-    // "1T00_000T_00T0",// CALC REG3,calctype
-];
+    // for i in (0..4).rev() {
+    //     let a = t1.get(i);
+    //     let b = t2.get(i);
+    //                 let k=val(a);
+    //         println!("Result:{}",k);
+    //     if a != b {
 
-fn main() -> std::io::Result<()> {
-    asm_utils::write_tasm(PROGRAM0)?;
-    asm_utils::write_tbin()?;
-    asm_utils::run_from_tbin()?;
-    Ok(())
+    //         //return
+    //     }
+    //     println!("Result:{}{}",a,b);
+    // }
+
+
+
 }

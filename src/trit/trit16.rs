@@ -1,8 +1,9 @@
 use std::fmt;
 use super::bit_utils::*;
 use core::ops::{Shl, Shr, Neg, Not, BitAnd, BitOr, BitXor, Add, Sub};
+use core::cmp::{Ordering, PartialOrd};
 
-#[derive(Clone, Copy, Debug)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct Trit16(pub u32);
 const MASK_EVEN: u32 = 0x5555_5555;
 const MASK_ODD:  u32 = 0xAAAA_AAAA;
@@ -213,5 +214,25 @@ impl Sub<Trit16> for Trit16 {
         let other = -rhs;
         let (s, carry) = TritOps::adder(self.0, other.0, 0);
         TritResult { carry, sum: Trit16(s) }
+    }
+}
+
+impl PartialOrd for Trit16 {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        Some(self.cmp(other))
+    }
+}
+
+impl Ord for Trit16 {
+    fn cmp(&self, other: &Self) -> Ordering {
+        for i in (0..16).rev() {
+            let a = self.get(i);
+            let b = other.get(i);
+
+            if a != b {
+                return val(a).cmp(&val(b));
+            }
+        }
+        Ordering::Equal
     }
 }

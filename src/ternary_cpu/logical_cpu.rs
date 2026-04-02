@@ -45,11 +45,11 @@ pub struct T80CPU {
 
 impl Register {
     pub fn new() -> Self {
-        Self { regs: [Trit4::new(0); 9] }
+        Self { regs: [Trit4::ZERO; 9] }
     }
 
     pub fn write_u8(&mut self, idx: usize, val: u8) {
-        self.regs[idx] =Trit4::new(val);
+        self.regs[idx] =Trit4(val);
     }
 }
 
@@ -97,7 +97,7 @@ impl T80CPU {
             //立即数模式，val 是直接加载到目标寄存器的 Trit4 值
             0x00 => Instruction::Imm {
                 dst: Self::decode_address(inst[1]) as usize,
-                val: Trit4::new(inst[2]),
+                val: Trit4(inst[2]),
             },
             //复制模式，src 和 dst 分别表示源寄存器和目标寄存器的索引
             0x10 => Instruction::Copy {
@@ -112,7 +112,8 @@ impl T80CPU {
             //条件跳转模式，根据 jump_type 和 reg3寄存器值 决定是否跳转
             0x40 => Instruction::Condition {
                 jtype: Self::decode_address(inst[1]),
-                offset: Trit4::new(inst[2]).to_dec() as isize,
+                offset:0,
+                //offset: Trit4(inst[2]).to_dec() as isize,
             },
             //停止指令，表示 CPU 执行停止
             0xFF => Instruction::Halt,
