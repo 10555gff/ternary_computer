@@ -1,90 +1,30 @@
 use trit_macro::trits;
 use ternary_arithmetic::trit::{Trit4,Trit8,Trit16,Trit32};
+use ternary_arithmetic::ternary_cpu::asm_utils;
+
+
+pub static PROGRAM0: &[&str] = &[
+    "0000_0000_TTT0",// LOAD REG0
+    "0100_00TT_00T0",// COPY REG0,REG1
+
+    "0000_0000_0000",// LOAD REG0
+    "0100_00TT_00T1",// COPY REG0,REG2
+
+    "0000_0000_1110",// LOAD REG0
+    "0100_00TT_000T",// COPY REG0,REG3
+
+    "0000_0000_T010",// LOAD REG0
+
+    "1T00_00T0_00TT",// CALC REG1,calctype
+    "1T00_00T1_00TT",// CALC REG2,calctype
+    "1T00_000T_00TT",// CALC REG3,calctype
+
+    // "1T00_00T0_00T0",// CALC REG1,calctype
+    // "1T00_00T1_00T0",// CALC REG2,calctype
+    // "1T00_000T_00T0",// CALC REG3,calctype
+];
 
 fn main() {
-    let a = trits!("1111_1111_1111_1111_1111_1111_1111_1111");
-    let b = trits!("0000_0000_0000_0000_0000_0000_0000_0011");
-    // let c = trits!("0000_0000_0000_0000_0000_0000_0000_0000");
-    // let d = trits!("+++0_+++0_+++0_+++0_+++0_+++0_+++0_+++0");
-
-    // let a = trits!("1111_1111_1111_1111");
-    // let b = trits!("0000_0000_0000_0001");
-    // let c = trits!("0000_0000_0000_0000");
-    // let d = trits!("+++0_+++0_+++0_+++0");
-
-    // let a = trits!("1111_1111");
-    // let b = trits!("0000_0001");
-    // let c = trits!("0000_0000");
-    // let d = trits!("+++0_+++0");
-
-    // let a = trits!("1111");
-    // let b = trits!("0001");
-    // let c = trits!("0000");
-    // let d = trits!("+++0");
-
-
-
-    let result1 =a - b;
-    // let result2 =a.tncons(c);
-    // let result3 =a.tncons(d);
-
-    println!("{}",result1);
-    // println!("{}",result2);
-    // println!("{}",result3);
-    // println!("{}", t.get(0));
-    // println!("{}", t.get(1));
-    // println!("{}", t.get(2));
-    // println!("{}", t.get(3));
-    // println!("{}", t.get(4));
-    // println!("{}", t.get(5));
-    // println!("{}", t.get(6));
-    // println!("{}", t.get(7));
-
-    
-
-    // println!("{}", Trit8(t.tneg(1)));
-
-    // b.set(31, 3);
-
-    // println!("{}", b);
-    //  println!("{}", b.get(0));
-    // let my_word: u8 = 0b11011000; // 二进制表示：11(3), 01(1), 10(2), 00(0)
-    
-    // // 调用函数
-    // let result = bit_utils::fmt(my_word);
-    // println!("输入字节: {:08b}", my_word);
-    // println!("解码结果: {}", result);
+    asm_utils::write_tasm(PROGRAM0);
+    asm_utils::write_tbin();
 }
-
-
-
-
-// fn main() {
-//     let a = trits!("T010");
-//     let b = trits!("---0_0000");
-
-
-//     // let mut t = Trit4::new(0);
-
-
-
-//     // let result = a.tor(b);
-//     // println!("{}", result);
-
-
-//     // let a = trits!("T010");
-//     // let b = trits!("---0");
-//     // let c = trits!("0000");
-//     // let d = trits!("+++0");
-//     // //CTYPE: [0]tor [1]tand [2]tnor [3]tnand [4]txor [5]tnxor [6]add [7]tcons [8]tany [9]tnany
-//     // let ctype=0;
-    
-//     // let result1 =a.gate_core(b,ctype);
-//     // let result2 =a.gate_core(c,ctype);
-//     // let result3 =a.gate_core(d,ctype);
-
-
-//     // println!("{}",result1);
-//     // println!("{}",result2);
-//     // println!("{}",result3);
-// }
