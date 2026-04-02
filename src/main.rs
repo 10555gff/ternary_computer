@@ -24,7 +24,9 @@ pub static PROGRAM0: &[&str] = &[
     // "1T00_000T_00T0",// CALC REG3,calctype
 ];
 
-fn main() {
-    asm_utils::write_tasm(PROGRAM0);
-    asm_utils::write_tbin();
+fn main() -> std::io::Result<()> {
+    asm_utils::write_tasm(PROGRAM0)?;
+    asm_utils::write_tbin()?;
+    asm_utils::run_from_tbin()?;
+    Ok(())
 }

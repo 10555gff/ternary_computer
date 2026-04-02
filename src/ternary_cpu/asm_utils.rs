@@ -1,6 +1,6 @@
 use std::fs::File;
 use std::io::{Write, BufWriter, BufRead, BufReader};
-// use crate::ternary_cpu::logical_cpu::T80CPU;
+use crate::ternary_cpu::logical_cpu::T80CPU;
 
 pub fn write_tasm(lines: &[&str]) -> std::io::Result<()> {
     let file=File::create("prog.tasm")?;
@@ -97,28 +97,28 @@ pub fn read_tbin() -> std::io::Result<()> {
 }
 
 
-// pub fn run_from_tbin() ->std::io::Result<()> {
-//     // 读取二进制程序
-//     //把文件 prog.tbin全部内容一次性读入内存，得到一个 Vec<u8>
-//     let mem = std::fs::read("prog.tbin")?;
+pub fn run_from_tbin() ->std::io::Result<()> {
+    // 读取二进制程序
+    //把文件 prog.tbin全部内容一次性读入内存，得到一个 Vec<u8>
+    let mem = std::fs::read("prog.tbin")?;
 
-//     // 创建 CPU，内存就是刚刚读到的字节
-//     let mut cpu = T80CPU::new(mem);
+    // 创建 CPU，内存就是刚刚读到的字节
+    let mut cpu = T80CPU::new(mem);
 
-//     // 可选：初始化一些寄存器值（模拟 INPUT 或初始数据）
-//     // cpu.regs.write_u8(0, 0b01_00_00_00);
-//     // cpu.regs.write_u8(1, 0b00_10_10_01);
+    // 可选：初始化一些寄存器值（模拟 INPUT 或初始数据）
+    // cpu.regs.write_u8(0, 0b01_00_00_00);
+    // cpu.regs.write_u8(1, 0b00_10_10_01);
 
-//     println!("开始执行程序... PC 从 0 开始");
-//     cpu.run();
+    println!("开始执行程序... PC 从 0 开始");
+    cpu.run();
 
-//     println!("执行完成");
+    println!("执行完成");
 
-//     // 可选：打印最终寄存器状态
-//     for i in 0..9 {
-//         let regs= cpu.regs[i];
-//         println!("REG{} = {}", i, regs);
-//     }
-//     Ok(())
-// }
+    // 可选：打印最终寄存器状态
+    for i in 0..9 {
+        let regs= cpu.regs[i];
+        println!("REG{} = {}", i, regs);
+    }
+    Ok(())
+}
 
