@@ -205,3 +205,13 @@ impl Add<Trit16> for Trit16 {
         TritResult { carry, sum: Trit16(s) }
     }
 }
+
+impl Sub<Trit16> for Trit16 {
+    type Output = TritResult;
+
+    fn sub(self, rhs: Trit16) -> Self::Output {
+        let other = -rhs;
+        let (s, carry) = TritOps::adder(self.0, other.0, 0);
+        TritResult { carry, sum: Trit16(s) }
+    }
+}

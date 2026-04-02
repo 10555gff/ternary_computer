@@ -3,7 +3,7 @@ use ternary_arithmetic::trit::{Trit4,Trit8,Trit16,Trit32};
 
 fn main() {
     let a = trits!("1111_1111_1111_1111_1111_1111_1111_1111");
-    let b = trits!("0000_0000_0000_0000_0000_0000_0000_0001");
+    let b = trits!("0000_0000_0000_0000_0000_0000_0000_0011");
     // let c = trits!("0000_0000_0000_0000_0000_0000_0000_0000");
     // let d = trits!("+++0_+++0_+++0_+++0_+++0_+++0_+++0_+++0");
 
@@ -24,7 +24,7 @@ fn main() {
 
 
 
-    let result1 =a +b;
+    let result1 =a - b;
     // let result2 =a.tncons(c);
     // let result3 =a.tncons(d);
 
