@@ -109,7 +109,7 @@ impl Trit4 {
         (second_sum, c)
     }
 
-    pub fn mul(self, other: Self) -> Trit8{
+    pub fn mul(self, other: Self) -> Trit8 {
         let mut pos_part= Trit8(self.0 as u16);
         let mut neg_part= -pos_part;
         let mut part_product=Trit8::ZERO;

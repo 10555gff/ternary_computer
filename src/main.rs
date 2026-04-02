@@ -7,18 +7,18 @@ fn main() {
     // let c = trits!("0000_0000_0000_0000_0000_0000_0000_0000");
     // let d = trits!("+++0_+++0_+++0_+++0_+++0_+++0_+++0_+++0");
 
-    // let a = trits!("T010_T010_T010_T010");
-    // let b = trits!("---0_---0_---0_---0");
+    let a = trits!("0000_0000_0000_1101");
+    let b = trits!("0000_0000_0000_1011");
     // let c = trits!("0000_0000_0000_0000");
     // let d = trits!("+++0_+++0_+++0_+++0");
 
-    // let a = trits!("T010_T010");
-    // let b = trits!("---0_---0");
+    // let a = trits!("0000_1101");
+    // let b = trits!("0000_1011");
     // let c = trits!("0000_0000");
     // let d = trits!("+++0_+++0");
 
-    let a = trits!("1101");
-    let b = trits!("1011");
+    // let a = trits!("1101");
+    // let b = trits!("1011");
 
     let result = a.mul(b);
     println!("fff:{}",result);

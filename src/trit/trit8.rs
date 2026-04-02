@@ -1,4 +1,5 @@
 use std::fmt;
+use crate::trit::Trit16;
 use super::bit_utils::*;
 use core::ops::{Shl, Shr, Neg, Not, BitAnd, BitOr, BitXor, Add, Sub};
 use core::cmp::{Ordering, PartialOrd};
@@ -105,6 +106,25 @@ impl Trit8 {
         let first_sum = self.tsum(other);
         let second_sum = first_sum.tsum(Self(prc));
         (second_sum, c)
+    }
+
+    pub fn mul(self, other: Self) -> Trit16 {
+        let mut pos_part= Trit16(self.0 as u32);
+        let mut neg_part= -pos_part;
+        let mut part_product=Trit16::ZERO;
+
+        for i in 0..8 {
+            let n = other.get(i);
+            if n == 1 {
+                part_product = (part_product + pos_part).sum;
+            } else if n == 2 {
+                part_product = (part_product + neg_part).sum;
+            }
+            pos_part = pos_part<<1;
+            neg_part = neg_part<<1;
+        }
+
+        part_product
     }
 
     pub fn gate_core(self, other: Self, code: u8) -> Self {
