@@ -127,6 +127,16 @@ impl Trit8 {
         part_product
     }
 
+    pub fn div(self, other: Self) {
+        if other == Self::ZERO {
+            panic!("Cannot divide by zero.");
+        }
+        println!("{}",other);
+
+    
+    }
+
+
     pub fn gate_core(self, other: Self, code: u8) -> Self {
         match code {
             0 => self.tand(other),  // MIN
