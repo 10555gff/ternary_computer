@@ -7,20 +7,20 @@ fn main() {
     // let c = trits!("0000_0000_0000_0000_0000_0000_0000_0000");
     // let d = trits!("+++0_+++0_+++0_+++0_+++0_+++0_+++0_+++0");
 
-    let a = trits!("0000_0000_0000_1101");
-    let b = trits!("0000_0000_0000_1011");
+    // let a = trits!("0000_0000_0000_1101");
+    // let b = trits!("0000_0000_0000_1011");
     // let c = trits!("0000_0000_0000_0000");
     // let d = trits!("+++0_+++0_+++0_+++0");
 
-    // let a = trits!("0000_1101");
-    // let b = trits!("0000_1011");
-    // let c = trits!("0000_0000");
+    let a = trits!("0010_1101");
+    let b = trits!("0000_010T");
+    // let c = trits!("0000_0001");
     // let d = trits!("+++0_+++0");
 
     // let a = trits!("1101");
     // let b = trits!("1011");
 
-    let result = a * b;
-    println!("fff:{}",result);
+    let _ = a.div(b);
+    // println!("fff:{}",result);
 
 }

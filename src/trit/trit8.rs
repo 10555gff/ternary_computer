@@ -127,11 +127,43 @@ impl Trit8 {
         part_product
     }
 
-    pub fn div(self, other: Self) {
+    pub fn div(self,mut other: Self) {
         if other == Self::ZERO {
             panic!("Cannot divide by zero.");
         }
+        let mut remainder=self;
+
+
+        other = other<<3;
+        println!("{}",remainder);
         println!("{}",other);
+        remainder=(remainder - other).sum;
+        println!("{}",remainder);
+        println!("---------------------------");
+
+        other = other>>1;
+        println!("{}",remainder);
+        println!("{}",other);
+        remainder=(remainder - other).sum;
+        println!("{}",remainder);
+        println!("---------------------------");
+
+        other = other>>1;
+        println!("{}",remainder);
+        println!("{}",other);
+        println!("---------------------------");
+
+        other = other>>1;
+        println!("{}",remainder);
+        println!("{}",other);
+        remainder=(remainder + other).sum;
+        println!("{}",remainder);
+        // println!("---------------------------");
+
+
+
+
+
 
     
     }
