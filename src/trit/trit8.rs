@@ -9,6 +9,14 @@ pub struct Trit8(pub u16);
 const MASK_EVEN: u16 = 0x5555;
 const MASK_ODD:  u16 = 0xAAAA;
 
+
+pub const TDIV:[[u8; 3];3]= [
+    [3, 0, 0],
+    [3, 1, 2],
+    [3, 2, 1],
+];
+
+
 #[derive(Clone, Copy, Debug)]
 pub struct TritResult {
     pub carry: u8,
@@ -135,13 +143,49 @@ impl Trit8 {
         let n1 = self.leading_zero_trits();
         let n2 = other.leading_zero_trits();
         let fixed = (n2 - n1) as usize;
-        //println!("{},{},{}",n1,n2,fixed);
+
+        let mut index =(7 - n1) as usize;
+        //
+
+        println!("{},{},{}",n1,n2,fixed);
         println!("---------------------------");
 
+        //初始化
         let mut remainder=self;
         other = other << fixed;
         println!("{}",remainder);
         println!("{}",other);
+
+        for shift in (0..=fixed).rev(){
+            let rn = remainder.get(index);
+            let dn = other.get(index);
+            let digit=TDIV[rn as usize][dn as usize];//获取商的符号
+            if digit == 1 {
+                remainder=(remainder - other).sum;
+            } else if digit == 2 {
+                remainder=(remainder + other).sum;
+            }
+
+
+            
+            println!("{},{}:{}",rn,dn,digit);
+
+            //
+
+
+            println!("i={},{}",shift,remainder);
+            println!("---------------------------");
+            //完成一次，右移一位
+            index-= 1;
+            other = other>>1;
+            println!("{}",remainder);
+            println!("{}",other);
+
+
+        }
+
+
+
 
 
         
