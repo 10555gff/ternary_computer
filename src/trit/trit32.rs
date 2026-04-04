@@ -1,6 +1,6 @@
 use std::fmt;
 use super::bit_utils::*;
-use core::ops::{Shl, Shr, Neg, Not, BitAnd, BitOr, BitXor, Add, Sub};
+use core::ops::{Shl, Shr, Neg, Not, BitAnd, BitOr, BitXor, Add, Sub, Div};
 use core::cmp::{Ordering, PartialOrd};
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -12,6 +12,12 @@ const MASK_ODD:  u64 = 0xAAAA_AAAA_AAAA_AAAA;
 pub struct TritResult {
     pub carry: u8,
     pub sum: Trit32,
+}
+
+#[derive(Clone, Copy, Debug)]
+pub struct DivResult {
+    pub quotient: Trit32,
+    pub remainder: Trit32,
 }
 
 impl Trit32 {
@@ -194,6 +200,12 @@ impl fmt::Display for TritResult {
     }
 }
 
+impl fmt::Display for DivResult {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "quotient: {}, remainder: {}", self.quotient, self.remainder)
+    }
+}
+
 impl Shl<usize> for Trit32 {
     type Output = Self;
 
@@ -266,6 +278,15 @@ impl Sub<Trit32> for Trit32 {
         let other = -rhs;
         let (s, carry) = TritOps::adder(self.0, other.0, 0);
         TritResult { carry, sum: Trit32(s) }
+    }
+}
+
+impl Div<Trit32> for Trit32 {
+    type Output = DivResult;
+
+    fn div(self, rhs: Trit32) -> Self::Output {
+        let (q,r)=self.div(rhs);
+        DivResult { quotient:q, remainder:r }
     }
 }
 

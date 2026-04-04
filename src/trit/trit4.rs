@@ -1,7 +1,7 @@
 use std::fmt;
 use crate::trit::Trit8;
 use super::bit_utils::*;
-use core::ops::{Shl, Shr, Neg, Not, BitAnd, BitOr, BitXor, Add, Sub, Mul};
+use core::ops::{Shl, Shr, Neg, Not, BitAnd, BitOr, BitXor, Add, Sub, Mul, Div};
 use core::cmp::{Ordering, PartialOrd};
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -13,6 +13,12 @@ const MASK_ODD:  u8 = 0xAA;
 pub struct TritResult {
     pub carry: u8,
     pub sum: Trit4,
+}
+
+#[derive(Clone, Copy, Debug)]
+pub struct DivResult {
+    pub quotient: Trit4,
+    pub remainder: Trit4,
 }
 
 impl Trit4 {
@@ -205,6 +211,11 @@ impl fmt::Display for TritResult {
         write!(f, "carry: {}, sum: {}", self.carry, self.sum)
     }
 }
+impl fmt::Display for DivResult {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "quotient: {}, remainder: {}", self.quotient, self.remainder)
+    }
+}
 
 impl Shl<usize> for Trit4 {
     type Output = Self;
@@ -283,6 +294,15 @@ impl Mul<Trit4> for Trit4 {
 
     fn mul(self, rhs: Trit4) -> Self::Output {
         self.mul(rhs)
+    }
+}
+
+impl Div<Trit4> for Trit4 {
+    type Output = DivResult;
+
+    fn div(self, rhs: Trit4) -> Self::Output {
+        let (q,r)=self.div(rhs);
+        DivResult { quotient:q, remainder:r }
     }
 }
 
