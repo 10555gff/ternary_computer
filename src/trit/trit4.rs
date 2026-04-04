@@ -108,8 +108,11 @@ impl Trit4 {
         if dec == 0 {
             return Trit4::ZERO;
         }
+        if !(-40..=40).contains(&dec) {
+            panic!("Trit4 range (-40..=40): Invalid value: {}", dec);
+        }
 
-        let mut res = Trit4::ZERO;
+        let mut res = Self::ZERO;
         let mut n: usize = 0;
 
         while dec != 0 {
@@ -131,7 +134,6 @@ impl Trit4 {
         }
         res
     }
-
 
     pub fn adder(self, other: Self, carry: u8) -> (Self, u8) {
         let (s, c) = TritOps::adder(self.0, other.0, carry);

@@ -103,6 +103,38 @@ impl Trit8 {
         let res = self.0 ^ other.0 ^ (((and & MASK_ODD) >> 1) | ((and & MASK_EVEN) << 1));
         Trit8(res ^ (((res & (res >> 1)) & MASK_EVEN) * 3))
     }
+
+    pub fn from_dec(mut dec: i16) -> Self {
+        if dec == 0 {
+            return Trit8::ZERO;
+        }
+        if !(-3280..=3280).contains(&dec) {
+            panic!("Trit8 range (-3280..=3280): Invalid value: {}", dec);
+        }
+
+        let mut res = Self::ZERO;
+        let mut n: usize = 0;
+
+        while dec != 0 {
+            let remainder = dec % 3;
+            match remainder {
+                -1 | 2 => {
+                    res.set(n, 0b10);
+                    dec = (dec + 1) / 3;
+                }
+                -2 | 1 => {
+                    res.set(n, 0b01);
+                    dec = (dec - 1) / 3;
+                }
+                _ => {
+                    dec = dec / 3;
+                }
+            }
+            n += 1;
+        }
+        res
+    }
+
     pub fn adder(self, other: Self, carry: u8) -> (Self, u8) {
         let (s, c) = TritOps::adder(self.0, other.0, carry);
         (Trit8(s), c)

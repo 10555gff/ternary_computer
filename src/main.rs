@@ -76,7 +76,7 @@ fn main() {
     // println!("{}",re);
 
 
-    let res =Trit4::from_dec(13);
+    let res =Trit32::from_dec(926510094425919);
     println!("{}",res);
 
 
