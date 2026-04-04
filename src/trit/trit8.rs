@@ -177,58 +177,6 @@ impl Trit8 {
         (final_quotient, remainder)
     }
 
-
-    pub fn dstep(self,mut other: Self) {
-        if other == Self::ZERO {
-            panic!("Cannot divide by zero.");
-        }
-        let mut remainder=self;
-
-
-        other = other<<1;
-        println!("{}",remainder);
-        println!("{}",other);
-        remainder=(remainder - other).sum;
-        println!("{}",remainder);
-        println!("///////////////////////");
-
-        //第二次相减
-        println!("{}",remainder);
-        println!("{}",other);
-        remainder=(remainder - other).sum;
-        println!("{}",remainder);
-        println!("---------------------------------------------");
-
-
-
-        other = other>>1;
-        println!("{}",remainder);
-        println!("{}",other);
-        remainder=(remainder + other).sum;
-        println!("{}",remainder);
-        println!("---------------------------");
-
-        // other = other>>1;
-        // println!("{}",remainder);
-        // println!("{}",other);
-        // println!("---------------------------");
-
-        // other = other>>1;
-        // println!("{}",remainder);
-        // println!("{}",other);
-        // remainder=(remainder + other).sum;
-        // println!("{}",remainder);
-        // // println!("---------------------------");
-
-
-
-
-
-
-    
-    }
-
-
     pub fn gate_core(self, other: Self, code: u8) -> Self {
         match code {
             0 => self.tand(other),  // MIN
