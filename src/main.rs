@@ -12,7 +12,7 @@ fn main() {
     // let c = trits!("0000_0000_0000_0000");
     // let d = trits!("+++0_+++0_+++0_+++0");
 
-    let a = trits!("0010_1101");
+    let a = trits!("0000_1111");
     let b = trits!("0000_010T");
     // let c = trits!("0000_0001");
     // let d = trits!("+++0_+++0");
