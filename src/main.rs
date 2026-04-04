@@ -13,9 +13,7 @@ fn main() {
     // let d = trits!("+++0_+++0_+++0_+++0");
 
     // let a = trits!("00+0_++0+");
-    // let b = trits!("0000_0+0-");
-
-        let a = trits!("0000_++++");
+    let a = trits!("0000_++++");
     let b = trits!("0000_0+0-");
     // let c = trits!("0000_0001");
     // let d = trits!("+++0_+++0");
@@ -25,7 +23,7 @@ fn main() {
 
     //let _ = a.dstep(b);
 
-    let _ = a.div(b);
-    // println!("fff:{}",result);
+    let re = a.div(b);
+    println!("quotient:{},remainder:{}",re.0,re.1);
 
 }

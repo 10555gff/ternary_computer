@@ -137,23 +137,28 @@ impl Trit8 {
     }
 
 
-    pub fn div(self,other: Self) {
-        if other == Self::ZERO {
+    pub fn div(self,divisor_in: Self)-> (Self, Self){
+        if divisor_in == Self::ZERO {
             panic!("Cannot divide by zero.");
         }
+
         let n1 = self.leading_zero_trits();
-        let n2 = other.leading_zero_trits();
+        let n2 = divisor_in.leading_zero_trits();
+
+        // 如果被除数小于除数，直接返回
+        if n1 > n2 {
+            return (Self::ZERO, self);
+        }
+
+
         let fixed = (n2 - n1) as usize;
-
         let mut index =(7 - n1) as usize;
-        //
-
         println!("{},{},{}",n1,n2,fixed);
         println!("---------------------------");
 
         //初始化
         let mut remainder=self;
-        let mut divisor= other;
+        let mut divisor= divisor_in;
 
         let mut fir_quotient =Trit8::ZERO ;
         let mut sec_quotient = Trit8::ZERO;
@@ -198,14 +203,15 @@ impl Trit8 {
         }
 
 
-        println!("frisss:{}",fir_quotient);
-        println!("second:{}",sec_quotient);
+        // println!("frisss:{}",fir_quotient);
+        // println!("second:{}",sec_quotient);
 
-        let all_quotient=(fir_quotient + sec_quotient).sum;
-        println!("all:{}",all_quotient);
+        // let all_quotient=(fir_quotient + sec_quotient).sum;
+        // println!("all:{}",all_quotient);
 
+        let final_quotient = (fir_quotient + sec_quotient).sum;
+        (final_quotient, remainder)
 
-    
     }
 
 
