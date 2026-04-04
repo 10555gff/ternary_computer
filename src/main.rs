@@ -55,25 +55,29 @@ fn main() {
     // let re = a.div(b);//22/5
     // println!("quotient:{},remainder:{}",re.0,re.1);
 
-    let a = trits!("0+0+");
-    let b = trits!("00-+");
-    let re = a / b;//10/2
-    println!("{}",re);
+    // let a = trits!("0+0+");
+    // let b = trits!("00-+");
+    // let re = a / b;//10/2
+    //println!("{}",re);
 
-    let a = trits!("00+0_++0+");
-    let b = trits!("0000_0+0-");
-    let re = a /b;//280/8
-    println!("{}",re);
+    // let a = trits!("00+0_++0+");
+    // let b = trits!("0000_0+0-");
+    // let re = a /b;//280/8
+    // println!("{}",re);
 
-    let a = trits!("0000_0000_00+0_++0+");
-    let b = trits!("0000_0000_0000_0+0-");
-    let re = a /b;//280/8
-    println!("{}",re);
+    // let a = trits!("0000_0000_00+0_++0+");
+    // let b = trits!("0000_0000_0000_0+0-");
+    // let re = a /b;//280/8
+    // println!("{}",re);
 
-    let a = trits!("0000_0000_0000_0000_0000_0000_00+0_++0+");
-    let b = trits!("0000_0000_0000_0000_0000_0000_0000_0+0-");
-    let re =a/b;//280/8
-    println!("{}",re);
+    // let a = trits!("0000_0000_0000_0000_0000_0000_00+0_++0+");
+    // let b = trits!("0000_0000_0000_0000_0000_0000_0000_0+0-");
+    // let re =a/b;//280/8
+    // println!("{}",re);
+
+
+    let res =Trit4::from_dec(13);
+    println!("{}",res);
 
 
 }

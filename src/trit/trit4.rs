@@ -104,6 +104,35 @@ impl Trit4 {
         Trit4(res ^ (((res & (res >> 1)) & MASK_EVEN) * 3))
     }
 
+    pub fn from_dec(mut dec: i8) -> Self {
+        if dec == 0 {
+            return Trit4::ZERO;
+        }
+
+        let mut res = Trit4::ZERO;
+        let mut n: usize = 0;
+
+        while dec != 0 {
+            let remainder = dec % 3;
+            match remainder {
+                -1 | 2 => {
+                    res.set(n, 0b10);
+                    dec = (dec + 1) / 3;
+                }
+                -2 | 1 => {
+                    res.set(n, 0b01);
+                    dec = (dec - 1) / 3;
+                }
+                _ => {
+                    dec = dec / 3;
+                }
+            }
+            n += 1;
+        }
+        res
+    }
+
+
     pub fn adder(self, other: Self, carry: u8) -> (Self, u8) {
         let (s, c) = TritOps::adder(self.0, other.0, carry);
         (Trit4(s), c)
