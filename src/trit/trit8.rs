@@ -135,8 +135,6 @@ impl Trit8 {
             _ => *self,
         };
     }
-
-
     pub fn div(self,divisor_in: Self)-> (Self, Self){
         if divisor_in == Self::ZERO {
             panic!("Cannot divide by zero.");
@@ -144,35 +142,24 @@ impl Trit8 {
 
         let n1 = self.leading_zero_trits();
         let n2 = divisor_in.leading_zero_trits();
-
-        // 如果被除数小于除数，直接返回
         if n1 > n2 {
             return (Self::ZERO, self);
         }
 
-
         let fixed = (n2 - n1) as usize;
         let mut index =(7 - n1) as usize;
-        println!("{},{},{}",n1,n2,fixed);
-        println!("---------------------------");
 
         //初始化并对齐
         let mut remainder=self;
         let mut divisor= divisor_in << fixed;
 
-        println!("aaaaaaaaaaa:{}",remainder);
-        println!("bbbbbbbbbbb:{}",divisor);
-        //两层商设计
+        //二重商
         let mut fir_quotient =Trit8::ZERO ;
         let mut sec_quotient = Trit8::ZERO;
         
-
-
-        for shift in 0..=fixed{
+        for _ in 0..=fixed{
             let nxor=remainder.tnxor(divisor);
             let digit=nxor.get(index);//获取商的符号
-
-            println!("cccccccccccccccc:{}",digit);
 
             fir_quotient.set(index, digit);
             remainder.update_remainder(digit, divisor);//更新余数，第一轮相减
@@ -183,35 +170,12 @@ impl Trit8 {
                 remainder.update_remainder(d_remainder, divisor);//更新余数，第二轮相减
             }
             
-            
-
-
-            
-            println!("{}",index);
-
-            
-
-            println!("i={},{}",shift,remainder);
-            println!("---------------------------");
-            //完成一次，右移一位
             index-= 1;
-            divisor = divisor>>1;
-            println!("{}",remainder);
-            //println!("{}",divisor);
-
-
+            divisor = divisor >> 1;
         }
-
-
-        // println!("frisss:{}",fir_quotient);
-        // println!("second:{}",sec_quotient);
-
-        // let all_quotient=(fir_quotient + sec_quotient).sum;
-        // println!("all:{}",all_quotient);
 
         let final_quotient = (fir_quotient + sec_quotient).sum;
         (final_quotient, remainder)
-
     }
 
 
