@@ -13,52 +13,67 @@ fn main() {
     // let d = trits!("+++0_+++0_+++0_+++0");
 
 
+    // let a = trits!("00+0_++0+");
+    // let b = trits!("0000_0+0-");
+    // let re = a.div(b);//280/8
+    // println!("quotient:{},remainder:{}",re.0,re.1);
+
+    // let a = trits!("0000_++++");
+    // let b = trits!("0000_0+0-");
+    // let re = a.div(b);//40/8
+    // println!("quotient:{},remainder:{}",re.0,re.1);
+
+
+
+    // let a = trits!("0000_0-0-");
+    // let b = trits!("0000_00-+");
+    // let re = a.div(b);//-10/-2
+    // println!("quotient:{},remainder:{}",re.0,re.1);
+
+    // let a = trits!("0000_0+0+");
+    // let b = trits!("0000_00-+");
+    // let re = a.div(b);//10/-2
+    // println!("quotient:{},remainder:{}",re.0,re.1);
+
+    // let a = trits!("0000_0-0-");
+    // let b = trits!("0000_00+-");
+    // let re = a.div(b);//-10/2
+    // println!("quotient:{},remainder:{}",re.0,re.1);
+
+    // let a = trits!("0000_0+0+");
+    // let b = trits!("0000_00+0");
+    // let re = a.div(b);//10/3
+    // println!("quotient:{},remainder:{}",re.0,re.1);
+
+    // let a = trits!("000+_-++-");
+    // let b = trits!("0000_0+--");
+    // let re = a.div(b);//65/5
+    // println!("quotient:{},remainder:{}",re.0,re.1);
+
+    // let a = trits!("0000_+-++");
+    // let b = trits!("0000_0-++");
+    // let re = a.div(b);//22/5
+    // println!("quotient:{},remainder:{}",re.0,re.1);
+
+    let a = trits!("0+0+");
+    let b = trits!("00-+");
+    let re = a.div(b);//10/2
+    println!("quotient:{},remainder:{}",re.0,re.1);
+
     let a = trits!("00+0_++0+");
     let b = trits!("0000_0+0-");
     let re = a.div(b);//280/8
     println!("quotient:{},remainder:{}",re.0,re.1);
 
-    let a = trits!("0000_++++");
-    let b = trits!("0000_0+0-");
-    let re = a.div(b);//40/8
+    let a = trits!("0000_0000_00+0_++0+");
+    let b = trits!("0000_0000_0000_0+0-");
+    let re = a.div(b);//280/8
     println!("quotient:{},remainder:{}",re.0,re.1);
 
-    let a = trits!("0000_0+0+");
-    let b = trits!("0000_00+-");
-    let re = a.div(b);//10/2
+    let a = trits!("0000_0000_0000_0000_0000_0000_00+0_++0+");
+    let b = trits!("0000_0000_0000_0000_0000_0000_0000_0+0-");
+    let re = a.div(b);//280/8
     println!("quotient:{},remainder:{}",re.0,re.1);
-
-    let a = trits!("0000_0-0-");
-    let b = trits!("0000_00-+");
-    let re = a.div(b);//-10/-2
-    println!("quotient:{},remainder:{}",re.0,re.1);
-
-    let a = trits!("0000_0+0+");
-    let b = trits!("0000_00-+");
-    let re = a.div(b);//10/-2
-    println!("quotient:{},remainder:{}",re.0,re.1);
-
-    let a = trits!("0000_0-0-");
-    let b = trits!("0000_00+-");
-    let re = a.div(b);//-10/2
-    println!("quotient:{},remainder:{}",re.0,re.1);
-
-    let a = trits!("0000_0+0+");
-    let b = trits!("0000_00+0");
-    let re = a.div(b);//10/3
-    println!("quotient:{},remainder:{}",re.0,re.1);
-
-    let a = trits!("000+_-++-");
-    let b = trits!("0000_0+--");
-    let re = a.div(b);//65/5
-    println!("quotient:{},remainder:{}",re.0,re.1);
-
-    let a = trits!("0000_+-++");
-    let b = trits!("0000_0-++");
-    let re = a.div(b);//22/5
-    println!("quotient:{},remainder:{}",re.0,re.1);
-
-
 
 
 }

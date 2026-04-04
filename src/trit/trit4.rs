@@ -128,7 +128,54 @@ impl Trit4 {
 
         part_product
     }
-    
+
+    fn update_remainder(&mut self, digit: u8, divisor: Self) {
+        *self = match digit {
+            1 => (*self - divisor).sum,
+            2 => (*self + divisor).sum,
+            _ => *self,
+        };
+    }
+    pub fn div(self,divisor_in: Self)-> (Self, Self){
+        if divisor_in == Self::ZERO {
+            panic!("Cannot divide by zero.");
+        }
+
+        let n1 = self.leading_zero_trits();
+        let n2 = divisor_in.leading_zero_trits();
+        if n1 > n2 {
+            return (Self::ZERO, self);
+        }
+
+        let fixed = (n2 - n1) as usize;
+        let mut index =(3 - n1) as usize;
+
+        let mut remainder=self;
+        let mut divisor= divisor_in << fixed;
+
+        let mut fir_quotient = Self::ZERO ;
+        let mut sec_quotient = Self::ZERO;
+        
+        for _ in 0..=fixed{
+            let nxor=remainder.tnxor(divisor);
+            let digit=nxor.get(index);
+
+            fir_quotient.set(index, digit);
+            remainder.update_remainder(digit, divisor);
+
+            if remainder.get(index) != 0 {
+                sec_quotient.set(index, digit);
+                remainder.update_remainder(digit, divisor);
+            }
+            
+            index-= 1;
+            divisor = divisor >> 1;
+        }
+        index+= 1;
+        let final_quotient = (fir_quotient + sec_quotient).sum >>index;
+        (final_quotient, remainder)
+    }
+
     pub fn gate_core(self, other: Self, code: u8) -> Self {
         match code {
             0 => self.tand(other),  // MIN

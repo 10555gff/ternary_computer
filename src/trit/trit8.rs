@@ -128,7 +128,7 @@ impl Trit8 {
         part_product
     }
 
-    fn update_remainder(&mut self, digit: u8, divisor: Trit8) {
+    fn update_remainder(&mut self, digit: u8, divisor: Self) {
         *self = match digit {
             1 => (*self - divisor).sum,
             2 => (*self + divisor).sum,
@@ -154,8 +154,8 @@ impl Trit8 {
         let mut divisor= divisor_in << fixed;
 
         //二重商
-        let mut fir_quotient =Trit8::ZERO ;
-        let mut sec_quotient = Trit8::ZERO;
+        let mut fir_quotient = Self::ZERO ;
+        let mut sec_quotient = Self::ZERO;
         
         for _ in 0..=fixed{
             let nxor=remainder.tnxor(divisor);
