@@ -12,18 +12,28 @@ fn main() {
     // let c = trits!("0000_0000_0000_0000");
     // let d = trits!("+++0_+++0_+++0_+++0");
 
-    let a = trits!("00+0_++0+");
-    //let a = trits!("0000_++++");
-    let b = trits!("0000_0+0-");
-    // let c = trits!("0000_0001");
-    // let d = trits!("+++0_+++0");
 
-    // let a = trits!("1101");
-    // let b = trits!("1011");
+    // let a = trits!("00+0_++0+");
+    // let b = trits!("0000_0+0-");
+    // let re = a.div(b);//
+    // println!("quotient:{},remainder:{}",re.0,re.1);
 
-    //let _ = a.dstep(b);
+    // let a = trits!("0000_++++");
+    // let b = trits!("0000_0+0-");
+    // let re = a.div(b);//40/8
+    // println!("quotient:{},remainder:{}",re.0,re.1);
 
-    let re = a.div(b);
+    // let a = trits!("0000_0+0+");
+    // let b = trits!("0000_00+-");
+    // let re = a.div(b);//10/2
+    // println!("quotient:{},remainder:{}",re.0,re.1);
+
+    let a = trits!("0000_0+0+");
+    let b = trits!("0000_00-+");
+    let re = a.div(b);//10/-2
     println!("quotient:{},remainder:{}",re.0,re.1);
+
+
+
 
 }

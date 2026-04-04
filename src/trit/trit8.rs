@@ -153,28 +153,37 @@ impl Trit8 {
         let mut remainder=self;
         let mut divisor= divisor_in << fixed;
 
+        println!("aaaaaaaaaaa:{}",remainder);
+        println!("bbbbbbbbbbb:{}",divisor);
+
         //二重商
         let mut fir_quotient =Trit8::ZERO ;
         let mut sec_quotient = Trit8::ZERO;
         
-        for _ in 0..=fixed{
+        for i in 0..=fixed{
             let nxor=remainder.tnxor(divisor);
             let digit=nxor.get(index);//获取商的符号
+            println!("dddddd:{}",digit);
 
             fir_quotient.set(index, digit);
             remainder.update_remainder(digit, divisor);//更新余数，第一轮相减
+            println!("{}:{}",i,remainder);
 
-            let d_remainder=remainder.get(index);
-            if d_remainder != 0 {
-                sec_quotient.set(index, d_remainder);
-                remainder.update_remainder(d_remainder, divisor);//更新余数，第二轮相减
+
+
+            if remainder.get(index) != 0 {
+                println!("kkkkkkkkkkkkkkkkkkkk{}",remainder);
+                sec_quotient.set(index, digit);
+                remainder.update_remainder(digit, divisor);//更新余数，第二轮相减
+                println!("vvvvvvvvvvvvvvvvvvvvvvvvvvvvv{}",remainder);
             }
             
             index-= 1;
             divisor = divisor >> 1;
         }
-
-        let final_quotient = (fir_quotient + sec_quotient).sum;
+        println!("{}",index);
+        index+= 1;
+        let final_quotient = (fir_quotient + sec_quotient).sum >>index;
         (final_quotient, remainder)
     }
 
