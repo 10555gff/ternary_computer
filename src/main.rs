@@ -12,8 +12,8 @@ fn main() {
     // let c = trits!("0000_0000_0000_0000");
     // let d = trits!("+++0_+++0_+++0_+++0");
 
-    // let a = trits!("00+0_++0+");
-    let a = trits!("0000_++++");
+    let a = trits!("00+0_++0+");
+    //let a = trits!("0000_++++");
     let b = trits!("0000_0+0-");
     // let c = trits!("0000_0001");
     // let d = trits!("+++0_+++0");

@@ -156,17 +156,17 @@ impl Trit8 {
         println!("{},{},{}",n1,n2,fixed);
         println!("---------------------------");
 
-        //初始化
+        //初始化并对齐
         let mut remainder=self;
-        let mut divisor= divisor_in;
+        let mut divisor= divisor_in << fixed;
 
+        println!("aaaaaaaaaaa:{}",remainder);
+        println!("bbbbbbbbbbb:{}",divisor);
+        //两层商设计
         let mut fir_quotient =Trit8::ZERO ;
         let mut sec_quotient = Trit8::ZERO;
         
 
-        divisor = divisor << fixed;
-        println!("{}",remainder);
-        println!("{}",divisor);
 
         for shift in 0..=fixed{
             let nxor=remainder.tnxor(divisor);
