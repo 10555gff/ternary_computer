@@ -27,6 +27,7 @@ impl Trit16 {
     pub fn toggle(&self, n:usize)->u32 { TritOps::toggle_2bit(self.0,n) }
     pub fn swap(&self, n:usize)  ->u32 { TritOps::swap_2bit(self.0,n) }
     pub fn set(&mut self,n:usize,v:u8){ self.0 =TritOps::set_2bit(self.0,n,v) }
+    pub fn leading_zero_trits(self) -> u32 { self.0.leading_zeros() >> 1 }
 
     pub fn tneg(self) -> Self {
         let val = self.0;
