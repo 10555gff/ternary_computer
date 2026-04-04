@@ -76,7 +76,11 @@ fn main() {
     // println!("{}",re);
 
 
-    let res =Trit32::from_dec(926510094425919);
+    //let a = trits!("1111");
+    //let a = trits!("1111_1111");
+    //let a = trits!("1111_1111_1111_1111");
+   let a = trits!("1111_1111_1111_1111_1111_1111_1111_1111");
+    let res =a.to_dec();
     println!("{}",res);
 
 

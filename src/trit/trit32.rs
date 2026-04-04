@@ -32,6 +32,8 @@ impl Trit32 {
     pub fn toggle(&self, n:usize)->u64 { TritOps::toggle_2bit(self.0,n) }
     pub fn swap(&self, n:usize)  ->u64 { TritOps::swap_2bit(self.0,n) }
     pub fn set(&mut self,n:usize,v:u8){ self.0 =TritOps::set_2bit(self.0,n,v) }
+
+    pub fn to_dec(self) -> i64{ TritOps::to_dec(self.0) }
     pub fn leading_zero_trits(self) -> u32 { self.0.leading_zeros() >> 1 }
 
     pub fn tneg(self) -> Self {

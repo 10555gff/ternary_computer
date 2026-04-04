@@ -49,6 +49,7 @@ pub fn fmt(word: u8) -> String {
 }
 
 pub trait TritOps: Sized {
+    fn to_dec(word: Self) -> i64;
     fn read_2bit(word: Self, n: usize) -> u8;
     fn clear_2bit(word: Self, n: usize) -> Self;
     fn toggle_2bit(word: Self, n: usize) -> Self;
@@ -78,11 +79,24 @@ macro_rules! impl_trit_ops_for {
                 let mask = (((val ^ (val >> 1)) & 1) * 3) as $t;
                 word ^ (mask << shift)
             }
-
             fn set_2bit(word: $t, n: usize, value: u8) -> $t {
                 let shift = n << 1;
                 let mask = (0x03 as $t) << shift;
                 (word & !mask) | (((value & 0x03) as $t) << shift)
+            }
+
+            fn to_dec(word: $t) -> i64 {
+                let mut dec = 0i64;
+                let mut pow = 1i64;
+                let width = core::mem::size_of::<$t>() * 4;
+
+                for i in 0..width {
+                    let trit = val(Self::read_2bit(word, i)) as i64;
+                    dec += trit * pow;
+                    pow *= 3;
+                }
+
+                dec
             }
 
             fn tcons3(mut word: $t, mut word2: $t, mut carry: u8) -> ($t, u8) {
