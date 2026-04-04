@@ -79,9 +79,20 @@ fn main() {
     //let a = trits!("1111");
     //let a = trits!("1111_1111");
     //let a = trits!("1111_1111_1111_1111");
-   let a = trits!("1111_1111_1111_1111_1111_1111_1111_1111");
-    let res =a.to_dec();
-    println!("{}",res);
+//    let a = trits!("1111_1111_1111_1111_1111_1111_1111_1111");
+//     let res =a.to_dec();
+//     println!("{}",res);
+
+    let a = trits!("0000_1101_0000_0000_1100_0000_00+0_++0+");
+    let b = trits!("0000_0000_0000_0000_0000_0000_0000_0+0-");
+    let re =a/b;//280/8
+
+    let n =a.to_dec();
+    let n2=b.to_dec();
+    let res =re.quotient;
+    let res2=re.remainder;
+    println!("{}/{}={}",n,n2,res.to_dec());
+    println!("{}",res2.to_dec());
 
 
 }
