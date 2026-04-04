@@ -132,6 +132,29 @@ impl Trit8 {
         if other == Self::ZERO {
             panic!("Cannot divide by zero.");
         }
+        let n1 = self.leading_zero_trits();
+        let n2 = other.leading_zero_trits();
+        let fixed = (n2 - n1) as usize;
+        //println!("{},{},{}",n1,n2,fixed);
+        println!("---------------------------");
+
+        let mut remainder=self;
+        other = other << fixed;
+        println!("{}",remainder);
+        println!("{}",other);
+
+
+        
+
+
+        //let mut remainder=self;
+    }
+
+
+    pub fn dstep(self,mut other: Self) {
+        if other == Self::ZERO {
+            panic!("Cannot divide by zero.");
+        }
         let mut remainder=self;
 
 
