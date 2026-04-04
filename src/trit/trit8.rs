@@ -9,14 +9,6 @@ pub struct Trit8(pub u16);
 const MASK_EVEN: u16 = 0x5555;
 const MASK_ODD:  u16 = 0xAAAA;
 
-
-pub const TDIV:[[u8; 3];3]= [
-    [3, 0, 0],
-    [3, 1, 2],
-    [3, 2, 1],
-];
-
-
 #[derive(Clone, Copy, Debug)]
 pub struct TritResult {
     pub carry: u8,
@@ -136,6 +128,15 @@ impl Trit8 {
         part_product
     }
 
+    fn update_remainder(&mut self, digit: u8, divisor: Trit8) {
+        *self = match digit {
+            1 => (*self - divisor).sum,
+            2 => (*self + divisor).sum,
+            _ => *self,
+        };
+    }
+
+
     pub fn div(self,other: Self) {
         if other == Self::ZERO {
             panic!("Cannot divide by zero.");
@@ -154,51 +155,36 @@ impl Trit8 {
         let mut remainder=self;
         let mut divisor= other;
 
-
         let mut fir_quotient =Trit8::ZERO ;
         let mut sec_quotient = Trit8::ZERO;
+        
 
         divisor = divisor << fixed;
         println!("{}",remainder);
         println!("{}",divisor);
 
         for shift in 0..=fixed{
-            let rn = remainder.get(index);
-            let dn = divisor.get(index);
-            let digit=TDIV[rn as usize][dn as usize];//获取商的符号
-            fir_quotient.set(index, digit);
+            let nxor=remainder.tnxor(divisor);
+            let digit=nxor.get(index);//获取商的符号
 
-            if digit == 1 {
-                remainder=(remainder - divisor).sum;
-            } else if digit == 2 {
-                remainder=(remainder + divisor).sum;
-            }
+            println!("cccccccccccccccc:{}",digit);
+
+            fir_quotient.set(index, digit);
+            remainder.update_remainder(digit, divisor);//更新余数，第一轮相减
 
             let d_remainder=remainder.get(index);
             if d_remainder != 0 {
-                println!("///////////////////////");
-
-                println!("{}",remainder);
-                println!("{}",divisor);
-                println!("kkkkkkkkkkkkkkkkkk:{}",d_remainder);
-
                 sec_quotient.set(index, d_remainder);
-                if d_remainder == 1 {
-                    remainder=(remainder - divisor).sum;
-                } else if d_remainder == 2 {
-                    remainder=(remainder + divisor).sum;
-                }
-                
+                remainder.update_remainder(d_remainder, divisor);//更新余数，第二轮相减
             }
             
             
 
 
             
-            println!("{},{}:{}",rn,dn,index);
+            println!("{}",index);
 
-            //
-
+            
 
             println!("i={},{}",shift,remainder);
             println!("---------------------------");
