@@ -90,12 +90,13 @@ macro_rules! impl_trit_ops_for {
                 let mut pow = 1i64;
                 let width = core::mem::size_of::<$t>() * 4;
 
-                for i in 0..width {
-                    let trit = val(Self::read_2bit(word, i)) as i64;
+                let mut w = word;
+                for _ in 0..width {
+                    let trit = val((w & 0x03) as u8) as i64;
                     dec += trit * pow;
                     pow *= 3;
+                    w >>= 2;
                 }
-
                 dec
             }
 
