@@ -204,9 +204,8 @@ impl Trit32 {
             4 => self.tnor(other),  // NOR
             5 => self.tnxor(other), // NXOR
             6 => self.tcons(other), // CONS
-            7 => self.tncons(other),// NCONS
-            8 => self.tany(other),  // ANY
-            9 => self.tsum(other),  // SUM
+            7 => self.tany(other),  // ANY
+            8 => self.adder(other, 0).0,  // SUM
             _ => unsafe { core::hint::unreachable_unchecked() }
         }
     }

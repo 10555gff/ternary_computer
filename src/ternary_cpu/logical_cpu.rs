@@ -112,8 +112,7 @@ impl T80CPU {
             //条件跳转模式，根据 jump_type 和 reg3寄存器值 决定是否跳转
             0x40 => Instruction::Condition {
                 jtype: Self::decode_address(inst[1]),
-                offset:0,
-                //offset: Trit4(inst[2]).to_dec() as isize,
+                offset: Trit4(inst[2]).to_dec() as isize,
             },
             //停止指令，表示 CPU 执行停止
             0xFF => Instruction::Halt,
