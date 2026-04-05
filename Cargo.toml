@@ -1,6 +1,6 @@
 [package]
 name = "ternary_arithmetic"
-version = "0.1.8"
+version = "0.2.0"
 edition = "2024"
 authors = ["10555gff 1073245193@qq.com"]
 description = "balanced ternary use array logic gate to arithmetic"
@@ -12,7 +12,7 @@ keywords = ["ternary", "balanced_ternary", "ternary_arithmetic", "ternary_logic"
 categories = ["mathematics"]
 
 [dependencies]
-trit_macro = "0.1.0"
+trit_macro = "0.1.1"
 
 [patch.crates-io]
 trit_macro = { path = "./trit_macro" }
