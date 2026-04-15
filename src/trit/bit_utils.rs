@@ -39,6 +39,14 @@ const TFULLCONS: [[[u8; 3]; 3]; 3] = [
 pub fn val(x: u8) -> i8 {
     [0, 1, -1][x as usize]
 }
+#[inline]
+pub fn tnxor_digit(lhs: u8, rhs: u8) -> u8 {
+    match (lhs, rhs) {
+        (1, 1) | (2, 2) => 1,
+        (1, 2) | (2, 1) => 2,
+        _ => 0,
+    }
+}
 
 pub fn fmt(word: u8) -> String {
     let t0 = DECODE[(word & 0x03) as usize];

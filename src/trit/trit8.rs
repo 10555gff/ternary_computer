@@ -197,22 +197,24 @@ impl Trit8 {
         let mut fir_quotient = Self::ZERO ;
         let mut sec_quotient = Self::ZERO;
         
-        for _ in 0..=fixed{
-            let nxor=remainder.tnxor(divisor);
-            let digit=nxor.get(index);//获取商的符号
+        for step in 0..=fixed{
+            let digit = tnxor_digit(remainder.get(index), divisor.get(index));
 
-            fir_quotient.set(index, digit);
-            remainder.update_remainder(digit, divisor);//更新余数，第一轮相减
+            if digit != 0 {
+                fir_quotient.set(index, digit);
+                remainder.update_remainder(digit, divisor);
 
-            if remainder.get(index) != 0 {
-                sec_quotient.set(index, digit);
-                remainder.update_remainder(digit, divisor);//更新余数，第二轮相减
+                if remainder.get(index) != 0 {
+                    sec_quotient.set(index, digit);
+                    remainder.update_remainder(digit, divisor);
+                }
             }
-            
-            index-= 1;
-            divisor = divisor >> 1;
+
+            if step != fixed {
+                index -= 1;
+                divisor = divisor >> 1;
+            }
         }
-        index+= 1;
         let final_quotient = (fir_quotient + sec_quotient).sum >>index;
         (final_quotient, remainder)
     }
