@@ -36,9 +36,10 @@ fn main() {
     let a = trits!("T010_T010_T010_T010_T010_T010_T010_T010");
     let b = trits!("---0_---0_---0_---0_---0_---0_---0_---0");
     let d = trits!("+++0_+++0_+++0_+++0_+++0_+++0_+++0_+++0");
-    println!("{}",a.tor(b));
-    println!("{}",a.tor(c));
-    println!("{}",a.tor(d));
+    println!("{}",a.tand(b));
+    println!("{}",a.tand(c));
+    println!("{}",a.tand(d));
+    println!("-----------------------");
 
     let a = trits!("T010_T010_T010_T010");
     let b = trits!("---0_---0_---0_---0");
@@ -46,6 +47,7 @@ fn main() {
     println!("Sub:{}",(a - b));
     println!("Mul:{}",(a * b));
     println!("DiV:{}",(a / b));
+    println!("-----------------------");
 
     let a = trits!("T010_T010");
     let b = trits!("+++0_---0");
@@ -54,7 +56,14 @@ fn main() {
     println!("a:{}",(a >> 1));
     println!("b:{}",(a << 2));
     println!("a:{},b:{},c:{},d:{}",a,b,c.to_dec(),d);
-    
+    println!("-----------------------");
+
+    let a = Trit32::from_dec(58192762);
+    let b = Trit32::from_dec(8);
+    let r =a/b;
+    println!("{},{},{}",a,b,r);
+    println!("{},{}",r.quotient.to_dec(),r.remainder.to_dec());
+    println!("-----------------------");
 
     let a = trits!("T011");
     let b = trits!("1111");
@@ -62,6 +71,7 @@ fn main() {
     println!("{},{}",-a,!b);
     println!("a:{},c:{}",a.get(3),c);
     println!("{},{},{}",(a | b),(a & b),(a ^ b));
+    println!("-----------------------");
 
 }
 
