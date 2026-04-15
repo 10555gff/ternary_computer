@@ -215,7 +215,9 @@ impl Trit8 {
                 divisor = divisor >> 1;
             }
         }
-        let final_quotient = (fir_quotient + sec_quotient).sum >>index;
+        fir_quotient = fir_quotient >> index;//提前移回位，避免相加溢出
+        sec_quotient = sec_quotient >> index;
+        let final_quotient = (fir_quotient + sec_quotient).sum;
         (final_quotient, remainder)
     }
 

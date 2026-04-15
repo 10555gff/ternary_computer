@@ -45,7 +45,7 @@ fn main() {
     println!("Add:{}",(a + b));
     println!("Sub:{}",(a - b));
     println!("Mul:{}",(a * b));
-    println!("Mul:{}",(a / b));
+    println!("DiV:{}",(a / b));
 
     let a = trits!("T010_T010");
     let b = trits!("+++0_---0");

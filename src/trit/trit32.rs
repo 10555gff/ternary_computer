@@ -193,7 +193,9 @@ impl Trit32 {
                 divisor = divisor >> 1;
             }
         }
-        let final_quotient = (fir_quotient + sec_quotient).sum >>index;
+        fir_quotient = fir_quotient >> index;
+        sec_quotient = sec_quotient >> index;
+        let final_quotient = (fir_quotient + sec_quotient).sum;
         (final_quotient, remainder)
     }
 
