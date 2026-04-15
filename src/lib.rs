@@ -105,4 +105,33 @@ mod tests {
         }
     }
 
+
+    #[test]
+    fn test_ternary_division_cases() {
+        let a = trits!("01TT_0000");
+        let b = trits!("001T_0000");
+        let r= a / b;
+        assert_eq!(format!("{}", r.quotient),  "Trit8[00000010]");
+        assert_eq!(format!("{}", r.remainder), "Trit8[000T0000]");
+
+        let a = trits!("0T11_0000");
+        let b = trits!("00T1_0000");
+        let r= a / b;
+        assert_eq!(format!("{}", r.quotient),  "Trit8[00000010]");
+        assert_eq!(format!("{}", r.remainder), "Trit8[00010000]");
+
+        let a = trits!("01TT_0000");
+        let b = trits!("00T1_0000");
+        let r= a / b;
+        assert_eq!(format!("{}", r.quotient),  "Trit8[000000T0]");
+        assert_eq!(format!("{}", r.remainder), "Trit8[000T0000]");
+
+        let a = trits!("0T11_0000");
+        let b = trits!("001T_0000");
+        let r= a / b;
+        assert_eq!(format!("{}", r.quotient),  "Trit8[000000T0]");
+        assert_eq!(format!("{}", r.remainder), "Trit8[00010000]");
+
+    }
+
 }
